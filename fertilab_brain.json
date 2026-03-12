@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "1.0",
+  "version": "1.1",
 
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
@@ -11,10 +11,10 @@
   },
 
   "rutas": {
-    "stock_dir":    "K:\\Sector STOCK\\Movimientos\\Stock",
+    "cola_raiz":    "K:\\Sector STOCK",
     "cola_dir":     "K:\\Sector STOCK\\Movimientos",
     "programa_dir": "K:\\Sector STOCK\\Movimientos\\Programa",
-    "cola_raiz":    "K:\\Sector STOCK",
+    "stock_dir":    "K:\\Sector STOCK\\Movimientos\\Stock",
     "bajas_dir":    "K:\\Sector STOCK\\Movimientos\\Bajas de stock"
   },
 
@@ -50,8 +50,26 @@
     "Items sin codigo usan clave __NOMBRE__{nombre}",
     "El username mrubini tiene una sola n, no mrubbini",
     "sync daemon arranca via Task Scheduler a las 8am",
-    "cola_retiros.json se escribe en COLA_RAIZ y en PROGRAMA_DIR"
+    "Todo JSON compartido cae PRIMERO a K:\\Sector STOCK (raiz), luego se replica a K:\\Sector STOCK\\Movimientos y K:\\Sector STOCK\\Movimientos\\Programa",
+    "Orden de escritura JSON: 1) K:\\Sector STOCK  2) K:\\Sector STOCK\\Movimientos  3) K:\\Sector STOCK\\Movimientos\\Programa  4) GitHub background"
   ],
+
+  "archivos_json_compartidos": {
+    "urgencias.json": [
+      "K:\\Sector STOCK\\urgencias.json",
+      "K:\\Sector STOCK\\Movimientos\\Programa\\urgencias.json"
+    ],
+    "cola_retiros.json": [
+      "K:\\Sector STOCK\\cola_retiros.json",
+      "K:\\Sector STOCK\\Movimientos\\cola_retiros.json",
+      "K:\\Sector STOCK\\Movimientos\\Programa\\cola_retiros.json"
+    ],
+    "cola_bajas.json": [
+      "K:\\Sector STOCK\\cola_bajas.json",
+      "K:\\Sector STOCK\\Movimientos\\cola_bajas.json",
+      "K:\\Sector STOCK\\Movimientos\\Programa\\cola_bajas.json"
+    ]
+  },
 
   "archivos_principales": [
     "kiosk_retiro_reactivos.py",
@@ -59,6 +77,11 @@
     "baja_stock_gns.py",
     "movimiento_stock_gns.py",
     "github_sync.py",
-    "login_fertilab.py"
-  ]
+    "login_fertilab.py",
+    "sync_daemon.py"
+  ],
+
+  "rutas_archivos_principales": {
+    "sync_daemon.py": "K:\\Sector STOCK\\Movimientos\\Programa\\sync_daemon.py"
+  }
 }
