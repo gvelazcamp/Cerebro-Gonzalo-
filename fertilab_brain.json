@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "1.1",
+  "version": "1.2",
 
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
@@ -52,7 +52,8 @@
     "sync daemon arranca via Task Scheduler a las 8am",
     "Todo JSON compartido cae PRIMERO a K:\\Sector STOCK (raiz), luego se replica a K:\\Sector STOCK\\Movimientos y K:\\Sector STOCK\\Movimientos\\Programa",
     "Orden de escritura JSON: 1) K:\\Sector STOCK  2) K:\\Sector STOCK\\Movimientos  3) K:\\Sector STOCK\\Movimientos\\Programa  4) GitHub background",
-    "SIEMPRE que se procesa un movimiento (retiro o baja), se debe actualizar el CSV de stock correspondiente al deposito del item y verificar alertas: stock == 0 genera alerta CRITICA, stock <= stock_minimo genera alerta ADVERTENCIA. Las alertas deben registrarse y ser visibles en el kiosk y/o notificadas al operador antes de cerrar la operacion."
+    "SIEMPRE que se procesa un movimiento (retiro o baja), se debe actualizar el CSV de stock correspondiente al deposito del item y verificar alertas: stock == 0 genera alerta CRITICA, stock <= stock_minimo genera alerta ADVERTENCIA. Las alertas deben registrarse y ser visibles en el kiosk y/o notificadas al operador antes de cerrar la operacion.",
+    "NUNCA BORRAR el boton PEDIR ni su popup de confirmacion en kiosk_retiro_reactivos.py. Este boton abre un tk.Toplevel con grab_set centrado en pantalla que muestra los articulos seleccionados, permite agregar cantidad por articulo, permite quitar articulos con boton X, y tiene boton CONFIRMAR (guarda urgencia en urgencias.json con campo cantidad incluido) y boton CANCELAR. El numero de pedido y feedback se muestran en el label de estado del popup de stock. Esta funcionalidad es CRITICA y no debe eliminarse ni simplificarse bajo ninguna circunstancia."
   ],
 
   "archivos_json_compartidos": {
