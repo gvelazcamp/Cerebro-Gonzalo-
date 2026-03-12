@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "1.5",
+  "version": "1.6",
 
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
@@ -18,12 +18,7 @@
     "bajas_dir":    "K:\\Sector STOCK\\Movimientos\\Bajas de stock"
   },
 
-  "archivos_stock": [
-    "ID Stock.csv",
-    "G Stock.csv",
-    "XX Stock.csv",
-    "FB Stock.csv"
-  ],
+  "archivos_stock": ["ID Stock.csv","G Stock.csv","XX Stock.csv","FB Stock.csv"],
 
   "archivos_bajas": {
     "ID": "ID.csv",
@@ -40,6 +35,12 @@
     "logica": "Match por Codigo Interno (col 3) contra codigo del articulo. Extrae nombre corto entre parentesis. Si hay multiples proveedores para el mismo codigo los une con ' / '.",
     "uso_kiosk": "En popup CONFIRMAR PEDIDO: muestra proveedor en cyan con icono 🏢 al lado del nombre. Se guarda campo 'proveedor' en urgencias.json.",
     "uso_procesador": "En popup _ver_urgencias: muestra proveedor en cyan. Primero lee u.get('proveedor','') del JSON, fallback a proveedores_map por codigo. NUNCA eliminar esta logica."
+  },
+
+  "contactos_whatsapp": {
+    "Inmunoquimica":     { "nombre": "Gabriela Calero",   "numero": "59898292163" },
+    "Inmunodiagnostico": { "nombre": "Melissa Rodriguez", "numero": "59898957747" },
+    "Microbiologia":     { "nombre": "Micro Fertilab",    "numero": "59893780407" }
   },
 
   "usuarios": {
@@ -66,7 +67,8 @@
     "NUNCA BORRAR el boton PEDIR ni su popup de confirmacion en kiosk_retiro_reactivos.py. Este boton abre un tk.Toplevel con grab_set centrado en pantalla que muestra los articulos seleccionados, permite agregar cantidad por articulo, permite quitar articulos con boton X, y tiene boton CONFIRMAR (guarda urgencia en urgencias.json con campo cantidad incluido) y boton CANCELAR. El numero de pedido y feedback se muestran en el label de estado del popup de stock. Esta funcionalidad es CRITICA y no debe eliminarse ni simplificarse bajo ninguna circunstancia.",
     "En procesador_gns.py el popup de Pedidos urgentes (_ver_urgencias) SIEMPRE debe mostrar la cantidad pedida por articulo. Cada item_row debe leer u.get('cantidad','') y si no esta vacio mostrar un Label amarillo con texto '[Cant: X]' al lado del nombre. NUNCA eliminar esta logica.",
     "En procesador_gns.py el popup _ver_urgencias: los Checkbutton de cada articulo individual (item_row) DEBEN tener selectcolor='#7B0000' y fg=COLOR_BLANCO para que el checkmark sea visible. NUNCA usar selectcolor igual al color de fondo (#2C0A0A) porque hace invisible el tick y el usuario no puede seleccionar articulos individuales para eliminar.",
-    "NUNCA tocar ni reescribir el historial de movimientos y bajas en procesador_gns.py. Esto incluye: la funcion _ver_historial, la logica de carga/guardado de historial_procesados.json, la tabla de historial en la UI, y cualquier codigo que lea o escriba el registro de items procesados. El historial es un registro permanente e irremplazable de operaciones realizadas. Cualquier refactor o entrega de procesador_gns.py DEBE preservar estas funciones intactas sin modificacion."
+    "NUNCA tocar ni reescribir el historial de movimientos y bajas en procesador_gns.py. Esto incluye: la funcion _ver_historial, la logica de carga/guardado de historial_procesados.json, la tabla de historial en la UI, y cualquier codigo que lea o escriba el registro de items procesados. El historial es un registro permanente e irremplazable de operaciones realizadas. Cualquier refactor o entrega de procesador_gns.py DEBE preservar estas funciones intactas sin modificacion.",
+    "En procesador_gns.py el popup _ver_urgencias tiene boton 💬 WHATSAPP (_whatsapp_pedido). Abre popup editable con selector de destinatario (radio buttons por deposito usando contactos_whatsapp), mensaje prellenado con N° pedido, fecha, articulos con cantidad y proveedor. Si hay items seleccionados envia solo esos, sino envia todos. NUNCA eliminar este boton ni su logica."
   ],
 
   "archivos_json_compartidos": {
