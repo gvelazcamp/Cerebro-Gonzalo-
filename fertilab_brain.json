@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "1.6",
+  "version": "1.7",
 
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
@@ -68,7 +68,8 @@
     "En procesador_gns.py el popup de Pedidos urgentes (_ver_urgencias) SIEMPRE debe mostrar la cantidad pedida por articulo. Cada item_row debe leer u.get('cantidad','') y si no esta vacio mostrar un Label amarillo con texto '[Cant: X]' al lado del nombre. NUNCA eliminar esta logica.",
     "En procesador_gns.py el popup _ver_urgencias: los Checkbutton de cada articulo individual (item_row) DEBEN tener selectcolor='#7B0000' y fg=COLOR_BLANCO para que el checkmark sea visible. NUNCA usar selectcolor igual al color de fondo (#2C0A0A) porque hace invisible el tick y el usuario no puede seleccionar articulos individuales para eliminar.",
     "NUNCA tocar ni reescribir el historial de movimientos y bajas en procesador_gns.py. Esto incluye: la funcion _ver_historial, la logica de carga/guardado de historial_procesados.json, la tabla de historial en la UI, y cualquier codigo que lea o escriba el registro de items procesados. El historial es un registro permanente e irremplazable de operaciones realizadas. Cualquier refactor o entrega de procesador_gns.py DEBE preservar estas funciones intactas sin modificacion.",
-    "En procesador_gns.py el popup _ver_urgencias tiene boton 💬 WHATSAPP (_whatsapp_pedido). Abre popup editable con selector de destinatario (radio buttons por deposito usando contactos_whatsapp), mensaje prellenado con N° pedido, fecha, articulos con cantidad y proveedor. Si hay items seleccionados envia solo esos, sino envia todos. NUNCA eliminar este boton ni su logica."
+    "En procesador_gns.py el popup _ver_urgencias tiene boton 💬 WHATSAPP (_whatsapp_pedido). Abre popup editable con selector de destinatario (radio buttons por deposito usando contactos_whatsapp), mensaje prellenado con N° pedido, fecha, articulos con cantidad y proveedor. Si hay items seleccionados envia solo esos, sino envia todos. NUNCA eliminar este boton ni su logica.",
+    "En procesador_gns.py el listbox de la cola tiene menu de click derecho (Button-3) con opciones: '✔ Marcar como PROCESADO' (llama _marcar_procesado_manual) y '✕ Eliminar item' (llama _eliminar_seleccionado). _marcar_procesado_manual mapea el indice visual al item real saltando headers, marca procesado=True, procesado_en=timestamp, procesado_manual=True, guarda cola y refresca lista. NUNCA eliminar este menu ni su logica."
   ],
 
   "archivos_json_compartidos": {
