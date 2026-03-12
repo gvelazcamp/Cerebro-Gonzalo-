@@ -51,7 +51,8 @@
     "El username mrubini tiene una sola n, no mrubbini",
     "sync daemon arranca via Task Scheduler a las 8am",
     "Todo JSON compartido cae PRIMERO a K:\\Sector STOCK (raiz), luego se replica a K:\\Sector STOCK\\Movimientos y K:\\Sector STOCK\\Movimientos\\Programa",
-    "Orden de escritura JSON: 1) K:\\Sector STOCK  2) K:\\Sector STOCK\\Movimientos  3) K:\\Sector STOCK\\Movimientos\\Programa  4) GitHub background"
+    "Orden de escritura JSON: 1) K:\\Sector STOCK  2) K:\\Sector STOCK\\Movimientos  3) K:\\Sector STOCK\\Movimientos\\Programa  4) GitHub background",
+    "SIEMPRE que se procesa un movimiento (retiro o baja), se debe actualizar el CSV de stock correspondiente al deposito del item y verificar alertas: stock == 0 genera alerta CRITICA, stock <= stock_minimo genera alerta ADVERTENCIA. Las alertas deben registrarse y ser visibles en el kiosk y/o notificadas al operador antes de cerrar la operacion."
   ],
 
   "archivos_json_compartidos": {
