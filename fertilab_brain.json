@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "2.5",
+  "version": "2.3",
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
     "G": "Inmunoquimica",
@@ -203,24 +203,22 @@
   "ui_notas": {
     "botones_tab": "5 botones en la barra de tabs. Font 11 bold, padx 16, pady 10, separacion 8px entre botones. Si se agrega un 6to boton reducir font a 10 o padx a 12."
   },
-  "aviso_lote_posterior": {
-    "descripcion": "Popup naranja que aparece 800ms despues de registrar un movimiento, si el lote retirado tiene vencimiento posterior a otros lotes del mismo articulo con stock > 0.",
-    "metodos": [
-      "_check_lote_posterior(familia, codigo, nombre, lote_sel, vencim_sel)",
-      "_popup_lote_posterior(...)"
-    ],
-    "logica": "Lee el CSV de stock de la familia, filtra lotes del mismo codigo con qty>0 y vencimiento anterior al lote seleccionado. Si hay alguno -> muestra popup.",
-    "color": "#e67e22 (naranja), distinto al rojo de sin stock",
-    "botones": "CONTINUAR (blanco/naranja) — cierra popup. 💬 WHATSAPP (verde) — abre borrador WA con mensaje de aviso. Si deposito tiene 2 contactos (Inmunoquimica) muestra selector.",
-    "mensaje_wa": "⚠️ Aviso de rotación de stock\n{nombre} [{codigo}]\n\nSe retiró el lote {lote_sel} (vto. {vencim_sel}).\nHay lotes con vencimiento anterior disponibles:\n• Lote X — vto. Y — Stock: Z\n\nEn caso de no haberlo consumido, se recomienda realizar la rotación.",
-    "timeout": "Se cierra automaticamente a los 30 segundos."
-  },
   "ideas_pendientes": {
-    "deteccion_lote_proveedor_anterior": {
-      "descripcion": "Detectar cuando el proveedor trae un lote con vencimiento anterior al que ya se estaba usando. Ej: se usa lote vto 28/06/2027, llega nuevo lote vto 05/05/2026 del mismo articulo.",
-      "logica_propuesta": "Al actualizar el CSV, comparar lotes nuevos con lotes actualmente en uso (via historial de movimientos). Si lote nuevo vence antes que el en uso -> alerta.",
-      "pendiente": "Definir donde vive la logica (kiosk al recargar stock, procesador, o script separado) y cuando se dispara exactamente.",
-      "estado": "En analisis con Gonzalo"
+    "predictor_demanda_exe": {
+      "descripcion": "Ejecutable independiente 'Prediccion Demanda.exe' compilado con PyInstaller. Solo lectura, no toca ningun archivo del sistema.",
+      "fuentes_datos": [
+        "historial_procesados.json — consumo real por articulo y fecha",
+        "CSVs de stock — stock actual sumando todos los lotes con qty>0"
+      ],
+      "logica": "Consumo promedio mensual (del historial) + stock actual = meses estimados hasta agotamiento. Stock actual / consumo promedio = prediccion.",
+      "ui_propuesta": "Tabla ordenada por urgencia con semaforo (rojo <30 dias, amarillo 30-60, verde >60). Filtro por deposito. Exportar Excel.",
+      "adaptativo": "Con poco historial muestra prediccion estimativa o 'sin datos suficientes'. A partir de 3 meses empieza a ser util, 6+ meses confiable.",
+      "estado": "Pendiente — arrancar cuando haya varios meses de historial acumulado.",
+      "nota": "El historial se construye solo a medida que se procesan movimientos en el sistema actual. No requiere cambios en los scripts existentes."
+    },
+    "menu_principal": {
+      "descripcion": "Menu principal launcher para navegar entre herramientas (Kiosk, Procesador, Prediccion Demanda, etc). Ventana Tkinter simple que lanza cada script con subprocess.",
+      "estado": "Pendiente"
     }
   }
 }
