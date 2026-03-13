@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "2.4",
+  "version": "2.5",
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
     "G": "Inmunoquimica",
@@ -211,8 +211,16 @@
     ],
     "logica": "Lee el CSV de stock de la familia, filtra lotes del mismo codigo con qty>0 y vencimiento anterior al lote seleccionado. Si hay alguno -> muestra popup.",
     "color": "#e67e22 (naranja), distinto al rojo de sin stock",
-    "botones": "CONTINUAR (blanco/naranja) — cierra popup. 💬 WHATSAPP (verde) — abre borrador WA con mensaje de aviso de rotacion. Si el deposito tiene 2 contactos (Inmunoquimica) muestra selector.",
-    "mensaje_wa": "Aviso de rotacion de stock + nombre + codigo + lote retirado + lista de lotes anteriores disponibles con vencimiento y stock.",
-    "timeout": "Se cierra automaticamente a los 30 segundos si no se interactua."
+    "botones": "CONTINUAR (blanco/naranja) — cierra popup. 💬 WHATSAPP (verde) — abre borrador WA con mensaje de aviso. Si deposito tiene 2 contactos (Inmunoquimica) muestra selector.",
+    "mensaje_wa": "⚠️ Aviso de rotación de stock\n{nombre} [{codigo}]\n\nSe retiró el lote {lote_sel} (vto. {vencim_sel}).\nHay lotes con vencimiento anterior disponibles:\n• Lote X — vto. Y — Stock: Z\n\nEn caso de no haberlo consumido, se recomienda realizar la rotación.",
+    "timeout": "Se cierra automaticamente a los 30 segundos."
+  },
+  "ideas_pendientes": {
+    "deteccion_lote_proveedor_anterior": {
+      "descripcion": "Detectar cuando el proveedor trae un lote con vencimiento anterior al que ya se estaba usando. Ej: se usa lote vto 28/06/2027, llega nuevo lote vto 05/05/2026 del mismo articulo.",
+      "logica_propuesta": "Al actualizar el CSV, comparar lotes nuevos con lotes actualmente en uso (via historial de movimientos). Si lote nuevo vence antes que el en uso -> alerta.",
+      "pendiente": "Definir donde vive la logica (kiosk al recargar stock, procesador, o script separado) y cuando se dispara exactamente.",
+      "estado": "En analisis con Gonzalo"
+    }
   }
 }
