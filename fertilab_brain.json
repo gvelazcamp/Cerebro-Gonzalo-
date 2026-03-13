@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "2.3",
+  "version": "2.6",
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
     "G": "Inmunoquimica",
@@ -95,7 +95,8 @@
       "procesado_manual": false
     },
     "flujo": "1) Admin abre tab PENDIENTE FACTURA en kiosk → escanea codigo → completa lote/vencimiento/cantidad → GUARDAR. 2) Sistema escribe en pendientes_factura.json (triple-write) Y encola MOVIMIENTO normal en cola_retiros.json. 3) Operadoras van a BAJA DE STOCK y bajan normal sin saber nada. 4) Admin baja en GNS+ manualmente. 5) Admin marca PROCESADO en procesador_gns (a implementar).",
-    "normalizacion_lote": "re.sub(r'^[A-Za-z]+', '', lote.strip()) — elimina prefijo alfabetico. Ej: DE86058 → 86058, 64489278 → 64489278"
+    "normalizacion_lote": "re.sub(r'^[A-Za-z]+', '', lote.strip()) — elimina prefijo alfabetico. Ej: DE86058 → 86058, 64489278 → 64489278",
+    "tipo_en_cola": "_tipo: 'PENDIENTE' — campo agregado al item en cola_retiros.json para que el procesador pueda identificarlo. Las operadoras no ven este campo, flujo de baja igual que siempre."
   },
   "archivos_json_compartidos": {
     "urgencias.json": [
@@ -151,7 +152,8 @@
     "AGREGAR NUEVA FAMILIA: al agregar una familia nueva al kiosk se deben actualizar OBLIGATORIAMENTE estos 4 lugares en kiosk_retiro_reactivos.py: (1) FAMILIA_DEPOSITO dict global, (2) ARCHIVOS_STOCK lista global, (3) fam_archivo dict DENTRO de _descontar_csv_stock, (4) fam_archivo dict DENTRO de _restaurar_csv_stock, (5) lista FAMILIAS dentro de _popup_ver_stock. Si se omite cualquiera de estos el descuento de stock y las alertas de stock=0 NO funcionaran para esa familia.",
     "VER PEDIDOS: el popup _popup_ver_pedidos lee urgencias.json y guarda el campo 'estado_pedido' en cada item al cambiar el selector. Solo gvelazquez puede cambiar estados. El campo estado_pedido debe preservarse al hacer cualquier escritura sobre urgencias.json. NUNCA eliminar este campo en operaciones de guardado.",
     "AGREGAR NUEVA FAMILIA: ademas de los 5 lugares en kiosk_retiro_reactivos.py, actualizar TAMBIEN el dict FAMILIA_DEPOSITO en baja_stock_gns.py Y movimiento_stock_gns.py. Si se omite, la familia cae en el default 'Casa Central' como deposito destino en GNS+.",
-    "AGREGAR NUEVA FAMILIA: actualizar TAMBIEN el dict familia_dep (inline, NO es global) en DOS lugares dentro de procesador_gns.py: funcion _cargar_stock_fallback (linea ~63) y funcion cargar_stock (linea ~216). Si se omite, la familia cae en 'Casa Central' como deposito en la UI del procesador."
+    "AGREGAR NUEVA FAMILIA: actualizar TAMBIEN el dict familia_dep (inline, NO es global) en DOS lugares dentro de procesador_gns.py: funcion _cargar_stock_fallback (linea ~63) y funcion cargar_stock (linea ~216). Si se omite, la familia cae en 'Casa Central' como deposito en la UI del procesador.",
+    "PENDIENTE FACTURA en cola: los items PF se encolan con _tipo='PENDIENTE' en cola_retiros.json. El procesador detecta este campo y los muestra en violeta #8e44ad con icono [PF] en lugar de [PKG]. Una vez procesado pasa a verde. NUNCA eliminar esta distincion visual."
   ],
   "contactos_whatsapp_nota": "Cuando un deposito tiene mas de un contacto el kiosk muestra radio buttons para seleccionar destinatario antes de enviar. Depositos con un solo contacto abren directo. Para agregar otro contacto: convertir el valor a lista de objetos {nombre, numero} igual que Inmunoquimica.",
   "ver_pedidos": {
@@ -201,24 +203,11 @@
     ]
   },
   "ui_notas": {
-    "botones_tab": "5 botones en la barra de tabs. Font 11 bold, padx 16, pady 10, separacion 8px entre botones. Si se agrega un 6to boton reducir font a 10 o padx a 12."
+    "botones_tab": "5 botones en la barra de tabs. Font 11 bold, padx 16, pady 10, separacion 8px entre botones. Si se agrega un 6to boton reducir font a 10 o padx a 12.",
+    "historial_kiosk_colores": "MOV=cyan, BAJA=naranja, PENDIENTE=violeta #8e44ad con badge 'PF' al lado del codigo.",
+    "procesador_listbox_colores": "MOVIMIENTO pendiente=amarillo, MOVIMIENTO procesado=verde, BAJA pendiente=amarillo, BAJA procesado=verde, PENDIENTE(PF) pendiente=violeta #8e44ad, PENDIENTE procesado=verde."
   },
-  "ideas_pendientes": {
-    "predictor_demanda_exe": {
-      "descripcion": "Ejecutable independiente 'Prediccion Demanda.exe' compilado con PyInstaller. Solo lectura, no toca ningun archivo del sistema.",
-      "fuentes_datos": [
-        "historial_procesados.json — consumo real por articulo y fecha",
-        "CSVs de stock — stock actual sumando todos los lotes con qty>0"
-      ],
-      "logica": "Consumo promedio mensual (del historial) + stock actual = meses estimados hasta agotamiento. Stock actual / consumo promedio = prediccion.",
-      "ui_propuesta": "Tabla ordenada por urgencia con semaforo (rojo <30 dias, amarillo 30-60, verde >60). Filtro por deposito. Exportar Excel.",
-      "adaptativo": "Con poco historial muestra prediccion estimativa o 'sin datos suficientes'. A partir de 3 meses empieza a ser util, 6+ meses confiable.",
-      "estado": "Pendiente — arrancar cuando haya varios meses de historial acumulado.",
-      "nota": "El historial se construye solo a medida que se procesan movimientos en el sistema actual. No requiere cambios en los scripts existentes."
-    },
-    "menu_principal": {
-      "descripcion": "Menu principal launcher para navegar entre herramientas (Kiosk, Procesador, Prediccion Demanda, etc). Ventana Tkinter simple que lanza cada script con subprocess.",
-      "estado": "Pendiente"
-    }
+  "aviso_lote_posterior": {
+    "mensaje_wa": "⚠️ Aviso de rotación de stock\n{nombre} [{codigo}]\n\nSe retiró el lote {lote_sel} (vto. {vencim_sel}).\nHay lotes con vencimiento anterior disponibles:\n• Lote X — vto. Y — Stock: Z\n\nEn caso de no haberlo consumido, se recomienda realizar la rotación."
   }
 }
