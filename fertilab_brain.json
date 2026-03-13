@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "1.9",
+  "version": "2.0",
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
     "G": "Inmunoquimica",
@@ -168,7 +168,14 @@
       "operadoras": "Solo lectura — ven el estado como label de color, sin OptionMenu"
     },
     "exportar_excel": "Boton '📥 EXPORTAR EXCEL' — genera xlsx con columnas: N° Pedido / Fecha / Usuario / Estado / Codigo / Articulo / Cantidad / Proveedor. Respeta filtros activos. Abre automaticamente con os.startfile.",
-    "whatsapp": "Boton '💬 WHATSAPP' presente — logica pendiente de definir con Gonzalo. Actualmente muestra mensaje placeholder.",
-    "borde_dinamico": "El borde de cada card de pedido cambia de color segun el estado actual para identificacion visual rapida."
+    "whatsapp": "Boton '💬 WHATSAPP' en popup VER PEDIDOS. Abre popup con: (1) selector de pedido (dropdown por N°/fecha), (2) selector de estado (radio buttons coloreados — cambia el mensaje preview automaticamente), (3) selector de destinatario (se detecta automaticamente por deposito de los articulos del pedido, si Inmunoquimica muestra Gabriela y Vanesa), (4) preview editable del mensaje. Mensajes predefinidos por estado en MENSAJES_ESTADO dict. Flujo identico al resto de WA del kiosk: abre borrador en WhatsApp, usuario da Enter.",
+    "borde_dinamico": "El borde de cada card de pedido cambia de color segun el estado actual para identificacion visual rapida.",
+    "mensajes_estado": {
+      "Pendiente": "Hola, les informamos que el Pedido N°{nro} ({fecha}) está PENDIENTE de envío. Artículos: {items}. Quedamos atentos.",
+      "En camino": "Hola, les informamos que el Pedido N°{nro} ({fecha}) está EN CAMINO. Artículos: {items}. Cualquier consulta nos avisan.",
+      "Realizado": "Hola, les confirmamos que el Pedido N°{nro} ({fecha}) fue RECIBIDO y está REALIZADO. Artículos: {items}. Gracias.",
+      "Finalizado": "Hola, el Pedido N°{nro} ({fecha}) quedó FINALIZADO y procesado en el sistema. Artículos: {items}. Gracias."
+    },
+    "contactos_pedidos": "Mismo dict que contactos_whatsapp pero interno en _popup_ver_pedidos como CONTACTOS_PEDIDOS. Preparacion de Materiales tiene lista vacia (sin contacto WA configurado). Destinatario se infiere del deposito de los articulos del pedido via datos_stock."
   }
 }
