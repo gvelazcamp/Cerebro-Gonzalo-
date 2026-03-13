@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "2.6",
+  "version": "2.7",
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
     "G": "Inmunoquimica",
@@ -153,7 +153,9 @@
     "VER PEDIDOS: el popup _popup_ver_pedidos lee urgencias.json y guarda el campo 'estado_pedido' en cada item al cambiar el selector. Solo gvelazquez puede cambiar estados. El campo estado_pedido debe preservarse al hacer cualquier escritura sobre urgencias.json. NUNCA eliminar este campo en operaciones de guardado.",
     "AGREGAR NUEVA FAMILIA: ademas de los 5 lugares en kiosk_retiro_reactivos.py, actualizar TAMBIEN el dict FAMILIA_DEPOSITO en baja_stock_gns.py Y movimiento_stock_gns.py. Si se omite, la familia cae en el default 'Casa Central' como deposito destino en GNS+.",
     "AGREGAR NUEVA FAMILIA: actualizar TAMBIEN el dict familia_dep (inline, NO es global) en DOS lugares dentro de procesador_gns.py: funcion _cargar_stock_fallback (linea ~63) y funcion cargar_stock (linea ~216). Si se omite, la familia cae en 'Casa Central' como deposito en la UI del procesador.",
-    "PENDIENTE FACTURA en cola: los items PF se encolan con _tipo='PENDIENTE' en cola_retiros.json. El procesador detecta este campo y los muestra en violeta #8e44ad con icono [PF] en lugar de [PKG]. Una vez procesado pasa a verde. NUNCA eliminar esta distincion visual."
+    "PENDIENTE FACTURA en cola: los items PF se encolan con _tipo='PENDIENTE' en cola_retiros.json. El procesador detecta este campo y los muestra en violeta #8e44ad con icono [PF] en lugar de [PKG]. Una vez procesado pasa a verde. NUNCA eliminar esta distincion visual.",
+    "BAJA en_uso tracking (FIX v2.7): al registrar BAJA en kiosk se llama escribir_movimiento() para obtener row_idx real, luego marcar_en_uso(row_idx). Esto habilita el popup dar por finalizado insumo anterior en segunda baja del mismo articulo. NUNCA volver a lote.get(row_idx) que siempre era None.",
+    "PROCESADOR historial dias_en_uso (FIX v2.7): condicion en _renderizar_historial es if tipo in (MOVIMIENTO, BAJA). Las BAJA tambien muestran rango fechas y dias en uso. NUNCA acotar a solo MOVIMIENTO."
   ],
   "contactos_whatsapp_nota": "Cuando un deposito tiene mas de un contacto el kiosk muestra radio buttons para seleccionar destinatario antes de enviar. Depositos con un solo contacto abren directo. Para agregar otro contacto: convertir el valor a lista de objetos {nombre, numero} igual que Inmunoquimica.",
   "ver_pedidos": {
