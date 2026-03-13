@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "2.3",
+  "version": "2.4",
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
     "G": "Inmunoquimica",
@@ -202,5 +202,17 @@
   },
   "ui_notas": {
     "botones_tab": "5 botones en la barra de tabs. Font 11 bold, padx 16, pady 10, separacion 8px entre botones. Si se agrega un 6to boton reducir font a 10 o padx a 12."
+  },
+  "aviso_lote_posterior": {
+    "descripcion": "Popup naranja que aparece 800ms despues de registrar un movimiento, si el lote retirado tiene vencimiento posterior a otros lotes del mismo articulo con stock > 0.",
+    "metodos": [
+      "_check_lote_posterior(familia, codigo, nombre, lote_sel, vencim_sel)",
+      "_popup_lote_posterior(...)"
+    ],
+    "logica": "Lee el CSV de stock de la familia, filtra lotes del mismo codigo con qty>0 y vencimiento anterior al lote seleccionado. Si hay alguno -> muestra popup.",
+    "color": "#e67e22 (naranja), distinto al rojo de sin stock",
+    "botones": "CONTINUAR (blanco/naranja) — cierra popup. 💬 WHATSAPP (verde) — abre borrador WA con mensaje de aviso de rotacion. Si el deposito tiene 2 contactos (Inmunoquimica) muestra selector.",
+    "mensaje_wa": "Aviso de rotacion de stock + nombre + codigo + lote retirado + lista de lotes anteriores disponibles con vencimiento y stock.",
+    "timeout": "Se cierra automaticamente a los 30 segundos si no se interactua."
   }
 }
