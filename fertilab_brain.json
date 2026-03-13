@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "1.8",
+  "version": "1.9",
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
     "G": "Inmunoquimica",
@@ -148,7 +148,27 @@
     "NUNCA tocar ni reescribir el historial de movimientos y bajas en procesador_gns.py. Esto incluye: la funcion _ver_historial, la logica de carga/guardado de historial_procesados.json, la tabla de historial en la UI, y cualquier codigo que lea o escriba el registro de items procesados. El historial es un registro permanente e irremplazable de operaciones realizadas. Cualquier refactor o entrega de procesador_gns.py DEBE preservar estas funciones intactas sin modificacion.",
     "En procesador_gns.py el popup _ver_urgencias tiene boton 💬 WHATSAPP (_whatsapp_pedido). Abre popup editable con selector de destinatario (radio buttons por deposito usando contactos_whatsapp), mensaje prellenado con N° pedido, fecha, articulos con cantidad y proveedor. Si hay items seleccionados envia solo esos, sino envia todos. NUNCA eliminar este boton ni su logica.",
     "En procesador_gns.py el listbox de la cola tiene menu de click derecho (Button-3) con opciones: '✔ Marcar como PROCESADO' (llama _marcar_procesado_manual) y '✕ Eliminar item' (llama _eliminar_seleccionado). _marcar_procesado_manual mapea el indice visual al item real saltando headers, marca procesado=True, procesado_en=timestamp, procesado_manual=True, guarda cola y refresca lista. NUNCA eliminar este menu ni su logica.",
-    "AGREGAR NUEVA FAMILIA: al agregar una familia nueva al kiosk se deben actualizar OBLIGATORIAMENTE estos 4 lugares en kiosk_retiro_reactivos.py: (1) FAMILIA_DEPOSITO dict global, (2) ARCHIVOS_STOCK lista global, (3) fam_archivo dict DENTRO de _descontar_csv_stock, (4) fam_archivo dict DENTRO de _restaurar_csv_stock, (5) lista FAMILIAS dentro de _popup_ver_stock. Si se omite cualquiera de estos el descuento de stock y las alertas de stock=0 NO funcionaran para esa familia."
+    "AGREGAR NUEVA FAMILIA: al agregar una familia nueva al kiosk se deben actualizar OBLIGATORIAMENTE estos 4 lugares en kiosk_retiro_reactivos.py: (1) FAMILIA_DEPOSITO dict global, (2) ARCHIVOS_STOCK lista global, (3) fam_archivo dict DENTRO de _descontar_csv_stock, (4) fam_archivo dict DENTRO de _restaurar_csv_stock, (5) lista FAMILIAS dentro de _popup_ver_stock. Si se omite cualquiera de estos el descuento de stock y las alertas de stock=0 NO funcionaran para esa familia.",
+    "VER PEDIDOS: el popup _popup_ver_pedidos lee urgencias.json y guarda el campo 'estado_pedido' en cada item al cambiar el selector. Solo gvelazquez puede cambiar estados. El campo estado_pedido debe preservarse al hacer cualquier escritura sobre urgencias.json. NUNCA eliminar este campo en operaciones de guardado."
   ],
-  "contactos_whatsapp_nota": "Cuando un deposito tiene mas de un contacto el kiosk muestra radio buttons para seleccionar destinatario antes de enviar. Depositos con un solo contacto abren directo. Para agregar otro contacto: convertir el valor a lista de objetos {nombre, numero} igual que Inmunoquimica."
+  "contactos_whatsapp_nota": "Cuando un deposito tiene mas de un contacto el kiosk muestra radio buttons para seleccionar destinatario antes de enviar. Depositos con un solo contacto abren directo. Para agregar otro contacto: convertir el valor a lista de objetos {nombre, numero} igual que Inmunoquimica.",
+  "ver_pedidos": {
+    "descripcion": "Popup accesible desde boton '📋 VER PEDIDOS' (verde oscuro #1a6b3a) al lado de PENDIENTE FACTURA. Lee urgencias.json y muestra historial de pedidos urgentes agrupados por N° pedido.",
+    "fuente_datos": "urgencias.json (mismas rutas que siempre: PROGRAMA_DIR y COLA_RAIZ)",
+    "campo_estado_pedido": "estado_pedido — campo agregado a cada item de urgencias.json al cambiar estado. Valores: Pendiente | En camino | Realizado | Finalizado",
+    "colores_estado": {
+      "Pendiente": "COLOR_AMARILLO",
+      "En camino": "COLOR_CYAN",
+      "Realizado": "COLOR_VERDE",
+      "Finalizado": "COLOR_GRIS"
+    },
+    "filtros": "Radio buttons por deposito (Todos / Inmunodiagnostico / Inmunoquimica / Microbiologia / Preparacion de Materiales) + buscador por nombre/codigo/N° pedido",
+    "permisos": {
+      "gvelazquez": "Puede cambiar estado via OptionMenu — guarda directamente en urgencias.json (dual-write PROGRAMA_DIR + COLA_RAIZ)",
+      "operadoras": "Solo lectura — ven el estado como label de color, sin OptionMenu"
+    },
+    "exportar_excel": "Boton '📥 EXPORTAR EXCEL' — genera xlsx con columnas: N° Pedido / Fecha / Usuario / Estado / Codigo / Articulo / Cantidad / Proveedor. Respeta filtros activos. Abre automaticamente con os.startfile.",
+    "whatsapp": "Boton '💬 WHATSAPP' presente — logica pendiente de definir con Gonzalo. Actualmente muestra mensaje placeholder.",
+    "borde_dinamico": "El borde de cada card de pedido cambia de color segun el estado actual para identificacion visual rapida."
+  }
 }
