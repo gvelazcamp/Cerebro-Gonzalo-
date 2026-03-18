@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "3.2",
+  "version": "3.3",
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
     "G": "Inmunoquimica",
@@ -166,7 +166,9 @@
     "PROCESADOR fix __NOMBRE__ (v2.9): en _procesar_cola, si codigo.startswith(__NOMBRE__) extraer nombre_real = codigo[len(__NOMBRE__):], setear codigo=vacio, info={sin_codigo:True, nombre:nombre_real}. Aplica tanto a MOV como BAJA. Sin esto GNS+ recibe el prefijo __NOMBRE__ en el campo codigo y falla.",
     "KIOSK boton PEDIR fix (v2.9): el popup de confirmacion de pedido debe usar tk.Toplevel(self.root) como parent, NO tk.Toplevel(popup). El popup de VER STOCK usa overrideredirect(True) y si el hijo lo usa como parent, grab_set falla y el boton no responde.",
     "PROCESADOR historial agrupado (v2.9): agregar_al_historial agrupa items mismo tipo+codigo+lote+dia incrementando _cantidad en vez de agregar fila nueva. La fila muestra x2 x3 xN en verde. Click derecho -> Agrupar iguales del mismo dia fusiona filas viejas manualmente.",
-    "PROCESADOR historial ajuste (v2.9): click derecho en [BAJA] -> Marcar como Ajuste -> tipo cambia a [AJU] gris. Metodo _toggle_ajuste. Click derecho de nuevo -> Quitar ajuste para revertir."
+    "PROCESADOR historial ajuste (v2.9): click derecho en [BAJA] -> Marcar como Ajuste -> tipo cambia a [AJU] gris. Metodo _toggle_ajuste. Click derecho de nuevo -> Quitar ajuste para revertir.",
+    "PROCESADOR historial filtro estado (v3.3): radio buttons Todos/En uso/Finalizados/Ajustes en _hist_filter_var. En uso = sin fecha_cierre y sin AJUSTE. Finalizado = con fecha_cierre y sin AJUSTE. Ajuste = _subtipo==AJUSTE. Se combina con el buscador de texto.",
+    "PROCESADOR Excel columnas (v3.3): headers = Tipo, Estado, Fecha Proceso, Fecha Inicio, Fecha Fin, Dias en uso, Codigo, Nombre, Familia, Deposito, Lote, Vencimiento, Usuario. Estado = En uso/Finalizado/Ajuste. Dias en uso calculado si no hay fecha_cierre. NUNCA volver al formato viejo de 9 columnas."
   ],
   "contactos_whatsapp_nota": "Cuando un deposito tiene mas de un contacto el kiosk muestra radio buttons para seleccionar destinatario antes de enviar. Depositos con un solo contacto abren directo. Para agregar otro contacto: convertir el valor a lista de objetos {nombre, numero} igual que Inmunoquimica.",
   "ver_pedidos": {
