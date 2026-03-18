@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "3.1",
+  "version": "3.2",
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
     "G": "Inmunoquimica",
@@ -167,7 +167,8 @@
     "KIOSK boton PEDIR fix (v2.9): el popup de confirmacion de pedido debe usar tk.Toplevel(self.root) como parent, NO tk.Toplevel(popup). El popup de VER STOCK usa overrideredirect(True) y si el hijo lo usa como parent, grab_set falla y el boton no responde.",
     "PROCESADOR historial agrupado (v2.9): agregar_al_historial agrupa items mismo tipo+codigo+lote+dia incrementando _cantidad en vez de agregar fila nueva. La fila muestra x2 x3 xN en verde. Click derecho -> Agrupar iguales del mismo dia fusiona filas viejas manualmente.",
     "PROCESADOR historial ajuste (v2.9): click derecho en [BAJA] -> Marcar como Ajuste -> tipo cambia a [AJU] gris. Metodo _toggle_ajuste. Click derecho de nuevo -> Quitar ajuste para revertir.",
-    "PROCESADOR historial buscador (v3.1): en _ver_historial hay un campo de busqueda (Entry con _hist_search_var) entre el contador y el frame scrolleable. En _renderizar_historial se filtra historial_ord por query en codigo/nombre/lote/deposito. El contador muestra N registro(s) — filtro: X. Boton X limpia el filtro. NUNCA eliminar este buscador."
+    "PROCESADOR display [AJU] (v3.2): en _renderizar_historial agregar es_ajuste = (tipo==BAJA and item.get(_subtipo)==AJUSTE). color_tipo=#7f8c8d si ajuste, #e67e22 si baja normal. icono=[AJU] si ajuste, [BAJA] si no. NUNCA omitir estas 3 lineas o el click derecho marcar ajuste no tendra efecto visual.",
+    "MOVIMIENTO lote fix 3 opciones (v3.2): en movimiento_stock_gns.py seleccion de lote: primero sleep(1.5) para que cargue el dropdown completo, luego intentar escribir lote_num directamente (fn.clear + send_keys lote_num + sleep(1.2)) antes de navegar con ARROW_DOWN. Esto evita el ida y vuelta cuando hay 3+ lotes. NUNCA volver al sleep(0.8) original."
   ],
   "contactos_whatsapp_nota": "Cuando un deposito tiene mas de un contacto el kiosk muestra radio buttons para seleccionar destinatario antes de enviar. Depositos con un solo contacto abren directo. Para agregar otro contacto: convertir el valor a lista de objetos {nombre, numero} igual que Inmunoquimica.",
   "ver_pedidos": {
