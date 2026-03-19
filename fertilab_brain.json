@@ -1,7 +1,7 @@
 {
   "proyecto": "FertiLab Kiosk",
   "autor": "gvelazquez",
-  "version": "3.9",
+  "version": "3.10",
   "familia_deposito": {
     "ID": "Inmunodiagnostico",
     "G": "Inmunoquimica",
@@ -174,7 +174,15 @@
     "CSV ESTRUCTURA COLUMNAS - CRITICO (v3.9): los archivos Stock CSV tienen exactamente 7 columnas: 0=FAMILIA, 1=CODIGO, 2=ARTICULO, 3=DEPOSITO, 4=NRO.LOTE, 5=F.VENCIM., 6=STOCK. Separador=';'. NUNCA cambiar estos indices en ninguna funcion de lectura de CSV.",
     "CSV LECTURA PATRON CORRECTO - NUNCA ROMPER (v3.9): el patron correcto para leer CSVs de stock es SIEMPRE meter el 'for row in reader' DENTRO del bloque 'with open(...) as f'. Si el for queda AFUERA del with, el archivo se cierra antes de leer y retorna 0 articulos sin error visible. Patron obligatorio: 'with open(path,r,encoding=enc) as f: reader=csv.reader(f,delimiter=;); next(reader); for row in reader: ...' TODO dentro del with. Ademas incluir 'break' al final del try para no reintentar encodings innecesariamente. VERIFICAR este patron en TODA funcion nueva que lea CSVs.",
     "COMPILADOR BAT (v3.9): compilar_kiosk.bat detecta Python automaticamente — busca Python 3.14 en AppData/Local/Python/pythoncore-3.14-64/python.exe primero, fallback a Python 3.12 en AppData/Local/Programs/Python/Python312/python.exe. Muestra [INFO] Usando Python: al arrancar. NUNCA hardcodear una sola ruta de Python en el bat.",
-    "DOCSTRINGS CON RUTAS WINDOWS (v3.9): en procesador_gns.py (y cualquier .py) los docstrings o comentarios que contengan rutas Windows como K:\\Sector STOCK deben usar doble backslash (\\\\S) o el compilador PyInstaller con Python 3.14 falla con SyntaxError invalid escape sequence. Siempre usar \\\\ en strings literales con rutas Windows fuera de raw strings."
+    "DOCSTRINGS CON RUTAS WINDOWS (v3.9): en procesador_gns.py (y cualquier .py) los docstrings o comentarios que contengan rutas Windows como K:\\Sector STOCK deben usar doble backslash (\\\\S) o el compilador PyInstaller con Python 3.14 falla con SyntaxError invalid escape sequence. Siempre usar \\\\ en strings literales con rutas Windows fuera de raw strings.",
+    "WA_ENVIADOS persistente (v3.10): kiosk VER STOCK tiene WA_ENVIADOS_FILE = os.path.join(PROGRAMA_DIR, 'wa_enviados_stock.json'). Al abrir _popup_ver_stock carga wa_enviados como set desde ese JSON. Al enviar WA guarda de vuelta. Los articulos en wa_enviados muestran '✓ WA enviado' en verde en el listbox. NUNCA volver a set() en memoria — tiene que ser persistente.",
+    "WA multi-seleccion VER STOCK (v3.10): _abrir_popup_wa recibe lista articulos_wa=[(info,cod),...]. Agrupa por deposito con defaultdict. 1 articulo = mensaje individual. Varios = lista con bullets nombre+cod+dias. 1 popup por deposito. _whatsapp() recorre TODOS los indices de lb.curselection(), no solo sel[0]. Ctrl+click o Shift+click para seleccionar varios en el listbox. NUNCA volver a sel[0] solo.",
+    "Click derecho listbox VER STOCK (v3.10): lb.bind('<Button-3>', _ctx_lb) muestra menu con '✓ Marcar como enviado (N)' y '✕ Desmarcar enviado (N)'. Guarda en WA_ENVIADOS_FILE y llama _refrescar(). Util para marcar todos los de un deposito de una vez sin enviar WA.",
+    "KIOSK PF descontar CSV (v3.10): _guardar_pf llama _descontar_csv_stock N veces segun cantidad al guardar pendiente factura. Sin esto el CSV no se actualizaba al registrar un PF.",
+    "KIOSK PF busqueda en CSV completo (v3.10): en modo PENDIENTE al escanear codigo no encontrado en datos_stock (stock=0), busca en todos los CSVs sin filtrar cantidad para obtener nombre y deposito. Muestra en amarillo con '(stock=0)'. Sin esto deposito quedaba vacio y GNS no sabia donde mover.",
+    "PROCESADOR deposito fallback (v3.10): en _procesar_cola tanto MOV como BAJA: si item.deposito vacio, tomar de info=datos_stock.get(codigo). Actualizar item['deposito']=dep. Sin esto GNS recibe flecha -> sin destino.",
+    "PROCESADOR nombre fallback (v3.10): en _procesar_cola si info.nombre vacio, inyectar item.get('nombre') en info antes de llamar procesar_articulo/procesar_baja.",
+    "PROCESADOR enriquecer historial al abrir (v3.10): en _ver_historial antes de renderizar, loop sobre items sin nombre, buscar en _cargar_nombres_csv() (sin filtro stock) y guardar. Silencioso y automatico — cuando entra la factura y se actualiza el CSV, la proxima vez que se abre el historial aparece el nombre."
   ],
   "contactos_whatsapp_nota": "Cuando un deposito tiene mas de un contacto el kiosk muestra radio buttons para seleccionar destinatario antes de enviar. Depositos con un solo contacto abren directo. Para agregar otro contacto: convertir el valor a lista de objetos {nombre, numero} igual que Inmunoquimica.",
   "ver_pedidos": {
