@@ -1882,6 +1882,44 @@ function renderConv(cat){
 }
 
 /* ── COMPLETAR ── */
+const COMPLETAR_DATA = {
+  0: [
+    {esp:"Buenos ___",                   hanzi:"早上 ___",         blank:"好", blankEsp:"días",        blankP:"hǎo",    p:"zǎoshàng ___",              ops:[{h:"好",e:"días"},{h:"晚",e:"noches"},{h:"早",e:"mañana"},{h:"再",e:"otra vez"}]},
+    {esp:"Buenas ___",                   hanzi:"晚上 ___",         blank:"好", blankEsp:"noches",      blankP:"hǎo",    p:"wǎnshàng ___",              ops:[{h:"好",e:"noches"},{h:"早",e:"días"},{h:"来",e:"vengo"},{h:"去",e:"voy"}]},
+    {esp:"___, ¿cómo estás?",            hanzi:"___, 你好吗？",    blank:"你好",blankEsp:"Hola",       blankP:"nǐ hǎo", p:"___, nǐ hǎo ma?",           ops:[{h:"你好",e:"Hola"},{h:"再见",e:"Adiós"},{h:"谢谢",e:"Gracias"},{h:"对不起",e:"Lo siento"}]},
+    {esp:"Estoy muy ___",                hanzi:"我很 ___",         blank:"好", blankEsp:"bien",        blankP:"hǎo",    p:"wǒ hěn ___",                ops:[{h:"好",e:"bien"},{h:"累",e:"cansado"},{h:"忙",e:"ocupado"},{h:"饿",e:"hambriento"}]},
+    {esp:"___, me equivoqué",            hanzi:"___，我错了",      blank:"对不起",blankEsp:"Perdón",   blankP:"duìbuqǐ",p:"___, wǒ cuò le",             ops:[{h:"对不起",e:"Perdón"},{h:"你好",e:"Hola"},{h:"再见",e:"Adiós"},{h:"谢谢",e:"Gracias"}]},
+    {esp:"___, me ayudaste mucho",       hanzi:"___，你帮了我很多",blank:"谢谢",blankEsp:"Gracias",   blankP:"xièxiè", p:"___, nǐ bāng le wǒ hěn duō",ops:[{h:"谢谢",e:"Gracias"},{h:"你好",e:"Hola"},{h:"再见",e:"Adiós"},{h:"请",e:"Por favor"}]},
+    {esp:"___, ¿puedes repetir?",        hanzi:"___，再说一遍",    blank:"请", blankEsp:"Por favor",   blankP:"qǐng",   p:"___, zài shuō yī biàn",     ops:[{h:"请",e:"Por favor"},{h:"谢谢",e:"Gracias"},{h:"你好",e:"Hola"},{h:"再见",e:"Adiós"}]},
+    {esp:"¿___ cuesta esto?",            hanzi:"这个 ___ 钱？",    blank:"多少",blankEsp:"Cuánto",    blankP:"duōshǎo",p:"zhège ___ qián?",            ops:[{h:"多少",e:"Cuánto"},{h:"什么",e:"Qué"},{h:"哪里",e:"Dónde"},{h:"为什么",e:"Por qué"}]},
+    {esp:"___, estoy perdido",           hanzi:"___，我迷路了",    blank:"请", blankEsp:"Disculpe",    blankP:"qǐng",   p:"___, wǒ mí lù le",          ops:[{h:"请",e:"Disculpe"},{h:"谢谢",e:"Gracias"},{h:"你好",e:"Hola"},{h:"再见",e:"Adiós"}]},
+    {esp:"___ (adiós)",                  hanzi:"___",             blank:"再见",blankEsp:"Hasta luego",blankP:"zàijiàn",p:"___",                        ops:[{h:"再见",e:"Hasta luego"},{h:"你好",e:"Hola"},{h:"谢谢",e:"Gracias"},{h:"请",e:"Por favor"}]},
+  ],
+  1: [
+    {esp:"No ___ nada de lo que dices",  hanzi:"我不 ___ 你说的",  blank:"懂", blankEsp:"entiendo",   blankP:"dǒng",   p:"wǒ bù ___ nǐ shuō de",     ops:[{h:"懂",e:"entiendo"},{h:"知道",e:"sé"},{h:"听",e:"escucho"},{h:"看",e:"veo"}]},
+    {esp:"Este precio es muy ___",       hanzi:"这个价格太 ___了",  blank:"贵", blankEsp:"caro",        blankP:"guì",    p:"zhège jiàgé tài ___ le",    ops:[{h:"贵",e:"caro"},{h:"便宜",e:"barato"},{h:"好",e:"bueno"},{h:"高",e:"alto"}]},
+    {esp:"¿___ pagar con tarjeta?",      hanzi:"___ 刷卡吗？",     blank:"可以",blankEsp:"Puedo",     blankP:"kěyǐ",   p:"___ shuā kǎ ma?",           ops:[{h:"可以",e:"Puedo"},{h:"不能",e:"No puedo"},{h:"应该",e:"Debería"},{h:"想",e:"Quiero"}]},
+    {esp:"___ la cuenta, por favor",     hanzi:"___ 买单",         blank:"请", blankEsp:"Tráigame",   blankP:"qǐng",   p:"___ mǎi dān",               ops:[{h:"请",e:"Por favor"},{h:"谢谢",e:"Gracias"},{h:"对不起",e:"Perdón"},{h:"你好",e:"Hola"}]},
+    {esp:"Habla un poco más ___",        hanzi:"请你说 ___ 一点",  blank:"慢", blankEsp:"despacio",    blankP:"màn",    p:"qǐng nǐ shuō ___ yīdiǎn",  ops:[{h:"慢",e:"despacio"},{h:"快",e:"rápido"},{h:"大",e:"fuerte"},{h:"小",e:"suave"}]},
+    {esp:"¿___ está la estación?",       hanzi:"地铁站 ___ 哪里？", blank:"在", blankEsp:"Dónde",       blankP:"zài",    p:"dìtiě zhàn ___ nǎlǐ?",     ops:[{h:"在",e:"está"},{h:"是",e:"es"},{h:"有",e:"hay"},{h:"去",e:"va"}]},
+    {esp:"¿___ hay descuento?",          hanzi:"___ 有打折吗？",   blank:"有没有",blankEsp:"Acaso",   blankP:"yǒuméiyǒu",p:"___ yǒu dǎzhé ma?",        ops:[{h:"有没有",e:"¿Hay?"},{h:"可以",e:"¿Puedo?"},{h:"什么",e:"¿Qué?"},{h:"为什么",e:"¿Por qué?"}]},
+    {esp:"Quiero ir ___",                hanzi:"我想 ___ 天安门",  blank:"去", blankEsp:"a Tiananmen", blankP:"qù",     p:"wǒ xiǎng ___ Tiān'ānmén",  ops:[{h:"去",e:"ir a"},{h:"来",e:"venir a"},{h:"看",e:"ver"},{h:"买",e:"comprar"}]},
+    {esp:"¿___ está el baño?",           hanzi:"洗手间 ___ 哪里？",blank:"在", blankEsp:"Dónde",       blankP:"zài",    p:"xǐshǒujiān ___ nǎlǐ?",     ops:[{h:"在",e:"está"},{h:"是",e:"es"},{h:"有",e:"hay"},{h:"去",e:"va"}]},
+    {esp:"Habla más ___",                hanzi:"请 ___ 说",        blank:"慢慢",blankEsp:"despacio",   blankP:"mànmàn", p:"qǐng ___ shuō",             ops:[{h:"慢慢",e:"despacio"},{h:"快快",e:"rápido"},{h:"大声",e:"fuerte"},{h:"小声",e:"suave"}]},
+  ],
+  2: [
+    {esp:"¿___ es la cantidad mínima?",  hanzi:"___ 是最小订购量？",blank:"什么",blankEsp:"Cuál",    blankP:"shénme", p:"___ shì zuì xiǎo dìnggòu liàng?",ops:[{h:"什么",e:"Cuál es"},{h:"多少",e:"Cuánto"},{h:"为什么",e:"Por qué"},{h:"哪里",e:"Dónde"}]},
+    {esp:"___ firmar el contrato hoy",   hanzi:"我们 ___ 今天签合同",blank:"可以",blankEsp:"Podemos", blankP:"kěyǐ",   p:"wǒmen ___ jīntiān qiān hétong",ops:[{h:"可以",e:"Podemos"},{h:"不能",e:"No podemos"},{h:"想",e:"Queremos"},{h:"应该",e:"Deberíamos"}]},
+    {esp:"¿___ nos envían las muestras?",hanzi:"___ 可以发样品？",  blank:"什么时候",blankEsp:"Cuándo",blankP:"shénme shíhòu",p:"___ kěyǐ fā yàngpǐn?",ops:[{h:"什么时候",e:"Cuándo"},{h:"为什么",e:"Por qué"},{h:"哪里",e:"Dónde"},{h:"多少",e:"Cuánto"}]},
+    {esp:"El precio ___ el envío",       hanzi:"价格 ___ 运费",    blank:"包括",blankEsp:"incluye",   blankP:"bāokuò", p:"jiàgé ___ yùnfèi",          ops:[{h:"包括",e:"incluye"},{h:"不包括",e:"no incluye"},{h:"是",e:"es"},{h:"有",e:"tiene"}]},
+    {esp:"Las relaciones ___ importantes",hanzi:"关系 ___ 重要",   blank:"很", blankEsp:"son muy",     blankP:"hěn",    p:"guānxi ___ zhòngyào",       ops:[{h:"很",e:"son/muy"},{h:"不",e:"no son"},{h:"也",e:"también"},{h:"都",e:"siempre"}]},
+    {esp:"¿___ aceptan carta de crédito?",hanzi:"___ 接受信用证？",blank:"你们",blankEsp:"Ustedes",  blankP:"nǐmen",  p:"___ jiēshòu xìnyòngzhèng?", ops:[{h:"你们",e:"Ustedes"},{h:"我们",e:"Nosotros"},{h:"他们",e:"Ellos"},{h:"可以",e:"¿Pueden?"}]},
+    {esp:"Somos ___ a largo plazo",      hanzi:"我们是 ___ 客户",  blank:"长期",blankEsp:"clientes",  blankP:"chángqī",p:"wǒmen shì ___ kèhù",        ops:[{h:"长期",e:"clientes fijos"},{h:"新",e:"nuevos"},{h:"老",e:"antiguos"},{h:"重要",e:"importantes"}]},
+    {esp:"¿El precio ___ el envío?",     hanzi:"价格 ___ 运费吗？",blank:"包括",blankEsp:"incluye",   blankP:"bāokuò", p:"jiàgé ___ yùnfèi ma?",      ops:[{h:"包括",e:"incluye"},{h:"不包括",e:"no incluye"},{h:"是",e:"es"},{h:"有",e:"tiene"}]},
+    {esp:"¿___ fabrican con mi marca?",  hanzi:"___ 可以OEM生产？",blank:"你们",blankEsp:"Ustedes",  blankP:"nǐmen",  p:"___ kěyǐ OEM shēngchǎn?",   ops:[{h:"你们",e:"Ustedes"},{h:"我们",e:"Nosotros"},{h:"他们",e:"Ellos"},{h:"可以",e:"¿Pueden?"}]},
+    {esp:"¿___ mínima de pedido?",       hanzi:"最小 ___ 是多少？",blank:"订购量",blankEsp:"Cantidad",blankP:"dìnggòu liàng",p:"zuì xiǎo ___ shì duōshǎo?",ops:[{h:"订购量",e:"Cantidad"},{h:"价格",e:"Precio"},{h:"质量",e:"Calidad"},{h:"数量",e:"Número"}]},
+  ]
+};
 let compState={nivel:0,qs:[],idx:0,correct:0,xpGained:0};
 function setCompNivel(n){
   compState.nivel=n;
