@@ -242,6 +242,9 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
     <div class="menu-btn" onclick="show('s-completar');initCompletar()" style="background:linear-gradient(135deg,#0a1a0a,#1a2a00);border-color:#2a4a00">
       <div class="icon">✍️</div><div class="label" style="color:#aaff44">Completar</div><div class="desc">Opción múltiple</div>
     </div>
+    <div class="menu-btn" onclick="show('s-audio');initAudioMode()" style="grid-column:span 2;background:linear-gradient(135deg,#001a2a,#002a1a);border-color:#004a3a">
+      <div class="icon">🎧</div><div class="label" style="color:#4cc9f0">Modo Audio — Caminando</div><div class="desc">Escuchá chino + español sin mirar el cel</div>
+    </div>
   </div>
 </div>
 
@@ -552,6 +555,49 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
   </div>
   <div class="cat-pill" id="w150cats"></div>
   <div id="w150list" style="display:flex;flex-direction:column;gap:8px"></div>
+</div>
+
+<!-- AUDIO MODE -->
+<div id="s-audio" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="back-btn" onclick="stopAudioMode();goMenu()">✕ Salir</button>
+    <div class="section-title">🎧 Modo Audio</div>
+    <div style="width:60px"></div>
+  </div>
+
+  <div style="background:var(--card);border-radius:14px;padding:14px;border:1px solid #2a2a2a;font-size:.82rem;color:var(--muted)">
+    Escuchás primero en <strong style="color:var(--gold)">chino</strong>, una pausa, después en <strong style="color:#06d6a0">español</strong>. ¡Perfecto para caminar! 🚶
+  </div>
+
+  <!-- Categoría -->
+  <div class="cat-pill" id="audioCats"></div>
+
+  <!-- Velocidad -->
+  <div style="background:var(--card);border-radius:14px;padding:14px;border:1px solid #222">
+    <div style="font-size:.85rem;color:var(--muted);margin-bottom:8px">Velocidad entre palabras</div>
+    <div style="display:flex;gap:8px">
+      <div class="pill active" id="audioSpd0" onclick="setAudioSpeed(0)">Lenta</div>
+      <div class="pill" id="audioSpd1" onclick="setAudioSpeed(1)">Normal</div>
+      <div class="pill" id="audioSpd2" onclick="setAudioSpeed(2)">Rápida</div>
+    </div>
+  </div>
+
+  <!-- Tarjeta activa -->
+  <div style="background:linear-gradient(145deg,#0a1a2a,#001a10);border:2px solid #004a3a;border-radius:24px;padding:32px 20px;text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px" id="audioCard">
+    <div style="font-size:.85rem;color:var(--muted)">Tocá ▶ para empezar</div>
+    <div style="font-size:5rem" id="audioEmoji">🎧</div>
+    <div id="audioHanzi" style="font-size:3rem;color:var(--gold);font-weight:900"></div>
+    <div id="audioPinyin" style="color:var(--blue);font-size:1rem"></div>
+    <div id="audioEsp" style="font-size:1.1rem;font-weight:600;color:#06d6a0"></div>
+    <div id="audioStatus" style="font-size:.8rem;color:var(--muted)">— — —</div>
+  </div>
+
+  <!-- Controles -->
+  <div style="display:flex;gap:10px">
+    <button class="btn btn-ghost" onclick="audioPrev()" style="flex:1;padding:14px;font-size:1.2rem">⏮</button>
+    <button class="btn" id="audioPlayBtn" onclick="toggleAudio()" style="flex:2;padding:14px;font-size:1.1rem;background:linear-gradient(135deg,#4cc9f0,#0077aa);color:#fff;font-weight:700">▶ Iniciar</button>
+    <button class="btn btn-ghost" onclick="audioNext()" style="flex:1;padding:14px;font-size:1.2rem">⏭</button>
+  </div>
 </div>
 
 <!-- FRASES -->
@@ -1971,6 +2017,180 @@ function renderCompletar(){
     btn.onclick=()=>checkCompletar(op.h,q,btn);
     opDiv.appendChild(btn);
   });
+}
+
+/* ── MODO AUDIO ── */
+var audioState={
+  playing:false, idx:0, words:[], cat:'', speed:1,
+  timer:null, utterance:null
+};
+var audioSpeeds=[4000,2500,1500]; // ms entre palabras
+
+function buildAudioWords(cat){
+  var words=[];
+  if(cat==='💰 Comercio'){
+    // Comercio y Regateo + Comercio Exterior de conversaciones
+    ['🛍️ Comercio y Regateo','🏭 Comercio Exterior'].forEach(function(k){
+      if(CONV[k])CONV[k].forEach(function(f){words.push({h:f.h,p:f.p,e:f.e,img:'💰'});});
+    });
+    // Top 150 comercio
+    if(TOP150['💰 Comercio'])TOP150['💰 Comercio'].forEach(function(w){words.push({h:w.h,p:w.p,e:w.e,img:'💰'});});
+  } else if(cat==='💬 Conversaciones'){
+    Object.keys(CONV).forEach(function(k){
+      CONV[k].forEach(function(f){words.push({h:f.h,p:f.p,e:f.e,img:'💬'});});
+    });
+  } else if(cat==='📚 Top 150'){
+    Object.keys(TOP150).forEach(function(k){
+      TOP150[k].forEach(function(w){words.push({h:w.h,p:w.p,e:w.e,img:'📚'});});
+    });
+  } else if(cat==='💬 Frases'){
+    FRASES_DATA.forEach(function(f){words.push({h:f.h,p:f.p,e:f.e,img:'💬'});});
+  } else if(cat==='🌏 Todo'){
+    // Todo junto
+    allWords().forEach(function(w){words.push(w);});
+    Object.keys(CONV).forEach(function(k){CONV[k].forEach(function(f){words.push({h:f.h,p:f.p,e:f.e,img:'💬'});});});
+    Object.keys(TOP150).forEach(function(k){TOP150[k].forEach(function(w){words.push({h:w.h,p:w.p,e:w.e,img:'📚'});});});
+    FRASES_DATA.forEach(function(f){words.push({h:f.h,p:f.p,e:f.e,img:'💬'});});
+  } else {
+    // Vocabulario normal por categoría
+    if(VOCAB[cat])VOCAB[cat].forEach(function(w){words.push(w);});
+  }
+  return words;
+}
+
+function initAudioMode(){
+  var audioCats=['💰 Comercio','💬 Conversaciones','📚 Top 150','💬 Frases','🌏 Todo'].concat(Object.keys(VOCAB));
+  audioState.cat='💰 Comercio';
+  var pillDiv=document.getElementById('audioCats');pillDiv.innerHTML='';
+  audioCats.forEach(function(cat,i){
+    var p=document.createElement('div');
+    p.className='pill'+(cat==='💰 Comercio'?' active':'');
+    p.textContent=cat;
+    p.onclick=function(){
+      stopAudioMode();
+      audioState.cat=cat;
+      document.querySelectorAll('#audioCats .pill').forEach(function(x){x.classList.remove('active');});
+      p.classList.add('active');
+      loadAudioCat(cat);
+    };
+    pillDiv.appendChild(p);
+  });
+  loadAudioCat('💰 Comercio');
+}
+
+function loadAudioCat(cat){
+  audioState.words=buildAudioWords(cat);
+  audioState.idx=0;
+  renderAudioCard();
+}
+
+function setAudioSpeed(n){
+  audioState.speed=n;
+  [0,1,2].forEach(function(i){
+    document.getElementById('audioSpd'+i).classList.toggle('active',i===n);
+  });
+}
+
+function renderAudioCard(){
+  if(!audioState.words.length)return;
+  var w=audioState.words[audioState.idx];
+  document.getElementById('audioEmoji').textContent=w.img||'🔤';
+  document.getElementById('audioHanzi').textContent=w.h;
+  document.getElementById('audioPinyin').textContent=w.p;
+  document.getElementById('audioEsp').textContent=w.e;
+  document.getElementById('audioStatus').textContent='Palabra '+(audioState.idx+1)+' de '+audioState.words.length;
+}
+
+function toggleAudio(){
+  if(audioState.playing){stopAudioMode();}
+  else{startAudioMode();}
+}
+
+var _wakeLock=null;
+async function requestWakeLock(){
+  try{
+    if('wakeLock' in navigator){
+      _wakeLock=await navigator.wakeLock.request('screen');
+      _wakeLock.addEventListener('release',function(){_wakeLock=null;});
+      document.getElementById('audioStatus').textContent='🔒 Pantalla activa';
+    }
+  }catch(e){console.log('WakeLock no disponible');}
+}
+function releaseWakeLock(){
+  if(_wakeLock){_wakeLock.release();_wakeLock=null;}
+}
+
+function startAudioMode(){
+  if(!audioState.words.length)return;
+  audioState.playing=true;
+  document.getElementById('audioPlayBtn').textContent='⏸ Pausar';
+  document.getElementById('audioPlayBtn').style.background='linear-gradient(135deg,#e63946,#c1121f)';
+  requestWakeLock();
+  playCurrentWord();
+}
+
+function stopAudioMode(){
+  audioState.playing=false;
+  if(audioState.timer){clearTimeout(audioState.timer);audioState.timer=null;}
+  if(window.speechSynthesis)window.speechSynthesis.cancel();
+  releaseWakeLock();
+  document.getElementById('audioPlayBtn').textContent='▶ Iniciar';
+  document.getElementById('audioPlayBtn').style.background='linear-gradient(135deg,#4cc9f0,#0077aa)';
+  document.getElementById('audioStatus').textContent='Pausado';
+}
+
+function playCurrentWord(){
+  if(!audioState.playing)return;
+  var w=audioState.words[audioState.idx];
+  renderAudioCard();
+  document.getElementById('audioStatus').textContent='🔊 Chino...';
+  // 1. Hablar en chino
+  speakText(w.h,'zh-CN',0.75,function(){
+    if(!audioState.playing)return;
+    document.getElementById('audioStatus').textContent='⏳ ...';
+    // 2. Pausa 1 seg
+    audioState.timer=setTimeout(function(){
+      if(!audioState.playing)return;
+      document.getElementById('audioStatus').textContent='🔊 Español...';
+      // 3. Hablar en español
+      speakText(w.e,'es-AR',1.0,function(){
+        if(!audioState.playing)return;
+        document.getElementById('audioStatus').textContent='✓ Siguiente...';
+        // 4. Pausa entre palabras según velocidad
+        var delay=audioSpeeds[audioState.speed];
+        audioState.timer=setTimeout(function(){
+          if(!audioState.playing)return;
+          // 5. Siguiente palabra
+          audioState.idx=(audioState.idx+1)%audioState.words.length;
+          playCurrentWord();
+        },delay);
+      });
+    },900);
+  });
+}
+
+function speakText(text,lang,rate,callback){
+  if(!window.speechSynthesis){if(callback)callback();return;}
+  window.speechSynthesis.cancel();
+  setTimeout(function(){
+    var u=new SpeechSynthesisUtterance(text);
+    u.lang=lang;u.rate=rate;u.pitch=1;u.volume=1;
+    if(lang==='zh-CN'&&_zhVoice)u.voice=_zhVoice;
+    u.onend=function(){if(callback)setTimeout(callback,300);};
+    u.onerror=function(){if(callback)callback();};
+    window.speechSynthesis.speak(u);
+  },150);
+}
+
+function audioNext(){
+  stopAudioMode();
+  audioState.idx=(audioState.idx+1)%audioState.words.length;
+  renderAudioCard();
+}
+function audioPrev(){
+  stopAudioMode();
+  audioState.idx=(audioState.idx-1+audioState.words.length)%audioState.words.length;
+  renderAudioCard();
 }
 
 document.getElementById('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter')startGame();});
