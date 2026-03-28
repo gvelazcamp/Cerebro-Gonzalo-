@@ -7,30 +7,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Chino Aventura">
+<link rel="manifest" href="manifest.json">
 <script>
-(function(){
-  var manifest={
-    "name":"Chino Aventura",
-    "short_name":"Chino 🐉",
-    "description":"Aprende chino mandarín jugando — tarjetas, quiz, trazos y modo audio",
-    "start_url":"./chino_aventura.html",
-    "scope":"./",
-    "display":"standalone",
-    "background_color":"#0d0d0d",
-    "theme_color":"#ffd166",
-    "orientation":"portrait",
-    "lang":"es",
-    "icons":[
-      {"src":"https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f409.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-      {"src":"https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f409.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
-    ]
-  };
-  var blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
-  var url=URL.createObjectURL(blob);
-  var link=document.createElement('link');
-  link.rel='manifest';link.href=url;
-  document.head.appendChild(link);
-})();
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').then(function(r){console.log('SW registered',r.scope)}).catch(function(e){console.log('SW failed',e)});
+}
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>🐉 Chino Aventura</title>
