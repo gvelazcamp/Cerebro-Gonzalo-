@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>🐉 Chino Aventura</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--red:#e63946;--gold:#ffd166;--dark:#0d0d0d;--card:#1a1a1a;--text:#f0e6d3;--muted:#888;--green:#06d6a0;--blue:#4cc9f0;--purple:#7b2ff7}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden;background-image:radial-gradient(ellipse at 20% 20%,#2a0a0a,transparent 60%),radial-gradient(ellipse at 80% 80%,#1a0a00,transparent 60%)}
+.screen{display:none;padding:18px;max-width:480px;margin:0 auto;min-height:100vh;flex-direction:column;gap:14px}
+.screen.active{display:flex}
+#s-intro{align-items:center;justify-content:center;text-align:center;gap:18px}
+.dragon{font-size:80px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.title-main{font-family:'Noto Serif SC',serif;font-size:2.4rem;font-weight:900;color:var(--gold)}
+.title-sub{font-size:.85rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:4px}
+.name-input{width:100%;padding:14px 20px;border-radius:12px;background:var(--card);border:2px solid #333;color:var(--text);font-family:'Outfit',sans-serif;font-size:1rem;outline:none;transition:border-color .2s}
+.name-input:focus{border-color:var(--gold)}
+.name-input::placeholder{color:var(--muted)}
+.btn{width:100%;padding:15px;border-radius:14px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;transition:transform .1s;user-select:none}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,var(--red),#c1121f);color:#fff}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#f4a261);color:#111}
+.btn-ghost{background:var(--card);color:var(--text);border:1px solid #333}
+.btn-green{background:linear-gradient(135deg,var(--green),#05a880);color:#111}
+.back-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;font-family:'Outfit',sans-serif;padding:4px 0}
+.row{display:flex;justify-content:space-between;align-items:center}
+.hud{background:var(--card);border-radius:16px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.xp-bar{height:6px;background:#333;border-radius:3px;margin-top:4px;width:100px}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--red));border-radius:3px;transition:width .5s}
+.stats-strip{background:var(--card);border-radius:12px;padding:12px 16px;display:flex;justify-content:space-around;text-align:center}
+.stat-val{font-size:1.2rem;font-weight:700;color:var(--gold)}
+.stat-lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.menu-title{font-family:'Noto Serif SC',serif;font-size:1.2rem;color:var(--gold);text-align:center}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.menu-btn{background:var(--card);border:1px solid #2a2a2a;border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;transition:transform .1s,border-color .2s;display:flex;flex-direction:column;gap:6px}
+.menu-btn:active{transform:scale(.96);border-color:var(--gold)}
+.menu-btn .icon{font-size:1.8rem}
+.menu-btn .label{font-size:.8rem;font-weight:600}
+.menu-btn .desc{font-size:.68rem;color:var(--muted)}
+/* FLASH */
+.flash-header{display:flex;justify-content:space-between;align-items:center}
+.cat-pill{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.cat-pill::-webkit-scrollbar{display:none}
+.pill{padding:8px 16px;border-radius:20px;background:var(--card);border:1px solid #333;font-size:.8rem;cursor:pointer;white-space:nowrap;transition:all .15s}
+.pill.active{background:var(--gold);color:#111;border-color:var(--gold);font-weight:700}
+.flip-scene{width:100%;height:270px;perspective:1000px;cursor:pointer}
+.flip-card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+.flip-card.flipped{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.flip-front{background:linear-gradient(145deg,#1e1e1e,#2a1a00);border:1px solid #3a2a00}
+.flip-back{background:linear-gradient(145deg,#0a1a2a,#1a0a2a);border:1px solid #2a1a4a;transform:rotateY(180deg)}
+.card-emoji{font-size:5rem;line-height:1}
+.card-esp{font-size:1.3rem;font-weight:700;color:var(--gold)}
+.card-hint{font-size:.75rem;color:var(--muted)}
+.card-hanzi{font-family:'Noto Serif SC',serif;font-size:4.5rem;font-weight:900;color:var(--gold)}
+.card-pinyin{font-size:1.1rem;color:var(--blue);letter-spacing:1px}
+.card-esp-back{font-size:.9rem;color:var(--muted)}
+.flash-nav{display:flex;gap:10px}
+
+/* ── TRAZOS ── */
+.symbol-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.sym-btn{background:var(--card);border:1px solid #2a2a2a;border-radius:12px;padding:10px 4px;text-align:center;cursor:pointer;transition:all .15s}
+.sym-btn.sel{border-color:var(--gold);background:#2a1a00}
+.sym-hanzi{font-family:'Noto Serif SC',serif;font-size:1.6rem;color:var(--gold)}
+.sym-label{font-size:.55rem;color:var(--muted);margin-top:2px}
+
+/* Info card del símbolo activo */
+.sym-info-card{
+  background:linear-gradient(135deg,#1a1200,#0a1a2a);
+  border:1px solid #3a2a00;border-radius:16px;
+  padding:14px 18px;display:flex;align-items:center;gap:16px;
+}
+.sym-info-big{font-family:'Noto Serif SC',serif;font-size:3.5rem;color:var(--gold);line-height:1;min-width:60px;text-align:center}
+.sym-info-right{flex:1}
+.sym-info-pinyin{font-size:1rem;color:var(--blue);font-weight:600}
+.sym-info-esp{font-size:1.2rem;font-weight:700;margin-top:2px}
+.sym-info-tip{font-size:.75rem;color:var(--muted);margin-top:4px}
+
+/* Canvas — sin overflow hidden para que no corte */
+.canvas-wrap{
+  position:relative;border-radius:20px;
+  background:#111;border:2px solid #2a2a2a;
+  width:100%;
+}
+/* El ghost char lo pintamos directo en canvas, no como div superpuesto */
+#drawCanvas{
+  display:block;
+  /* CSS width = 100% del contenedor; height se setea por JS */
+  width:100%;
+  border-radius:18px;
+}
+
+/* Banner que aparece DENTRO del canvas mientras dibujás */
+.live-banner{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+  padding:8px 16px;display:flex;align-items:center;gap:10px;
+  border-bottom-left-radius:18px;border-bottom-right-radius:18px;
+  pointer-events:none;
+}
+.live-hanzi{font-family:'Noto Serif SC',serif;font-size:1.8rem;color:var(--gold)}
+.live-text{font-size:.85rem;color:var(--text)}
+.live-sub{font-size:.72rem;color:var(--muted)}
+
+.trazo-btns{display:flex;gap:10px}
+.trazo-btns .btn{flex:1;padding:12px}
+.stroke-tip{background:var(--card);border-radius:12px;padding:10px 14px;font-size:.8rem;color:var(--muted);text-align:center;border:1px solid #222}
+
+/* PALABRAS */
+.word-list{display:flex;flex-direction:column;gap:10px}
+.word-row{background:var(--card);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;border:1px solid #222;cursor:pointer;transition:border-color .2s}
+.word-row:active{border-color:var(--gold)}
+.word-hanzi{font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--gold);min-width:46px;text-align:center}
+.word-info{flex:1}
+.word-pinyin{font-size:.8rem;color:var(--blue)}
+.word-esp{font-size:.95rem;font-weight:600}
+.word-emoji{font-size:1.6rem}
+
+/* QUIZ */
+.char-card{background:var(--card);border-radius:20px;padding:28px 20px;text-align:center;border:1px solid #2a2a2a}
+.hanzi{font-family:'Noto Serif SC',serif;font-size:5rem;font-weight:900;color:var(--gold);line-height:1}
+.pinyin{font-size:1rem;color:var(--blue);margin-top:6px}
+.qhint{font-size:1.6rem;margin-top:4px}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt-btn{background:var(--card);border:2px solid #2a2a2a;border-radius:14px;padding:14px 18px;color:var(--text);font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:all .15s}
+.opt-btn.correct{background:rgba(6,214,160,.15);border-color:var(--green);color:var(--green)}
+.opt-btn.wrong{background:rgba(230,57,70,.15);border-color:var(--red);color:var(--red)}
+.opt-num{background:#2a2a2a;border-radius:8px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.feedback{border-radius:14px;padding:14px 18px;text-align:center;font-weight:600;animation:popIn .2s ease}
+@keyframes popIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.feedback.ok{background:rgba(6,214,160,.15);color:var(--green);border:1px solid var(--green)}
+.feedback.fail{background:rgba(230,57,70,.15);color:var(--red);border:1px solid var(--red)}
+.progress-row{display:flex;gap:6px;flex-wrap:wrap}
+.pip{width:22px;height:6px;border-radius:3px;background:#333}
+#s-result{align-items:center;justify-content:center;text-align:center}
+.result-icon{font-size:5rem;animation:float 2s infinite}
+.result-score{font-family:'Noto Serif SC',serif;font-size:3rem;font-weight:900;color:var(--gold)}
+.result-stats{background:var(--card);border-radius:16px;padding:16px;width:100%;display:flex;justify-content:space-around}
+
+/* DUOLINGO OVERLAY */
+.duo-overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);pointer-events:none;opacity:0;transition:opacity .15s}
+.duo-overlay.show{opacity:1;pointer-events:all}
+.duo-circle{width:140px;height:140px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:80px;transform:scale(0);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.duo-overlay.show .duo-circle{transform:scale(1)}
+.duo-circle.ok{background:var(--green);box-shadow:0 0 80px rgba(6,214,160,.8)}
+.duo-label{font-size:1.8rem;font-weight:700;margin-top:20px;transform:translateY(24px);opacity:0;transition:all .3s .2s;color:var(--green)}
+.duo-overlay.show .duo-label{transform:translateY(0);opacity:1}
+.duo-meaning{font-size:1rem;color:var(--muted);margin-top:8px;opacity:0;transition:opacity .3s .3s}
+.duo-overlay.show .duo-meaning{opacity:1}
+.duo-continue{margin-top:30px;padding:14px 44px;border-radius:14px;border:none;background:var(--green);color:#111;font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;cursor:pointer;transform:translateY(20px);opacity:0;transition:all .3s .28s}
+.duo-overlay.show .duo-continue{transform:translateY(0);opacity:1}
+.confetti-dot{position:absolute;border-radius:50%;width:10px;height:10px;animation:confettiFall 1s ease-out forwards}
+@keyframes confettiFall{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}
+
+.xp-popup{position:fixed;top:20px;right:20px;background:linear-gradient(135deg,var(--gold),var(--red));color:#111;font-weight:700;padding:8px 16px;border-radius:20px;font-size:.9rem;animation:slideIn .3s ease,fadeOut .3s 1.5s forwards;z-index:9998;pointer-events:none}
+@keyframes slideIn{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes fadeOut{to{opacity:0;transform:translateY(-10px)}}
+.section-title{font-family:'Noto Serif SC',serif;font-size:1.1rem;color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- DUOLINGO OVERLAY -->
+<div class="duo-overlay" id="duoOverlay">
+  <div id="confettiContainer" style="position:absolute;inset:0;pointer-events:none;overflow:hidden"></div>
+  <div class="duo-circle ok">✓</div>
+  <div class="duo-label">¡Excelente!</div>
+  <div class="duo-meaning" id="duoMeaning"></div>
+  <button class="duo-continue" onclick="closeDuo()">Continuar →</button>
+</div>
+
+<!-- INTRO -->
+<div id="s-intro" class="screen active">
+  <div class="dragon">🐉</div>
+  <div><div class="title-main">Chino Aventura</div><div class="title-sub">Aprende Mandarín</div></div>
+  <p style="color:var(--muted);font-size:.9rem;text-align:center">Tarjetas animadas, trazos con el dedo y juegos 🔥</p>
+  <input class="name-input" id="nameInput" placeholder="¿Tu nombre, aventurero?" maxlength="20">
+  <button class="btn btn-primary" onclick="startGame()">Comenzar 开始 →</button>
+</div>
+
+<!-- MENÚ -->
+<div id="s-menu" class="screen">
+  <div class="hud">
+    <div>
+      <div style="font-size:.8rem;color:var(--muted)">Jugador: <span id="hudName" style="color:var(--gold);font-weight:700;font-size:1rem"></span></div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:2px">⭐ Nivel <span id="hudNivel" style="color:var(--gold);font-weight:700">1</span></div>
+    </div>
+    <div style="text-align:right">
+      <div id="hudXpText" style="color:var(--gold);font-weight:700;font-size:.8rem">0/100 XP</div>
+      <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="stats-strip">
+    <div><div class="stat-val" id="st-racha">0</div><div class="stat-lbl">🔥 Racha</div></div>
+    <div><div class="stat-val" id="st-palabras">0</div><div class="stat-lbl">📚 Palabras</div></div>
+    <div><div class="stat-val" id="st-correctas">0</div><div class="stat-lbl">✅ Correctas</div></div>
+  </div>
+  <div class="menu-title">¿Qué hacemos hoy?</div>
+  <div class="menu-grid">
+    <div class="menu-btn" onclick="show('s-flash');initFlash()">
+      <div class="icon">🃏</div><div class="label">Tarjetas</div><div class="desc">Gira y aprende</div>
+    </div>
+    <div class="menu-btn" onclick="show('s-trazos');initTrazos()">
+      <div class="icon">✏️</div><div class="label">Trazos</div><div class="desc">Dibuja con el dedo</div>
+    </div>
+    <div class="menu-btn" onclick="show('s-palabras');initPalabras()">
+      <div class="icon">📖</div><div class="label">Palabras</div><div class="desc">Vocabulario visual</div>
+    </div>
+    <div class="menu-btn" onclick="startQuiz()">
+      <div class="icon">🎯</div><div class="label">Quiz</div><div class="desc">Opción múltiple</div>
+    </div>
+  </div>
+  <div class="menu-btn" onclick="startDesafio()" style="flex-direction:row;align-items:center;background:linear-gradient(135deg,#1a0000,#2a0a00);border-color:#5a1a1a">
+    <div class="icon" style="font-size:1.5rem">⚡</div>
+    <div style="text-align:left"><div class="label" style="color:var(--red)">Desafío Relámpago</div><div class="desc">10 preguntas · Contrarreloj</div></div>
+  </div>
+  <div class="menu-grid" style="margin-top:0">
+    <div class="menu-btn" onclick="show('s-pinyin');initPinyin()">
+      <div class="icon">🗣️</div><div class="label">Pinyin</div><div class="desc">Pronunciación</div>
+    </div>
+    <div class="menu-btn" onclick="show('s-como')">
+      <div class="icon">🧠</div><div class="label">¿Cómo funciona?</div><div class="desc">El sistema chino</div>
+    </div>
+    <div class="menu-btn" onclick="show('s-cultura');initCultura()">
+      <div class="icon">🏮</div><div class="label">Cultura China</div><div class="desc">Historia y tradiciones</div>
+    </div>
+    <div class="menu-btn" onclick="show('s-frases');initFrases()">
+      <div class="icon">💬</div><div class="label">Frases</div><div class="desc">Frases del día</div>
+    </div>
+    <div class="menu-btn" onclick="show('s-ciudades');initCiudades()">
+      <div class="icon">🏙️</div><div class="label">Ciudades</div><div class="desc">China y sus lugares</div>
+    </div>
+    <div class="menu-btn" onclick="show('s-conv');initConv()">
+      <div class="icon">🗺️</div><div class="label">Conversaciones</div><div class="desc">Situaciones reales</div>
+    </div>
+    <div class="menu-btn" onclick="show('s-150');init150()">
+      <div class="icon">💯</div><div class="label">Top 150</div><div class="desc">Las más usadas</div>
+    </div>
+    <div class="menu-btn" onclick="show('s-completar');initCompletar()" style="background:linear-gradient(135deg,#0a1a0a,#1a2a00);border-color:#2a4a00">
+      <div class="icon">✍️</div><div class="label" style="color:#aaff44">Completar</div><div class="desc">Opción múltiple</div>
+    </div>
+  </div>
+</div>
+
+<!-- COMO FUNCIONA -->
+<div id="s-como" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">🧠 El Chino Mandarín</div>
+    <div style="width:60px"></div>
+  </div>
+
+  <!-- Tab pills -->
+  <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none">
+    <div class="pill active" id="ct0" onclick="showComoTab(0)">¿Sin letras?</div>
+    <div class="pill" id="ct1" onclick="showComoTab(1)">Los trazos</div>
+    <div class="pill" id="ct2" onclick="showComoTab(2)">Combinaciones</div>
+    <div class="pill" id="ct3" onclick="showComoTab(3)">Los tonos</div>
+    <div class="pill" id="ct4" onclick="showComoTab(4)">¿Por qué tantas líneas?</div>
+  </div>
+
+  <!-- Tab 0: Sin abecedario -->
+  <div id="ctab0">
+    <div style="background:var(--card);border-radius:16px;padding:18px;border:1px solid #2a2a2a">
+      <div style="font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:10px">🔤 No hay abecedario</div>
+      <p style="color:var(--muted);font-size:.9rem;line-height:1.6">En español usamos 27 letras para formar palabras. En chino <strong style="color:var(--text)">no existen las letras</strong>. En cambio, cada palabra es un <strong style="color:var(--gold)">símbolo visual</strong> llamado <strong style="color:var(--gold)">汉字 (hànzì)</strong>.</p>
+    </div>
+    <div style="background:var(--card);border-radius:16px;padding:18px;border:1px solid #2a2a2a">
+      <div style="font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:12px">Comparación directa:</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:14px;background:#111;border-radius:12px;padding:12px">
+          <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:var(--gold);min-width:50px;text-align:center">人</div>
+          <div><div style="font-weight:700">Persona</div><div style="color:var(--blue);font-size:.85rem">rén</div><div style="color:var(--muted);font-size:.8rem">Un solo símbolo = una palabra</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;background:#111;border-radius:12px;padding:12px">
+          <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:var(--gold);min-width:50px;text-align:center">爱</div>
+          <div><div style="font-weight:700">Amor</div><div style="color:var(--blue);font-size:.85rem">ài</div><div style="color:var(--muted);font-size:.8rem">Un solo símbolo = una palabra</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;background:#111;border-radius:12px;padding:12px">
+          <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:var(--gold);min-width:50px;text-align:center">中国</div>
+          <div><div style="font-weight:700">China</div><div style="color:var(--blue);font-size:.85rem">zhōng guó</div><div style="color:var(--muted);font-size:.8rem">2 símbolos = "país del centro"</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,#1a1200,#0a1a00);border-radius:16px;padding:16px;border:1px solid #3a2a00">
+      <div style="color:var(--gold);font-weight:700;margin-bottom:6px">💡 Dato curioso</div>
+      <p style="color:var(--muted);font-size:.85rem;line-height:1.5">El chino tiene más de <strong style="color:var(--text)">50.000 caracteres</strong>, pero para leer un diario solo necesitás conocer <strong style="color:var(--text)">~2.000</strong>. ¡Vos ya aprendiste varios! 🎉</p>
+    </div>
+  </div>
+
+  <!-- Tab 1: Los trazos -->
+  <div id="ctab1" style="display:none">
+    <div style="background:var(--card);border-radius:16px;padding:18px;border:1px solid #2a2a2a">
+      <div style="font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:10px">✏️ Los 8 trazos básicos</div>
+      <p style="color:var(--muted);font-size:.9rem;line-height:1.6">Todos los miles de caracteres chinos se construyen con <strong style="color:var(--text)">8 trazos fundamentales</strong>. Es como el ADN de la escritura china.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:#111;border-radius:14px;padding:14px;text-align:center;border:1px solid #222">
+        <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:var(--gold)">一</div>
+        <div style="font-weight:700;font-size:.9rem">Horizontal</div>
+        <div style="color:var(--muted);font-size:.75rem">De izq. a der. ➡️</div>
+      </div>
+      <div style="background:#111;border-radius:14px;padding:14px;text-align:center;border:1px solid #222">
+        <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:var(--gold)">丨</div>
+        <div style="font-weight:700;font-size:.9rem">Vertical</div>
+        <div style="color:var(--muted);font-size:.75rem">De arriba a abajo ⬇️</div>
+      </div>
+      <div style="background:#111;border-radius:14px;padding:14px;text-align:center;border:1px solid #222">
+        <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:var(--gold)">丿</div>
+        <div style="font-weight:700;font-size:.9rem">Inclinado izq.</div>
+        <div style="color:var(--muted);font-size:.75rem">Diagonal ↙️</div>
+      </div>
+      <div style="background:#111;border-radius:14px;padding:14px;text-align:center;border:1px solid #222">
+        <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:var(--gold)">丶</div>
+        <div style="font-weight:700;font-size:.9rem">Punto</div>
+        <div style="color:var(--muted);font-size:.75rem">Trazo corto</div>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,#1a1200,#0a1a00);border-radius:16px;padding:16px;border:1px solid #3a2a00">
+      <div style="color:var(--gold);font-weight:700;margin-bottom:6px">💡 Regla de oro</div>
+      <p style="color:var(--muted);font-size:.85rem;line-height:1.5">Siempre se escribe <strong style="color:var(--text)">de arriba a abajo</strong> y de <strong style="color:var(--text)">izquierda a derecha</strong>. ¡Nunca al revés!</p>
+    </div>
+  </div>
+
+  <!-- Tab 2: Combinaciones -->
+  <div id="ctab2" style="display:none">
+    <div style="background:var(--card);border-radius:16px;padding:18px;border:1px solid #2a2a2a">
+      <div style="font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:10px">🧩 Símbolos que se combinan</div>
+      <p style="color:var(--muted);font-size:.9rem;line-height:1.6">Los caracteres se pueden juntar para crear nuevas palabras con significados lógicos. ¡Es como un rompecabezas visual!</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="background:#111;border-radius:16px;padding:16px;border:1px solid #222">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--gold)">日</div><div style="font-size:.7rem;color:var(--muted)">Sol (rì)</div></div>
+          <div style="font-size:1.5rem;color:var(--muted)">+</div>
+          <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--gold)">月</div><div style="font-size:.7rem;color:var(--muted)">Luna (yuè)</div></div>
+          <div style="font-size:1.5rem;color:var(--muted)">=</div>
+          <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--green)">明</div><div style="font-size:.7rem;color:var(--green)">Brillante (míng)</div></div>
+        </div>
+      </div>
+      <div style="background:#111;border-radius:16px;padding:16px;border:1px solid #222">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--gold)">人</div><div style="font-size:.7rem;color:var(--muted)">Persona</div></div>
+          <div style="font-size:1.5rem;color:var(--muted)">+</div>
+          <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--gold)">木</div><div style="font-size:.7rem;color:var(--muted)">Árbol</div></div>
+          <div style="font-size:1.5rem;color:var(--muted)">=</div>
+          <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--green)">休</div><div style="font-size:.7rem;color:var(--green)">Descansar</div></div>
+        </div>
+      </div>
+      <div style="background:#111;border-radius:16px;padding:16px;border:1px solid #222">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--gold)">女</div><div style="font-size:.7rem;color:var(--muted)">Mujer</div></div>
+          <div style="font-size:1.5rem;color:var(--muted)">+</div>
+          <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--gold)">子</div><div style="font-size:.7rem;color:var(--muted)">Hijo</div></div>
+          <div style="font-size:1.5rem;color:var(--muted)">=</div>
+          <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--green)">好</div><div style="font-size:.7rem;color:var(--green)">Bueno/Hola</div></div>
+        </div>
+      </div>
+      <div style="background:#111;border-radius:16px;padding:16px;border:1px solid #222">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--gold)">山</div><div style="font-size:.7rem;color:var(--muted)">Montaña</div></div>
+          <div style="font-size:1.5rem;color:var(--muted)">+</div>
+          <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--gold)">水</div><div style="font-size:.7rem;color:var(--muted)">Agua</div></div>
+          <div style="font-size:1.5rem;color:var(--muted)">=</div>
+          <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--green)">仙</div><div style="font-size:.7rem;color:var(--green)">Inmortal/Mágico</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 3: Los tonos -->
+  <div id="ctab3" style="display:none">
+    <div style="background:var(--card);border-radius:16px;padding:18px;border:1px solid #2a2a2a">
+      <div style="font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:10px">🎵 Los 4 tonos</div>
+      <p style="color:var(--muted);font-size:.9rem;line-height:1.6">En chino la <strong style="color:var(--text)">entonación cambia el significado</strong> de la palabra. La misma sílaba "ma" puede significar 4 cosas distintas.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:#111;border-radius:14px;padding:14px;display:flex;align-items:center;gap:14px;border:1px solid #222">
+        <div style="background:var(--red);color:#fff;border-radius:10px;padding:8px 14px;font-weight:700;font-size:1.1rem;min-width:48px;text-align:center">1°</div>
+        <div><div style="font-family:'Noto Serif SC',serif;font-size:1.8rem;color:var(--gold)">妈 <span style="font-size:1rem;color:var(--blue)">mā</span></div><div style="color:var(--muted);font-size:.85rem">Tono plano — — →  significa <strong style="color:var(--text)">Mamá</strong></div></div>
+      </div>
+      <div style="background:#111;border-radius:14px;padding:14px;display:flex;align-items:center;gap:14px;border:1px solid #222">
+        <div style="background:#f4a261;color:#111;border-radius:10px;padding:8px 14px;font-weight:700;font-size:1.1rem;min-width:48px;text-align:center">2°</div>
+        <div><div style="font-family:'Noto Serif SC',serif;font-size:1.8rem;color:var(--gold)">麻 <span style="font-size:1rem;color:var(--blue)">má</span></div><div style="color:var(--muted);font-size:.85rem">Tono sube ↗  significa <strong style="color:var(--text)">Cáñamo</strong></div></div>
+      </div>
+      <div style="background:#111;border-radius:14px;padding:14px;display:flex;align-items:center;gap:14px;border:1px solid #222">
+        <div style="background:var(--green);color:#111;border-radius:10px;padding:8px 14px;font-weight:700;font-size:1.1rem;min-width:48px;text-align:center">3°</div>
+        <div><div style="font-family:'Noto Serif SC',serif;font-size:1.8rem;color:var(--gold)">马 <span style="font-size:1rem;color:var(--blue)">mǎ</span></div><div style="color:var(--muted);font-size:.85rem">Baja y sube ↘↗  significa <strong style="color:var(--text)">Caballo</strong></div></div>
+      </div>
+      <div style="background:#111;border-radius:14px;padding:14px;display:flex;align-items:center;gap:14px;border:1px solid #222">
+        <div style="background:var(--purple);color:#fff;border-radius:10px;padding:8px 14px;font-weight:700;font-size:1.1rem;min-width:48px;text-align:center">4°</div>
+        <div><div style="font-family:'Noto Serif SC',serif;font-size:1.8rem;color:var(--gold)">骂 <span style="font-size:1rem;color:var(--blue)">mà</span></div><div style="color:var(--muted);font-size:.85rem">Tono baja ↘  significa <strong style="color:var(--text)">Insultar</strong></div></div>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,#1a1200,#0a1a00);border-radius:16px;padding:16px;border:1px solid #3a2a00">
+      <div style="color:var(--gold);font-weight:700;margin-bottom:6px">⚠️ ¡Cuidado!</div>
+      <p style="color:var(--muted);font-size:.85rem;line-height:1.5">Decir "Mamá" (妈 mā) con tono equivocado puede sonar como "Caballo" (马 mǎ) o peor, ¡insultar! 😅 Por eso el pinyin tiene los acentos.</p>
+    </div>
+  </div>
+
+  <!-- Tab 4: Por qué tantas líneas -->
+  <div id="ctab4" style="display:none">
+    <div style="background:var(--card);border-radius:16px;padding:18px;border:1px solid #2a2a2a">
+      <div style="font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:10px">🔍 ¿Por qué tantas líneas?</div>
+      <p style="color:var(--muted);font-size:.9rem;line-height:1.6">Cada carácter chino no es un dibujo aleatorio. <strong style="color:var(--text)">Cada parte tiene un significado</strong>. Es como una imagen que cuenta una historia.</p>
+    </div>
+
+    <!-- AMOR 爱 -->
+    <div style="background:#111;border-radius:16px;padding:18px;border:1px solid #333">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+        <div style="font-family:'Noto Serif SC',serif;font-size:4rem;color:var(--gold);line-height:1">爱</div>
+        <div><div style="font-weight:700;font-size:1.1rem">Amor · Aì</div><div style="color:var(--muted);font-size:.85rem">13 trazos — acá te explico por qué</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="background:#1a1a1a;border-radius:12px;padding:12px;display:flex;gap:12px;align-items:center">
+          <div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:#e63946;min-width:40px;text-align:center">爫</div>
+          <div><div style="font-weight:600;font-size:.9rem">Parte de arriba: mano extendida</div><div style="color:var(--muted);font-size:.8rem">Alguien que alcanza, que entrega algo</div></div>
+        </div>
+        <div style="text-align:center;color:var(--muted);font-size:1.2rem">+</div>
+        <div style="background:#1a1a1a;border-radius:12px;padding:12px;display:flex;gap:12px;align-items:center">
+          <div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--gold);min-width:40px;text-align:center">心</div>
+          <div><div style="font-weight:600;font-size:.9rem">Centro: corazón (xīn)</div><div style="color:var(--muted);font-size:.8rem">El corazón es el núcleo del amor</div></div>
+        </div>
+        <div style="text-align:center;color:var(--muted);font-size:1.2rem">+</div>
+        <div style="background:#1a1a1a;border-radius:12px;padding:12px;display:flex;gap:12px;align-items:center">
+          <div style="font-family:'Noto Serif SC',serif;font-size:2rem;color:var(--blue);min-width:40px;text-align:center">友</div>
+          <div><div style="font-weight:600;font-size:.9rem">Parte de abajo: amigo (yǒu)</div><div style="color:var(--muted);font-size:.8rem">Hacia quien va ese amor</div></div>
+        </div>
+        <div style="background:linear-gradient(135deg,#1a0a2a,#0a1a2a);border-radius:12px;padding:12px;margin-top:4px;border:1px solid #2a1a4a">
+          <div style="color:var(--blue);font-weight:700;font-size:.9rem">💡 La historia completa:</div>
+          <div style="color:var(--muted);font-size:.85rem;margin-top:4px;line-height:1.5">"Una mano extendida + un corazón + un amigo" = <strong style="color:var(--text)">Amor</strong>. ¡El carácter literalmente muestra a alguien dando su corazón a un amigo!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUENO 好 -->
+    <div style="background:#111;border-radius:16px;padding:18px;border:1px solid #333">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+        <div style="font-family:'Noto Serif SC',serif;font-size:4rem;color:var(--gold);line-height:1">好</div>
+        <div><div style="font-weight:700;font-size:1.1rem">Bueno / Hola · Hǎo</div><div style="color:var(--muted);font-size:.85rem">6 trazos — tiene lógica perfecta</div></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+        <div style="text-align:center;flex:1;background:#1a1a1a;border-radius:12px;padding:12px">
+          <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:#e63946">女</div>
+          <div style="font-size:.8rem;font-weight:600">Mujer</div>
+          <div style="font-size:.72rem;color:var(--muted)">nǚ</div>
+        </div>
+        <div style="font-size:1.5rem;color:var(--muted)">+</div>
+        <div style="text-align:center;flex:1;background:#1a1a1a;border-radius:12px;padding:12px">
+          <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:var(--blue)">子</div>
+          <div style="font-size:.8rem;font-weight:600">Hijo</div>
+          <div style="font-size:.72rem;color:var(--muted)">zǐ</div>
+        </div>
+        <div style="font-size:1.5rem;color:var(--muted)">=</div>
+        <div style="text-align:center;flex:1;background:#1a1a1a;border-radius:12px;padding:12px">
+          <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:var(--green)">好</div>
+          <div style="font-size:.8rem;font-weight:600">Bueno</div>
+          <div style="font-size:.72rem;color:var(--muted)">hǎo</div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,#001a0a,#0a1a00);border-radius:12px;padding:12px;border:1px solid #1a3a1a">
+        <div style="color:var(--green);font-weight:700;font-size:.9rem">💡 La historia:</div>
+        <div style="color:var(--muted);font-size:.85rem;margin-top:4px;line-height:1.5">"Mujer + Hijo" = <strong style="color:var(--text)">Bueno</strong>. Para los antiguos chinos, una madre con su hijo era la imagen perfecta de algo bueno. ¡Por eso 你好 (nǐ hǎo = Hola) literalmente dice "tú bueno"!</div>
+      </div>
+    </div>
+
+    <!-- BRILLANTE 明 -->
+    <div style="background:#111;border-radius:16px;padding:18px;border:1px solid #333">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+        <div style="font-family:'Noto Serif SC',serif;font-size:4rem;color:var(--gold);line-height:1">明</div>
+        <div><div style="font-weight:700;font-size:1.1rem">Brillante / Claro · Míng</div><div style="color:var(--muted);font-size:.85rem">8 trazos — el más lógico de todos</div></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+        <div style="text-align:center;flex:1;background:#1a1a1a;border-radius:12px;padding:12px">
+          <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:#f4a261">日</div>
+          <div style="font-size:.8rem;font-weight:600">Sol</div>
+          <div style="font-size:.72rem;color:var(--muted)">rì</div>
+        </div>
+        <div style="font-size:1.5rem;color:var(--muted)">+</div>
+        <div style="text-align:center;flex:1;background:#1a1a1a;border-radius:12px;padding:12px">
+          <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:#aaaaff">月</div>
+          <div style="font-size:.8rem;font-weight:600">Luna</div>
+          <div style="font-size:.72rem;color:var(--muted)">yuè</div>
+        </div>
+        <div style="font-size:1.5rem;color:var(--muted)">=</div>
+        <div style="text-align:center;flex:1;background:#1a1a1a;border-radius:12px;padding:12px">
+          <div style="font-family:'Noto Serif SC',serif;font-size:2.5rem;color:var(--gold)">明</div>
+          <div style="font-size:.8rem;font-weight:600">Brillante</div>
+          <div style="font-size:.72rem;color:var(--muted)">míng</div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1a1200,#0a0a00);border-radius:12px;padding:12px;border:1px solid #3a2a00">
+        <div style="color:var(--gold);font-weight:700;font-size:.9rem">💡 La historia:</div>
+        <div style="color:var(--muted);font-size:.85rem;margin-top:4px;line-height:1.5">"Sol + Luna" = <strong style="color:var(--text)">Brillante</strong>. Los dos astros más luminosos juntos = máxima luminosidad. ¡Pura lógica visual!</div>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#1a1200,#0a1a00);border-radius:16px;padding:16px;border:1px solid #3a3a00;text-align:center">
+      <div style="font-size:1.5rem;margin-bottom:8px">🤯</div>
+      <div style="color:var(--gold);font-weight:700;margin-bottom:6px">¡El chino es una escritura pictórica!</div>
+      <p style="color:var(--muted);font-size:.85rem;line-height:1.5">Cada carácter complejo es una <strong style="color:var(--text)">mini historia visual</strong>. Las líneas no son aleatorias — cada una tiene un rol. Por eso cuantas más líneas, más rica es la historia que cuenta.</p>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETAR FRASE -->
+<div id="s-completar" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">✍️ Completar la Frase</div>
+    <div style="font-size:.85rem;color:var(--muted)"><span id="compIdx">1</span>/<span id="compTotal">10</span></div>
+  </div>
+
+  <!-- nivel pills -->
+  <div style="display:flex;gap:8px">
+    <div class="pill active" id="compN0" onclick="setCompNivel(0)">🌱 Básico</div>
+    <div class="pill" id="compN1" onclick="setCompNivel(1)">🔥 Intermedio</div>
+    <div class="pill" id="compN2" onclick="setCompNivel(2)">⚡ Avanzado</div>
+  </div>
+
+  <!-- progress -->
+  <div class="progress-row" id="compPips"></div>
+
+  <!-- frase card -->
+  <div style="background:linear-gradient(145deg,#111,#1a1a00);border:1px solid #3a3a00;border-radius:20px;padding:24px 18px;text-align:center">
+    <div style="font-size:.8rem;color:var(--muted);margin-bottom:10px">Completá la frase:</div>
+    <div id="compFraseDisplay" style="font-family:'Noto Serif SC',serif;font-size:1.6rem;color:var(--text);line-height:1.8;letter-spacing:2px"></div>
+    <div id="compPinyin" style="font-size:.85rem;color:var(--blue);margin-top:8px"></div>
+    <div id="compTraduccion" style="font-size:.85rem;color:var(--muted);margin-top:4px"></div>
+  </div>
+
+  <!-- opciones -->
+  <div class="options" id="compOpciones"></div>
+
+  <!-- feedback -->
+  <div id="compFeedback" style="display:none"></div>
+  <button id="compNext" class="btn btn-gold" style="display:none" onclick="nextCompletar()">Siguiente →</button>
+</div>
+
+<!-- TOP 150 -->
+<div id="s-150" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">💯 Top 150 Palabras</div>
+    <div style="font-size:.8rem;color:var(--muted)" id="w150count">0/150</div>
+  </div>
+  <div style="background:var(--card);border-radius:12px;padding:12px 14px;font-size:.82rem;color:var(--muted);border:1px solid #222">
+    Con estas <strong style="color:var(--gold)">150 palabras</strong> podés entender el <strong style="color:var(--gold)">50%</strong> de cualquier conversación en chino. Tocá una para escucharla 🔊
+  </div>
+  <div class="cat-pill" id="w150cats"></div>
+  <div id="w150list" style="display:flex;flex-direction:column;gap:8px"></div>
+</div>
+
+<!-- FRASES -->
+<div id="s-frases" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">💬 Frases del día</div>
+    <div style="font-size:.85rem;color:var(--muted)"><span id="fraseIdx">1</span>/<span id="fraseTotal">10</span></div>
+  </div>
+  <div class="flip-scene" onclick="flipFrase()">
+    <div class="flip-card" id="flipFrase">
+      <div class="flip-front" style="background:linear-gradient(145deg,#1e1e1e,#001a1a);border-color:#1a3a3a">
+        <div style="font-size:1.5rem">💬</div>
+        <div id="fraseEsp" style="font-size:1.3rem;font-weight:700;color:var(--gold);text-align:center;padding:0 20px"></div>
+        <div style="font-size:.75rem;color:var(--muted)">Toca para ver en chino 👆</div>
+        <button onclick="event.stopPropagation();speakFrase(this)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:8px 20px;color:#fff;font-size:.9rem;cursor:pointer;margin-top:4px">🔊 Escuchar</button>
+      </div>
+      <div class="flip-back" style="gap:14px">
+        <div id="fraseHanzi" style="font-family:'Noto Serif SC',serif;font-size:2.5rem;font-weight:900;color:var(--gold);text-align:center"></div>
+        <div id="frasePinyin" style="font-size:1rem;color:var(--blue);letter-spacing:1px"></div>
+        <div id="fraseEspBack" style="font-size:.9rem;color:var(--muted)"></div>
+        <button onclick="event.stopPropagation();speakFrase(this)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:8px 20px;color:#fff;font-size:.9rem;cursor:pointer">🔊 Escuchar</button>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:.75rem;color:var(--muted);text-align:center">👆 Toca para ver el chino</p>
+  <div style="display:flex;gap:10px">
+    <button class="btn btn-ghost" onclick="prevFrase()" style="flex:1;padding:12px">← Anterior</button>
+    <button class="btn btn-gold" onclick="nextFrase()" style="flex:1;padding:12px">Siguiente →</button>
+  </div>
+</div>
+
+<!-- CULTURA -->
+<div id="s-cultura" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">🏮 Cultura China</div>
+    <div style="font-size:.85rem;color:var(--muted)"><span id="cultIdx">1</span>/<span id="cultTotal">1</span></div>
+  </div>
+  <div class="cat-pill" id="cultCats"></div>
+  <div class="flip-scene" onclick="flipCultura()">
+    <div class="flip-card" id="flipCultura">
+      <div class="flip-front" style="background:linear-gradient(145deg,#1a0505,#2a1000);border-color:#5a1a00">
+        <div class="card-emoji" id="cultEmoji">🏮</div>
+        <div id="cultTitulo" style="font-size:1.2rem;font-weight:700;color:var(--gold);text-align:center;padding:0 16px"></div>
+        <div style="font-size:.75rem;color:var(--muted)">Toca para saber más 👆</div>
+      </div>
+      <div class="flip-back" style="background:linear-gradient(145deg,#1a0505,#2a1000);border-color:#5a1a00;gap:12px;padding:20px;overflow:hidden">
+        <div id="cultEmojiBig" style="font-size:2.5rem"></div>
+        <div id="cultTituloBack" style="font-family:'Noto Serif SC',serif;font-size:1.1rem;color:var(--gold);font-weight:700;text-align:center"></div>
+        <div id="cultTexto" style="font-size:.82rem;color:var(--muted);text-align:center;line-height:1.5;padding:0 8px;overflow-y:auto;max-height:130px"></div>
+        <div id="cultDato" style="font-size:.78rem;color:var(--blue);text-align:center;font-style:italic"></div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:.75rem;color:var(--muted);text-align:center">👆 Toca para descubrir</p>
+  <div style="display:flex;gap:10px">
+    <button class="btn btn-ghost" onclick="prevCultura()" style="flex:1;padding:12px">← Anterior</button>
+    <button class="btn btn-primary" onclick="nextCultura()" style="flex:1;padding:12px">Siguiente →</button>
+  </div>
+</div>
+
+<!-- CIUDADES -->
+<div id="s-ciudades" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">🏙️ Ciudades de China</div>
+    <div style="font-size:.85rem;color:var(--muted)"><span id="ciudIdx">1</span>/<span id="ciudTotal">1</span></div>
+  </div>
+  <div class="flip-scene" onclick="flipCiudad()">
+    <div class="flip-card" id="flipCiudad">
+      <div class="flip-front" style="background:linear-gradient(145deg,#0a0a2a,#1a0a1a);border-color:#2a1a4a">
+        <div class="card-emoji" id="ciudEmoji">🏙️</div>
+        <div id="ciudNombre" style="font-size:1.4rem;font-weight:700;color:var(--gold)"></div>
+        <div id="ciudHanzi" style="font-family:'Noto Serif SC',serif;font-size:1.8rem;color:var(--blue)"></div>
+        <div style="font-size:.75rem;color:var(--muted)">Toca para conocerla 👆</div>
+      </div>
+      <div class="flip-back" style="background:linear-gradient(145deg,#0a0a2a,#1a0a1a);border-color:#2a1a4a;gap:10px;padding:20px">
+        <div id="ciudEmojiBig" style="font-size:2rem"></div>
+        <div id="ciudNombreBack" style="font-family:'Noto Serif SC',serif;font-size:1rem;color:var(--gold);font-weight:700"></div>
+        <div id="ciudPinyin" style="color:var(--blue);font-size:.9rem"></div>
+        <div id="ciudInfo" style="font-size:.8rem;color:var(--muted);text-align:center;line-height:1.5;max-height:120px;overflow-y:auto"></div>
+        <div id="ciudDato" style="font-size:.75rem;color:var(--green);font-style:italic;text-align:center"></div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:.75rem;color:var(--muted);text-align:center">👆 Toca para conocer la ciudad</p>
+  <div style="display:flex;gap:10px">
+    <button class="btn btn-ghost" onclick="prevCiudad()" style="flex:1;padding:12px">← Anterior</button>
+    <button class="btn btn-gold" onclick="nextCiudad()" style="flex:1;padding:12px">Siguiente →</button>
+  </div>
+</div>
+
+<!-- CONVERSACIONES -->
+<div id="s-conv" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">🗺️ Conversaciones</div>
+    <div style="width:60px"></div>
+  </div>
+  <div class="cat-pill" id="convCats"></div>
+  <div style="display:flex;flex-direction:column;gap:10px" id="convList"></div>
+</div>
+
+<!-- PINYIN -->
+<div id="s-pinyin" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">🗣️ Guía de Pronunciación</div>
+    <div style="width:60px"></div>
+  </div>
+  <div style="background:var(--card);border-radius:14px;padding:14px;border:1px solid #2a2a2a;font-size:.85rem;color:var(--muted);line-height:1.5">
+    El chino usa el sistema <strong style="color:var(--gold)">Pinyin</strong> para escribir la pronunciación con letras latinas. Tocá cualquier sílaba para escucharla. 🔊
+  </div>
+
+  <div class="section-title" style="font-size:.95rem">Vocales simples</div>
+  <div id="pinyinVocales" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+
+  <div class="section-title" style="font-size:.95rem">Iniciales (consonantes)</div>
+  <div id="pinyinIniciales" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+
+  <div class="section-title" style="font-size:.95rem">Finales comunes (vocales compuestas)</div>
+  <div id="pinyinFinales" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+
+  <div class="section-title" style="font-size:.95rem">A → Z con ejemplos en chino</div>
+  <div id="pinyinAZ" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+
+  <div style="background:var(--card);border-radius:14px;padding:14px;border:1px solid #2a2a2a">
+    <div style="color:var(--gold);font-weight:700;margin-bottom:10px">🎵 Los 4 tonos — ejemplo con "ma"</div>
+    <div style="display:flex;flex-direction:column;gap:8px" id="tonosDemo"></div>
+  </div>
+
+  <div style="background:var(--card);border-radius:14px;padding:14px;border:1px solid #2a2a2a">
+    <div style="color:var(--gold);font-weight:700;margin-bottom:8px">⚠️ Letras que suenan diferente</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;gap:10px;align-items:center;background:#111;border-radius:8px;padding:10px">
+        <div style="color:var(--gold);font-weight:700;width:30px;font-size:1.1rem">x</div>
+        <div style="color:var(--muted);font-size:.85rem">Suena como "sh" suave. <strong style="color:var(--text)">xiè</strong> = "shieh"</div>
+        <button onclick="speakHanzi('谢谢',this)" style="margin-left:auto;background:rgba(255,255,255,.08);border:1px solid #333;border-radius:12px;padding:5px 10px;color:#ccc;font-size:.8rem;cursor:pointer">🔊</button>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;background:#111;border-radius:8px;padding:10px">
+        <div style="color:var(--gold);font-weight:700;width:30px;font-size:1.1rem">zh</div>
+        <div style="color:var(--muted);font-size:.85rem">Suena como "ch" fuerte. <strong style="color:var(--text)">zhōng</strong> = "chong"</div>
+        <button onclick="speakHanzi('中国',this)" style="margin-left:auto;background:rgba(255,255,255,.08);border:1px solid #333;border-radius:12px;padding:5px 10px;color:#ccc;font-size:.8rem;cursor:pointer">🔊</button>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;background:#111;border-radius:8px;padding:10px">
+        <div style="color:var(--gold);font-weight:700;width:30px;font-size:1.1rem">q</div>
+        <div style="color:var(--muted);font-size:.85rem">Suena como "ch" suave. <strong style="color:var(--text)">qǐng</strong> = "ching"</div>
+        <button onclick="speakHanzi('请',this)" style="margin-left:auto;background:rgba(255,255,255,.08);border:1px solid #333;border-radius:12px;padding:5px 10px;color:#ccc;font-size:.8rem;cursor:pointer">🔊</button>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;background:#111;border-radius:8px;padding:10px">
+        <div style="color:var(--gold);font-weight:700;width:30px;font-size:1.1rem">c</div>
+        <div style="color:var(--muted);font-size:.85rem">Suena como "ts". <strong style="color:var(--text)">cài</strong> = "tsai"</div>
+        <button onclick="speakHanzi('菜',this)" style="margin-left:auto;background:rgba(255,255,255,.08);border:1px solid #333;border-radius:12px;padding:5px 10px;color:#ccc;font-size:.8rem;cursor:pointer">🔊</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TARJETAS -->
+<div id="s-flash" class="screen">
+  <div class="flash-header">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">🃏 Tarjetas</div>
+    <div style="font-size:.85rem;color:var(--muted)"><span id="flashIdx">1</span>/<span id="flashTotal">10</span></div>
+  </div>
+  <div class="cat-pill" id="flashCats"></div>
+  <div class="flip-scene" onclick="flipCard()">
+    <div class="flip-card" id="flipCard">
+      <div class="flip-front">
+        <div class="card-emoji" id="cardEmoji">👋</div>
+        <div class="card-esp" id="cardEsp">Hola</div>
+        <div class="card-hint">Toca para ver en chino 👆</div>
+        <button onclick="event.stopPropagation();speakCurrent(this)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:8px 20px;color:#fff;font-size:.9rem;cursor:pointer;margin-top:4px">🔊 Escuchar</button>
+      </div>
+      <div class="flip-back">
+        <div class="card-hanzi" id="cardHanzi">你好</div>
+        <div class="card-pinyin" id="cardPinyin">nǐ hǎo</div>
+        <div class="card-esp-back" id="cardEspBack">Hola</div>
+        <button onclick="event.stopPropagation();speakCurrent(this)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:8px 20px;color:#fff;font-size:.9rem;cursor:pointer;margin-top:4px">🔊 Escuchar</button>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:.75rem;color:var(--muted);text-align:center">👆 Toca la tarjeta para girarla</p>
+  <div class="flash-nav">
+    <button class="btn btn-ghost" onclick="prevCard()" style="flex:1;padding:12px">← Anterior</button>
+    <button class="btn btn-gold" onclick="nextCard()" style="flex:1;padding:12px">Siguiente →</button>
+  </div>
+</div>
+
+<!-- TRAZOS -->
+<div id="s-trazos" class="screen">
+  <div class="row">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">✏️ Trazos</div>
+    <div style="width:60px"></div>
+  </div>
+
+  <!-- Tabs -->
+  <div style="display:flex;gap:8px">
+    <button class="btn btn-ghost" id="tabBasicos" onclick="switchTab('basicos')" style="flex:1;padding:10px;font-size:.85rem">Básicos</button>
+    <button class="btn btn-ghost" id="tabPalTraz" onclick="switchTab('palabrastrazo')" style="flex:1;padding:10px;font-size:.85rem">Palabras</button>
+  </div>
+
+  <!-- Grid de símbolos -->
+  <div class="symbol-grid" id="symbolGrid"></div>
+
+  <!-- Info del símbolo seleccionado — lo que estás dibujando -->
+  <div class="sym-info-card">
+    <div class="sym-info-big" id="selHanzi">一</div>
+    <div class="sym-info-right">
+      <div class="sym-info-pinyin" id="selPinyin">yī</div>
+      <div class="sym-info-esp" id="selEsp">Horizontal</div>
+      <div class="sym-info-tip" id="selTip">Un trazo de izquierda a derecha ➡️</div>
+    </div>
+  </div>
+
+  <!-- Canvas: ghost + dibujo — tamaño REAL fijo en JS -->
+  <div class="canvas-wrap" id="canvasWrap">
+    <canvas id="drawCanvas" style="display:block;width:100%;border-radius:18px"></canvas>
+    <!-- Banner vivo que muestra lo que significa -->
+    <div class="live-banner" id="liveBanner">
+      <div class="live-hanzi" id="liveBannerH">一</div>
+      <div>
+        <div class="live-text" id="liveBannerE">Horizontal</div>
+        <div class="live-sub" id="liveBannerP">yī · Dibujá el trazo 👆</div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div style="display:flex;gap:10px;align-items:center">
+    <button class="btn" id="drawToggle" onclick="toggleDraw()" style="flex:1;padding:13px;background:#1a1a1a;border:2px solid #333;color:var(--muted);border-radius:14px;font-size:.95rem;font-weight:600">✏️ Activar dibujo</button>
+  </div>
+  <div class="stroke-tip" id="strokeTip">Activá el dibujo, luego trazá el carácter con el dedo</div>
+  <div class="trazo-btns">
+    <button class="btn btn-ghost" onclick="clearCanvas()">🗑️ Borrar</button>
+    <button class="btn btn-green" onclick="checkStroke()">✓ Listo</button>
+  </div>
+</div>
+
+<!-- PALABRAS -->
+<div id="s-palabras" class="screen">
+  <div class="row">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">📖 Vocabulario</div>
+    <div style="width:60px"></div>
+  </div>
+  <div class="cat-pill" id="palabrasCats"></div>
+  <div class="word-list" id="wordList"></div>
+</div>
+
+<!-- QUIZ -->
+<div id="s-game" class="screen">
+  <div class="row">
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="back-btn" onclick="exitGame()">✕ Salir</button>
+      <div class="section-title" id="gameMode">🎯 Quiz</div>
+    </div>
+    <div style="font-size:.8rem;color:var(--muted)"><span id="qNum">1</span>/<span id="qTotal">10</span></div>
+  </div>
+  <div class="progress-row" id="progressRow"></div>
+  <div class="char-card">
+    <div class="hanzi" id="qHanzi"></div>
+    <div class="pinyin" id="qPinyin"></div>
+    <div class="qhint" id="qHint"></div>
+    <button onclick="speakHanzi(document.getElementById('qHanzi').textContent,this)" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:7px 18px;color:#ccc;font-size:.85rem;cursor:pointer;margin-top:8px">🔊 Escuchar</button>
+  </div>
+  <div class="options" id="optionsList"></div>
+  <div id="feedbackBox" style="display:none"></div>
+  <button id="nextBtn" class="btn btn-gold" style="display:none" onclick="nextQuestion()">Siguiente →</button>
+</div>
+
+<!-- RESULTADO -->
+<div id="s-result" class="screen">
+  <div class="result-icon" id="resultIcon">🏆</div>
+  <div class="result-score" id="resultScore"></div>
+  <div id="resultMsg" style="color:var(--muted);font-size:1.1rem"></div>
+  <div class="result-stats">
+    <div><div class="stat-val" id="rs-correctas">0</div><div class="stat-lbl">✅ Correctas</div></div>
+    <div><div class="stat-val" id="rs-xp">0</div><div class="stat-lbl">⚡ XP</div></div>
+    <div><div class="stat-val" id="rs-racha">0</div><div class="stat-lbl">🔥 Racha</div></div>
+  </div>
+  <button class="btn btn-primary" onclick="goMenu()">Volver al menú 🐉</button>
+  <button class="btn btn-ghost" onclick="restartMode()">Jugar otra vez 🔄</button>
+</div>
+
+<script>
+/* ── DATOS ── */
+const VOCAB={
+  "Saludos 👋":[
+    {h:"你好",p:"nǐ hǎo",e:"Hola",img:"👋"},{h:"再见",p:"zài jiàn",e:"Adiós",img:"🙏"},
+    {h:"谢谢",p:"xiè xiè",e:"Gracias",img:"🙌"},{h:"对不起",p:"duì bu qǐ",e:"Lo siento",img:"😔"},
+    {h:"没关系",p:"méi guān xì",e:"No hay problema",img:"😊"},{h:"早上好",p:"zǎo shàng hǎo",e:"Buenos días",img:"🌅"},
+    {h:"晚上好",p:"wǎn shàng hǎo",e:"Buenas noches",img:"🌙"},{h:"请",p:"qǐng",e:"Por favor",img:"🤲"},
+    {h:"是",p:"shì",e:"Sí",img:"✅"},{h:"不",p:"bù",e:"No",img:"❌"}
+  ],
+  "Números 🔢":[
+    {h:"一",p:"yī",e:"Uno",img:"1️⃣"},{h:"二",p:"èr",e:"Dos",img:"2️⃣"},{h:"三",p:"sān",e:"Tres",img:"3️⃣"},
+    {h:"四",p:"sì",e:"Cuatro",img:"4️⃣"},{h:"五",p:"wǔ",e:"Cinco",img:"5️⃣"},{h:"六",p:"liù",e:"Seis",img:"6️⃣"},
+    {h:"七",p:"qī",e:"Siete",img:"7️⃣"},{h:"八",p:"bā",e:"Ocho",img:"8️⃣"},{h:"九",p:"jiǔ",e:"Nueve",img:"9️⃣"},
+    {h:"十",p:"shí",e:"Diez",img:"🔟"}
+  ],
+  "Comida 🍜":[
+    {h:"米饭",p:"mǐ fàn",e:"Arroz",img:"🍚"},{h:"面条",p:"miàn tiáo",e:"Fideos",img:"🍜"},
+    {h:"水",p:"shuǐ",e:"Agua",img:"💧"},{h:"茶",p:"chá",e:"Té",img:"🍵"},
+    {h:"苹果",p:"píng guǒ",e:"Manzana",img:"🍎"},{h:"肉",p:"ròu",e:"Carne",img:"🥩"},
+    {h:"鱼",p:"yú",e:"Pescado",img:"🐟"},{h:"面包",p:"miàn bāo",e:"Pan",img:"🍞"},
+    {h:"鸡蛋",p:"jī dàn",e:"Huevo",img:"🥚"},{h:"牛奶",p:"niú nǎi",e:"Leche",img:"🥛"}
+  ],
+  "Colores 🎨":[
+    {h:"红色",p:"hóng sè",e:"Rojo",img:"🔴"},{h:"蓝色",p:"lán sè",e:"Azul",img:"🔵"},
+    {h:"绿色",p:"lǜ sè",e:"Verde",img:"🟢"},{h:"黄色",p:"huáng sè",e:"Amarillo",img:"🟡"},
+    {h:"黑色",p:"hēi sè",e:"Negro",img:"⚫"},{h:"白色",p:"bái sè",e:"Blanco",img:"⚪"},
+    {h:"紫色",p:"zǐ sè",e:"Morado",img:"🟣"},{h:"粉色",p:"fěn sè",e:"Rosa",img:"🌸"},
+    {h:"橙色",p:"chéng sè",e:"Naranja",img:"🟠"},{h:"灰色",p:"huī sè",e:"Gris",img:"🩶"}
+  ],
+  "Animales 🐾":[
+    {h:"猫",p:"māo",e:"Gato",img:"🐱"},{h:"狗",p:"gǒu",e:"Perro",img:"🐶"},
+    {h:"鸟",p:"niǎo",e:"Pájaro",img:"🐦"},{h:"兔子",p:"tù zi",e:"Conejo",img:"🐰"},
+    {h:"熊猫",p:"xióng māo",e:"Panda",img:"🐼"},{h:"老虎",p:"lǎo hǔ",e:"Tigre",img:"🐯"},
+    {h:"大象",p:"dà xiàng",e:"Elefante",img:"🐘"},{h:"猴子",p:"hóu zi",e:"Mono",img:"🐒"},
+    {h:"龙",p:"lóng",e:"Dragón",img:"🐉"},{h:"马",p:"mǎ",e:"Caballo",img:"🐴"}
+  ]
+};
+const BASICOS=[
+  {h:"一",p:"yī",e:"Horizontal",tip:"Trazo de izquierda a derecha ➡️"},
+  {h:"丨",p:"shù",e:"Vertical",tip:"De arriba hacia abajo ⬇️"},
+  {h:"丿",p:"piě",e:"Inclinado",tip:"Diagonal hacia abajo-izquierda ↙️"},
+  {h:"丶",p:"diǎn",e:"Punto",tip:"Un pequeño punto o trazo corto"},
+  {h:"人",p:"rén",e:"Persona",tip:"2 trazos: izquierda luego derecha"},
+  {h:"口",p:"kǒu",e:"Boca",tip:"3 trazos formando un cuadrado"},
+  {h:"日",p:"rì",e:"Sol",tip:"4 trazos: caja + línea del medio"},
+  {h:"木",p:"mù",e:"Árbol",tip:"4 trazos: cruz con ramas abajo"},
+  {h:"水",p:"shuǐ",e:"Agua",tip:"4 trazos que fluyen"},
+  {h:"火",p:"huǒ",e:"Fuego",tip:"4 trazos como llamas"},
+  {h:"山",p:"shān",e:"Montaña",tip:"3 picos verticales"},
+  {h:"大",p:"dà",e:"Grande",tip:"3 trazos: horizontal + dos brazos"}
+];
+const PALABRASTRAZO=[
+  {h:"小",p:"xiǎo",e:"Pequeño",tip:"3 trazos: vertical + dos curvas"},
+  {h:"心",p:"xīn",e:"Corazón",tip:"4 trazos curvos"},
+  {h:"手",p:"shǒu",e:"Mano",tip:"4 líneas + vertical central"},
+  {h:"女",p:"nǚ",e:"Mujer",tip:"3 trazos en V abierta"},
+  {h:"子",p:"zǐ",e:"Hijo",tip:"3 trazos: curva + cuerpo"},
+  {h:"王",p:"wáng",e:"Rey",tip:"3 horizontales + 1 vertical"},
+  {h:"天",p:"tiān",e:"Cielo",tip:"4 trazos como 大 con techo"},
+  {h:"地",p:"dì",e:"Tierra",tip:"6 trazos compuestos"}
+];
+
+/* ── ESTADO ── */
+let player={nombre:'',nivel:1,xp:0,racha:0,mejorRacha:0,correctas:0,incorrectas:0,palabras:new Set()};
+let gameState={mode:'',questions:[],idx:0,correct:0,xpGained:0,lastMode:''};
+let flashState={cards:[],idx:0,cat:'Saludos 👋'};
+let desafioTimer=null;
+let canvas,ctx,drawing=false,drawMode=false;
+let currentSymList=BASICOS,currentSymIdx=0;
+// Pixel ratio y escala para coordenadas correctas
+let canvasCSSW=0,canvasCSSH=0,dpr=1;
+
+/* ── UTILS ── */
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function allWords(){return Object.values(VOCAB).flat()}
+function xpNeeded(){return player.nivel*100}
+function addXP(n){
+  player.xp+=n;gameState.xpGained=(gameState.xpGained||0)+n;
+  const el=document.createElement('div');el.className='xp-popup';el.textContent='+'+n+' XP 🔥';
+  document.body.appendChild(el);setTimeout(()=>el.remove(),2000);
+  while(player.xp>=xpNeeded()){player.xp-=xpNeeded();player.nivel++;
+    const lv=document.createElement('div');lv.className='xp-popup';lv.textContent='⭐ ¡NIVEL '+player.nivel+'!';lv.style.top='60px';
+    document.body.appendChild(lv);setTimeout(()=>lv.remove(),2000);}
+  updateHUD();
+}
+function updateHUD(){
+  document.getElementById('hudName').textContent=player.nombre;
+  document.getElementById('hudNivel').textContent=player.nivel;
+  document.getElementById('hudXpText').textContent=player.xp+'/'+xpNeeded()+' XP';
+  document.getElementById('xpFill').style.width=(player.xp/xpNeeded()*100)+'%';
+  document.getElementById('st-racha').textContent=player.racha;
+  document.getElementById('st-palabras').textContent=player.palabras.size;
+  document.getElementById('st-correctas').textContent=player.correctas;
+}
+function goMenu(){updateHUD();show('s-menu')}
+function exitGame(){if(desafioTimer){clearInterval(desafioTimer);desafioTimer=null;}goMenu()}
+function startGame(){player.nombre=document.getElementById('nameInput').value.trim()||'Dragón';updateHUD();show('s-menu')}
+
+/* ── DUOLINGO ── */
+function showDuo(meaning){
+  document.getElementById('duoMeaning').textContent=meaning||'';
+  launchConfetti();
+  document.getElementById('duoOverlay').classList.add('show');
+}
+function closeDuo(){document.getElementById('duoOverlay').classList.remove('show');document.getElementById('confettiContainer').innerHTML='';}
+function launchConfetti(){
+  const c=document.getElementById('confettiContainer');c.innerHTML='';
+  const colors=['#ffd166','#06d6a0','#4cc9f0','#e63946','#ffffff'];
+  for(let i=0;i<35;i++){
+    const d=document.createElement('div');d.className='confetti-dot';
+    const tx=(Math.random()*260-130)+'px',ty=(Math.random()*-350-60)+'px';
+    d.style.cssText=`left:${Math.random()*100}%;top:55%;background:${colors[i%colors.length]};--tx:${tx};--ty:${ty};animation-delay:${Math.random()*.4}s;animation-duration:${.8+Math.random()*.7}s`;
+    c.appendChild(d);
+  }
+}
+
+/* ── TARJETAS ── */
+function initFlash(){
+  const pillDiv=document.getElementById('flashCats');pillDiv.innerHTML='';
+  Object.keys(VOCAB).forEach(c=>{
+    const p=document.createElement('div');p.className='pill'+(c===flashState.cat?' active':'');p.textContent=c;
+    p.onclick=()=>{flashState.cat=c;document.querySelectorAll('#flashCats .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');loadFlashCat(c);}
+    pillDiv.appendChild(p);
+  });
+  loadFlashCat(flashState.cat);
+}
+function loadFlashCat(cat){flashState.cards=shuffle(VOCAB[cat]);flashState.idx=0;document.getElementById('flashTotal').textContent=flashState.cards.length;renderFlash();}
+function renderFlash(){
+  const card=flashState.cards[flashState.idx];
+  document.getElementById('flipCard').classList.remove('flipped');
+  document.getElementById('flashIdx').textContent=flashState.idx+1;
+  document.getElementById('cardEmoji').textContent=card.img;
+  document.getElementById('cardEsp').textContent=card.e;
+  document.getElementById('cardHanzi').textContent=card.h;
+  document.getElementById('cardPinyin').textContent=card.p;
+  document.getElementById('cardEspBack').textContent=card.e;
+  player.palabras.add(card.h);
+}
+function flipCard(){document.getElementById('flipCard').classList.toggle('flipped');addXP(2);}
+function nextCard(){flashState.idx=flashState.idx<flashState.cards.length-1?flashState.idx+1:0;renderFlash();}
+function prevCard(){flashState.idx=flashState.idx>0?flashState.idx-1:flashState.cards.length-1;renderFlash();}
+
+/* ── TRAZOS ── */
+function initTrazos(){
+  canvas=document.getElementById('drawCanvas');
+  dpr=window.devicePixelRatio||1;
+  // Esperar que el DOM pinte para leer ancho real
+  requestAnimationFrame(()=>{
+    const wrap=document.getElementById('canvasWrap');
+    canvasCSSW=wrap.clientWidth;
+    canvasCSSH=Math.round(canvasCSSW*0.72); // relación ~4:3 adaptada
+    // Píxeles reales (para nitidez en pantallas HiDPI)
+    canvas.width=Math.round(canvasCSSW*dpr);
+    canvas.height=Math.round(canvasCSSH*dpr);
+    // CSS size = tamaño visual
+    canvas.style.height=canvasCSSH+'px';
+    ctx=canvas.getContext('2d');
+    ctx.scale(dpr,dpr);           // escala una sola vez
+    ctx.strokeStyle='#ffd166';ctx.lineWidth=5;ctx.lineCap='round';ctx.lineJoin='round';
+    bindCanvas();
+    setTabStyle('basicos');
+    renderSymGrid(BASICOS);
+    selectSym(0,BASICOS);
+  });
+}
+
+/* Convierte posición del toque a coordenadas del canvas (CSS, antes del scale) */
+function getPos(e){
+  const r=canvas.getBoundingClientRect();
+  const src=e.touches?e.touches[0]:e;
+  return {
+    x:(src.clientX-r.left)*(canvasCSSW/r.width),
+    y:(src.clientY-r.top)*(canvasCSSH/r.height)
+  };
+}
+
+function toggleDraw(){
+  drawMode=!drawMode;
+  const btn=document.getElementById('drawToggle');
+  const wrap=document.getElementById('canvasWrap');
+  const tip=document.getElementById('strokeTip');
+  if(drawMode){
+    btn.textContent='🛑 Detener dibujo';
+    btn.style.background='rgba(6,214,160,.15)';
+    btn.style.borderColor='var(--green)';
+    btn.style.color='var(--green)';
+    wrap.style.border='2px solid var(--green)';
+    wrap.style.boxShadow='0 0 20px rgba(6,214,160,.3)';
+    tip.textContent='✏️ Modo dibujo ON — trazá el carácter';
+    tip.style.color='var(--green)';
+  } else {
+    drawing=false;
+    btn.textContent='✏️ Activar dibujo';
+    btn.style.background='#1a1a1a';
+    btn.style.borderColor='#333';
+    btn.style.color='var(--muted)';
+    wrap.style.border='2px solid #2a2a2a';
+    wrap.style.boxShadow='';
+    tip.textContent='Activá el dibujo, luego trazá el carácter con el dedo';
+    tip.style.color='';
+  }
+}
+function bindCanvas(){
+  document.addEventListener("touchstart",function(e){
+    if(!drawMode)return;
+    // Ignorar toques sobre botones/controles fuera del canvas
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.closest('button')||t.closest('.trazo-btns')||t.closest('.sym-btn')||t.closest('.symbol-grid'))return;
+    // Solo dibujar si el toque es dentro del canvas
+    var r=canvas.getBoundingClientRect();
+    var src=e.touches[0];
+    if(src.clientX<r.left||src.clientX>r.right||src.clientY<r.top||src.clientY>r.bottom)return;
+    drawing=true;
+    e.preventDefault();
+    var p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);
+  },{passive:false});
+  document.addEventListener("touchmove",function(e){
+    if(!drawing)return;
+    e.preventDefault();
+    var p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke();
+  },{passive:false});
+  document.addEventListener("touchend",function(){drawing=false;});
+  canvas.addEventListener("mousedown",function(e){if(!drawMode)return;drawing=true;var p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+  canvas.addEventListener("mousemove",function(e){if(!drawing)return;var p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
+  canvas.addEventListener("mouseup",function(){drawing=false;});
+}
+
+function drawGhost(sym){
+  if(!ctx)return;
+  // Limpiar todo y redibujar ghost
+  ctx.clearRect(0,0,canvasCSSW,canvasCSSH);
+  ctx.save();
+  ctx.font='bold '+Math.round(canvasCSSH*.72)+'px "Noto Serif SC", serif';
+  ctx.fillStyle='rgba(255,200,0,0.10)';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText(sym.h,canvasCSSW/2,canvasCSSH/2);
+  ctx.restore();
+}
+
+function setTabStyle(tab){
+  document.getElementById('tabBasicos').style.borderColor=tab==='basicos'?'var(--gold)':'#333';
+  document.getElementById('tabBasicos').style.color=tab==='basicos'?'var(--gold)':'var(--muted)';
+  document.getElementById('tabPalTraz').style.borderColor=tab==='palabrastrazo'?'var(--gold)':'#333';
+  document.getElementById('tabPalTraz').style.color=tab==='palabrastrazo'?'var(--gold)':'var(--muted)';
+}
+function switchTab(tab){
+  setTabStyle(tab);
+  const list=tab==='basicos'?BASICOS:PALABRASTRAZO;
+  currentSymList=list;renderSymGrid(list);selectSym(0,list);
+}
+function renderSymGrid(list){
+  const grid=document.getElementById('symbolGrid');grid.innerHTML='';
+  list.forEach((s,i)=>{
+    const btn=document.createElement('div');btn.className='sym-btn'+(i===0?' sel':'');
+    btn.innerHTML='<div class="sym-hanzi">'+s.h+'</div><div class="sym-label">'+s.e+'</div>';
+    btn.onclick=()=>{selectSym(i,list);document.querySelectorAll('.sym-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');};
+    grid.appendChild(btn);
+  });
+}
+function selectSym(i,list){
+  currentSymIdx=i;
+  const s=list[i];
+  // Info card
+  document.getElementById('selHanzi').textContent=s.h;
+  document.getElementById('selPinyin').textContent=s.p;
+  document.getElementById('selEsp').textContent=s.e;
+  document.getElementById('selTip').textContent=s.tip;
+  // Live banner
+  document.getElementById('liveBannerH').textContent=s.h;
+  document.getElementById('liveBannerE').textContent=s.e+' ('+s.p+')';
+  document.getElementById('liveBannerP').textContent=s.tip;
+  // Stroke tip
+  if(drawMode){toggleDraw();} // apagar modo dibujo al cambiar símbolo
+  document.getElementById('strokeTip').textContent='Activá el dibujo, luego trazá el carácter con el dedo';
+  document.getElementById('strokeTip').style.color='';
+  document.getElementById('strokeTip').style.color='';
+  // Ghost en canvas
+  if(ctx)drawGhost(s);
+}
+function clearCanvas(){
+  if(!ctx)return;
+  const s=currentSymList[currentSymIdx];
+  drawGhost(s);
+}
+function checkStroke(){
+  if(!ctx)return;
+  // Revisar si hay píxeles dorados (el usuario dibujó algo)
+  const data=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+  let hasStroke=false;
+  for(let i=0;i<data.length;i+=16){
+    // Buscar píxeles con componente roja alta y alpha visible
+    if(data[i]>150&&data[i+3]>30){hasStroke=true;break;}
+  }
+  const s=currentSymList[currentSymIdx];
+  if(hasStroke){
+    addXP(5);player.correctas++;player.palabras.add(s.h);
+    showDuo(s.h+' = '+s.e+' · '+s.p);
+  } else {
+    const tip=document.getElementById('strokeTip');
+    tip.textContent='¡Primero dibujá el trazo con el dedo! 👆';
+    tip.style.color='var(--red)';
+    setTimeout(()=>{tip.style.color='';tip.textContent='Seguí el trazo gris, luego tocá ✓ Listo';},1800);
+  }
+}
+
+/* ── PALABRAS ── */
+let palabrasCat=Object.keys(VOCAB)[0];
+function initPalabras(){
+  const pillDiv=document.getElementById('palabrasCats');pillDiv.innerHTML='';
+  Object.keys(VOCAB).forEach(c=>{
+    const p=document.createElement('div');p.className='pill'+(c===palabrasCat?' active':'');p.textContent=c;
+    p.onclick=()=>{palabrasCat=c;document.querySelectorAll('#palabrasCats .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');renderWordList(c);};
+    pillDiv.appendChild(p);
+  });
+  renderWordList(palabrasCat);
+}
+function renderWordList(cat){
+  const list=document.getElementById('wordList');list.innerHTML='';
+  VOCAB[cat].forEach(w=>{
+    const row=document.createElement('div');row.className='word-row';
+    row.innerHTML='<div class="word-emoji">'+w.img+'</div><div class="word-hanzi">'+w.h+'</div><div class="word-info"><div class="word-pinyin">'+w.p+'</div><div class="word-esp">'+w.e+'</div></div>';
+    row.onclick=()=>{player.palabras.add(w.h);addXP(1);row.style.borderColor='var(--gold)';setTimeout(()=>row.style.borderColor='',600);};
+    list.appendChild(row);
+  });
+}
+
+/* ── QUIZ ── */
+function startQuiz(){
+  const qs=shuffle(allWords()).slice(0,10);
+  gameState={mode:'quiz',questions:qs,idx:0,correct:0,xpGained:0,lastMode:'quiz'};
+  buildPips(10);document.getElementById('gameMode').textContent='🎯 Quiz';renderQuestion();show('s-game');
+}
+function buildPips(n){
+  const row=document.getElementById('progressRow');row.innerHTML='';
+  for(let i=0;i<n;i++){const p=document.createElement('div');p.className='pip';p.id='pip'+i;if(i===0)p.style.background='var(--gold)';row.appendChild(p);}
+}
+function renderQuestion(){
+  const q=gameState.questions[gameState.idx];
+  document.getElementById('qNum').textContent=gameState.idx+1;
+  document.getElementById('qTotal').textContent=gameState.questions.length;
+  document.getElementById('qHanzi').textContent=q.h;
+  document.getElementById('qPinyin').textContent=q.p;
+  document.getElementById('qHint').textContent=q.img||'';
+  const correct=q.e;
+  const opts=shuffle([correct,...shuffle(allWords().filter(w=>w.e!==correct)).slice(0,3).map(w=>w.e)]);
+  const list=document.getElementById('optionsList');list.innerHTML='';
+  opts.forEach((op,i)=>{
+    const btn=document.createElement('button');btn.className='opt-btn';
+    btn.innerHTML='<div class="opt-num">'+(i+1)+'</div>'+op;
+    btn.onclick=()=>checkAnswer(op,correct,btn);
+    list.appendChild(btn);
+  });
+  document.getElementById('feedbackBox').style.display='none';
+  document.getElementById('nextBtn').style.display='none';
+}
+function checkAnswer(chosen,correct,btn){
+  document.querySelectorAll('.opt-btn').forEach(b=>b.onclick=null);
+  if(desafioTimer){clearInterval(desafioTimer);desafioTimer=null;}
+  const fb=document.getElementById('feedbackBox');
+  if(chosen===correct){
+    btn.classList.add('correct');player.racha++;player.correctas++;player.mejorRacha=Math.max(player.racha,player.mejorRacha);
+    player.palabras.add(gameState.questions[gameState.idx].h);
+    const xp=10+player.racha*2;addXP(xp);gameState.correct++;
+    fb.className='feedback ok';fb.textContent='✅ ¡Correcto!'+(player.racha>1?' 🔥 x'+player.racha:'');
+    const pip=document.getElementById('pip'+gameState.idx);if(pip)pip.style.background='var(--green)';
+  }else{
+    btn.classList.add('wrong');document.querySelectorAll('.opt-btn').forEach(b=>{if(b.textContent.includes(correct))b.classList.add('correct');});
+    player.racha=0;player.incorrectas++;
+    fb.className='feedback fail';fb.innerHTML='❌ Era: <strong>'+correct+'</strong>';
+    const pip=document.getElementById('pip'+gameState.idx);if(pip)pip.style.background='var(--red)';
+  }
+  const next=document.getElementById('pip'+(gameState.idx+1));if(next)next.style.background='var(--gold)';
+  fb.style.display='block';document.getElementById('nextBtn').style.display='block';
+}
+function nextQuestion(){
+  gameState.idx++;
+  if(gameState.idx>=gameState.questions.length){showResult();return;}
+  if(gameState.mode==='desafio')renderDesafioQ();else renderQuestion();
+}
+
+/* ── DESAFÍO ── */
+function startDesafio(){
+  const qs=shuffle(allWords()).slice(0,10);
+  gameState={mode:'desafio',questions:qs,idx:0,correct:0,xpGained:0,lastMode:'desafio'};
+  buildPips(10);document.getElementById('gameMode').textContent='⚡ Relámpago';renderDesafioQ();show('s-game');
+}
+function renderDesafioQ(){
+  const q=gameState.questions[gameState.idx];
+  document.getElementById('qNum').textContent=gameState.idx+1;
+  document.getElementById('qHanzi').textContent=q.h;
+  document.getElementById('qPinyin').textContent=q.p;
+  let sec=5;document.getElementById('qHint').textContent='⚡ '+sec+' seg';
+  const correct=q.e;
+  const opts=shuffle([correct,...shuffle(allWords().filter(w=>w.e!==correct)).slice(0,3).map(w=>w.e)]);
+  const list=document.getElementById('optionsList');list.innerHTML='';
+  opts.forEach((op,i)=>{
+    const btn=document.createElement('button');btn.className='opt-btn';
+    btn.innerHTML='<div class="opt-num">'+(i+1)+'</div>'+op;
+    btn.onclick=()=>{if(desafioTimer){clearInterval(desafioTimer);desafioTimer=null;}checkAnswer(op,correct,btn);};
+    list.appendChild(btn);
+  });
+  document.getElementById('feedbackBox').style.display='none';document.getElementById('nextBtn').style.display='none';
+  if(desafioTimer)clearInterval(desafioTimer);
+  desafioTimer=setInterval(()=>{
+    sec--;const h=document.getElementById('qHint');if(h)h.textContent='⚡ '+sec+' seg';
+    if(sec<=0){
+      clearInterval(desafioTimer);desafioTimer=null;
+      document.querySelectorAll('.opt-btn').forEach(b=>b.onclick=null);
+      const fb=document.getElementById('feedbackBox');fb.className='feedback fail';fb.textContent='⏰ ¡Tiempo! Era: '+correct;fb.style.display='block';
+      player.racha=0;player.incorrectas++;
+      const pip=document.getElementById('pip'+gameState.idx);if(pip)pip.style.background='var(--red)';
+      const nxt=document.getElementById('pip'+(gameState.idx+1));if(nxt)nxt.style.background='var(--gold)';
+      document.getElementById('nextBtn').style.display='block';
+    }
+  },1000);
+}
+
+/* ── RESULTADO ── */
+function showResult(){
+  const total=gameState.questions.length;const c=gameState.correct;const pct=Math.round(c/total*100);
+  document.getElementById('resultScore').textContent=c+'/'+total;
+  document.getElementById('rs-correctas').textContent=c;document.getElementById('rs-xp').textContent=gameState.xpGained;document.getElementById('rs-racha').textContent=player.mejorRacha;
+  let icon='🏆',msg='';
+  if(pct===100){icon='🌟';msg='¡Perfecto! 完美！';}else if(pct>=80){icon='🎉';msg='¡Excelente! 很好！';}else if(pct>=60){icon='👍';msg='¡Bien hecho! 不错！';}else{icon='💪';msg='¡Sigue practicando! 加油！';}
+  document.getElementById('resultIcon').textContent=icon;document.getElementById('resultMsg').textContent=msg;
+  updateHUD();show('s-result');
+}
+function restartMode(){if(gameState.lastMode==='desafio')startDesafio();else if(gameState.lastMode==='completar')initCompletar();else startQuiz();}
+function showComoTab(n){
+  for(let i=0;i<5;i++){
+    const tab=document.getElementById('ctab'+i);
+    const pill=document.getElementById('ct'+i);
+    if(tab){tab.style.display=i===n?'flex':'none';if(i===n){tab.style.flexDirection='column';tab.style.gap='14px';}}
+    if(pill)pill.classList.toggle('active',i===n);
+  }
+}
+/* ── SPEECH ── */
+var _zhVoice=null;
+function loadVoices(){
+  if(!window.speechSynthesis)return;
+  var voices=window.speechSynthesis.getVoices();
+  _zhVoice=voices.find(v=>v.lang==='zh-CN')||voices.find(v=>v.lang==='zh-TW')||voices.find(v=>v.lang.startsWith('zh'))||null;
+}
+if(window.speechSynthesis){
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged=loadVoices;
+}
+function flashBtn(btn){
+  if(!btn)return;
+  var orig=btn.getAttribute('data-orig-bg')||'';
+  btn.style.setProperty('background','rgba(6,214,160,.4)','important');
+  btn.style.setProperty('border','2px solid #06d6a0','important');
+  btn.style.setProperty('color','#06d6a0','important');
+  setTimeout(function(){
+    btn.style.removeProperty('background');
+    btn.style.removeProperty('border');
+    btn.style.removeProperty('color');
+  },1200);
+}
+function speakHanzi(text,btn){
+  if(!text||!text.trim())return;
+  if(btn)flashBtn(btn);
+  if(!window.speechSynthesis){alert('Tu navegador no soporta audio');return;}
+  window.speechSynthesis.cancel();
+  setTimeout(function(){
+    var u=new SpeechSynthesisUtterance(text);
+    u.lang='zh-CN';
+    u.rate=0.8;
+    u.pitch=1.0;
+    u.volume=1.0;
+    if(!_zhVoice)loadVoices();
+    if(_zhVoice)u.voice=_zhVoice;
+    window.speechSynthesis.speak(u);
+  },100);
+}
+function speakCurrent(btn){
+  if(flashState.cards&&flashState.cards[flashState.idx]){
+    speakHanzi(flashState.cards[flashState.idx].h,btn||null);
+  }
+}
+const pinyin_map={"学":"xué","是":"shì","多":"duō","好":"hǎo","起":"qǐ","见":"jiàn","请":"qǐng","不":"bù","谢":"xiè","懂":"dǒng","贵":"guì","打":"dǎ","迷":"mí","可":"kě","遍":"biàn","始":"shǐ","点":"diǎn","名":"míng","门":"mén","久":"jiǔ","验":"yàn","合":"hé","方":"fāng","证":"zhèng","客":"kè","系":"xì","费":"fèi","生":"shēng","订":"dìng","爱":"ài"};
+function checkCompletar(chosen,q,btn){
+  document.querySelectorAll('#compOpciones .opt-btn').forEach(b=>b.onclick=null);
+  const slot=document.getElementById('blankSlot');
+  const fb=document.getElementById('compFeedback');
+  const pip=document.getElementById('cpip'+compState.idx);
+  const nextPip=document.getElementById('cpip'+(compState.idx+1));
+
+  const espSlot=document.getElementById('blankSlotEsp');
+  // Fill pinyin blank too
+  const pinyinEl=document.getElementById('compPinyin');
+  // Get the pinyin of the blank word
+  const bP=q.blankP||(pinyin_map[q.blank]||q.blank);
+  if(pinyinEl) pinyinEl.textContent=q.p.replace('___', bP);
+  if(chosen===q.blank){
+    if(slot){slot.textContent=q.blank;slot.style.color='var(--green)';slot.style.borderColor='var(--green)';slot.style.fontFamily='"Noto Serif SC",serif';}
+    if(espSlot){espSlot.textContent=q.blankEsp;espSlot.style.color='var(--green)';espSlot.style.borderColor='var(--green)';}
+    btn.classList.add('correct');
+    player.racha++;player.correctas++;player.mejorRacha=Math.max(player.racha,player.mejorRacha);
+    const xp=15+player.racha*3;addXP(xp);compState.correct++;
+    const tip=q.ops.find(o=>o.h===q.blank);
+    const correctOp=q.ops.find(o=>o.h===q.blank);
+    fb.className='feedback ok';
+    fb.innerHTML='✅ ¡Correcto! <span style="font-size:1.2rem;color:var(--gold)">'+q.blank+'</span> = <strong>'+(correctOp?correctOp.e:q.blankEsp)+'</strong>'+(player.racha>1?' 🔥 x'+player.racha:'');
+    if(pip)pip.style.background='var(--green)';
+    if(player.racha>=3){showDuo(q.blank+' = '+q.blankEsp);}
+  } else {
+    if(slot){slot.textContent=q.blank;slot.style.color='var(--red)';slot.style.borderBottom='3px solid var(--red)';slot.style.fontFamily='"Noto Serif SC",serif';}
+    if(espSlot){espSlot.textContent=q.blankEsp;espSlot.style.color='var(--muted)';}
+    if(pinyinEl) pinyinEl.textContent=q.p.replace('___', bP);
+    btn.classList.add('wrong');
+    document.querySelectorAll('#compOpciones .opt-btn').forEach(b=>{
+      if(b.textContent.includes(q.blank))b.classList.add('correct');
+    });
+    player.racha=0;player.incorrectas++;
+    const correctOp2=q.ops.find(o=>o.h===q.blank);
+    fb.className='feedback fail';
+    fb.innerHTML='❌ Era <span style="font-size:1.2rem;color:var(--gold)">'+q.blank+'</span> = <strong>'+(correctOp2?correctOp2.e:q.blankEsp)+'</strong>';
+    if(pip)pip.style.background='var(--red)';
+  }
+  if(nextPip)nextPip.style.background='var(--gold)';
+  fb.style.display='block';
+  document.getElementById('compNext').style.display='block';
+}
+
+function nextCompletar(){
+  compState.idx++;
+  if(compState.idx>=compState.qs.length){
+    // Show result
+    const total=compState.qs.length;const c2=compState.correct;const pct=Math.round(c2/total*100);
+    document.getElementById('resultScore').textContent=c2+'/'+total;
+    document.getElementById('rs-correctas').textContent=c2;
+    document.getElementById('rs-xp').textContent=gameState.xpGained||0;
+    document.getElementById('rs-racha').textContent=player.mejorRacha;
+    let icon='🏆',msg='';
+    if(pct===100){icon='🌟';msg='¡Perfecto! 完美！';}
+    else if(pct>=80){icon='🎉';msg='¡Excelente! 很好！';}
+    else if(pct>=60){icon='👍';msg='¡Bien hecho! 不错！';}
+    else{icon='💪';msg='¡Sigue practicando! 加油！';}
+    document.getElementById('resultIcon').textContent=icon;
+    document.getElementById('resultMsg').textContent=msg;
+    updateHUD();
+    gameState.lastMode='completar';
+    show('s-result');
+    return;
+  }
+  renderCompletar();
+}
+
+/* ── TOP 150 ── */
+const TOP150 = {
+  "👤 Pronombres":[
+    {h:"我",p:"wǒ",e:"yo"},
+    {h:"你",p:"nǐ",e:"tú"},
+    {h:"他",p:"tā",e:"él"},
+    {h:"她",p:"tā",e:"ella"},
+    {h:"我们",p:"wǒmen",e:"nosotros"},
+    {h:"你们",p:"nǐmen",e:"ustedes"},
+    {h:"他们",p:"tāmen",e:"ellos"},
+    {h:"这",p:"zhè",e:"esto"},
+    {h:"那",p:"nà",e:"eso/aquello"},
+    {h:"什么",p:"shénme",e:"qué"},
+    {h:"谁",p:"shéi",e:"quién"},
+    {h:"哪里",p:"nǎlǐ",e:"dónde"},
+    {h:"为什么",p:"wèishénme",e:"por qué"},
+    {h:"怎么",p:"zěnme",e:"cómo"},
+    {h:"多少",p:"duōshǎo",e:"cuánto"},
+  ],
+  "🔢 Números":[
+    {h:"一",p:"yī",e:"1"},
+    {h:"二",p:"èr",e:"2"},
+    {h:"三",p:"sān",e:"3"},
+    {h:"四",p:"sì",e:"4"},
+    {h:"五",p:"wǔ",e:"5"},
+    {h:"六",p:"liù",e:"6"},
+    {h:"七",p:"qī",e:"7"},
+    {h:"八",p:"bā",e:"8"},
+    {h:"九",p:"jiǔ",e:"9"},
+    {h:"十",p:"shí",e:"10"},
+    {h:"百",p:"bǎi",e:"100"},
+    {h:"千",p:"qiān",e:"1.000"},
+    {h:"万",p:"wàn",e:"10.000"},
+    {h:"零",p:"líng",e:"cero"},
+    {h:"第一",p:"dì yī",e:"primero"},
+  ],
+  "⏰ Tiempo":[
+    {h:"今天",p:"jīntiān",e:"hoy"},
+    {h:"明天",p:"míngtiān",e:"mañana"},
+    {h:"昨天",p:"zuótiān",e:"ayer"},
+    {h:"现在",p:"xiànzài",e:"ahora"},
+    {h:"以后",p:"yǐhòu",e:"después"},
+    {h:"以前",p:"yǐqián",e:"antes"},
+    {h:"早上",p:"zǎoshàng",e:"mañana (hora)"},
+    {h:"下午",p:"xiàwǔ",e:"tarde"},
+    {h:"晚上",p:"wǎnshàng",e:"noche"},
+    {h:"年",p:"nián",e:"año"},
+    {h:"月",p:"yuè",e:"mes / luna"},
+    {h:"日",p:"rì",e:"día / sol"},
+    {h:"小时",p:"xiǎoshí",e:"hora"},
+    {h:"分钟",p:"fēnzhōng",e:"minuto"},
+    {h:"周",p:"zhōu",e:"semana"},
+  ],
+  "🔄 Verbos básicos":[
+    {h:"是",p:"shì",e:"ser / estar"},
+    {h:"有",p:"yǒu",e:"tener / haber"},
+    {h:"去",p:"qù",e:"ir"},
+    {h:"来",p:"lái",e:"venir"},
+    {h:"要",p:"yào",e:"querer / necesitar"},
+    {h:"可以",p:"kěyǐ",e:"poder"},
+    {h:"说",p:"shuō",e:"hablar / decir"},
+    {h:"知道",p:"zhīdào",e:"saber"},
+    {h:"做",p:"zuò",e:"hacer"},
+    {h:"吃",p:"chī",e:"comer"},
+    {h:"喝",p:"hē",e:"beber"},
+    {h:"看",p:"kàn",e:"mirar / leer"},
+    {h:"听",p:"tīng",e:"escuchar"},
+    {h:"买",p:"mǎi",e:"comprar"},
+    {h:"卖",p:"mài",e:"vender"},
+  ],
+  "📍 Lugar":[
+    {h:"这里",p:"zhèlǐ",e:"aquí"},
+    {h:"那里",p:"nàlǐ",e:"allá"},
+    {h:"上面",p:"shàngmiàn",e:"arriba"},
+    {h:"下面",p:"xiàmiàn",e:"abajo"},
+    {h:"左边",p:"zuǒbiān",e:"izquierda"},
+    {h:"右边",p:"yòubiān",e:"derecha"},
+    {h:"前面",p:"qiánmiàn",e:"adelante"},
+    {h:"后面",p:"hòumiàn",e:"atrás"},
+    {h:"里面",p:"lǐmiàn",e:"adentro"},
+    {h:"外面",p:"wàimiàn",e:"afuera"},
+    {h:"中间",p:"zhōngjiān",e:"en el medio"},
+    {h:"旁边",p:"pángbiān",e:"al lado"},
+    {h:"远",p:"yuǎn",e:"lejos"},
+    {h:"近",p:"jìn",e:"cerca"},
+    {h:"对面",p:"duìmiàn",e:"enfrente"},
+  ],
+  "💬 Conversación":[
+    {h:"对",p:"duì",e:"correcto / sí"},
+    {h:"不",p:"bù",e:"no"},
+    {h:"好",p:"hǎo",e:"bien / bueno"},
+    {h:"很",p:"hěn",e:"muy"},
+    {h:"也",p:"yě",e:"también"},
+    {h:"都",p:"dōu",e:"todo / todos"},
+    {h:"还",p:"hái",e:"todavía / aún"},
+    {h:"就",p:"jiù",e:"entonces / ya"},
+    {h:"再",p:"zài",e:"otra vez"},
+    {h:"一起",p:"yīqǐ",e:"juntos"},
+    {h:"一点",p:"yīdiǎn",e:"un poco"},
+    {h:"非常",p:"fēicháng",e:"muy / extremadamente"},
+    {h:"太",p:"tài",e:"demasiado"},
+    {h:"没有",p:"méiyǒu",e:"no hay / no tengo"},
+    {h:"不是",p:"bú shì",e:"no es"},
+  ],
+  "💰 Comercio":[
+    {h:"钱",p:"qián",e:"dinero"},
+    {h:"价格",p:"jiàgé",e:"precio"},
+    {h:"便宜",p:"piányí",e:"barato"},
+    {h:"贵",p:"guì",e:"caro"},
+    {h:"打折",p:"dǎzhé",e:"descuento"},
+    {h:"收据",p:"shōujù",e:"recibo"},
+    {h:"发票",p:"fāpiào",e:"factura"},
+    {h:"合同",p:"hétong",e:"contrato"},
+    {h:"订单",p:"dìngdān",e:"pedido"},
+    {h:"质量",p:"zhìliàng",e:"calidad"},
+    {h:"数量",p:"shùliàng",e:"cantidad"},
+    {h:"运费",p:"yùnfèi",e:"envío"},
+    {h:"付款",p:"fùkuǎn",e:"pago"},
+    {h:"银行",p:"yínháng",e:"banco"},
+    {h:"交货",p:"jiāohuò",e:"entrega"},
+  ],
+  "🌍 Esenciales":[
+    {h:"人",p:"rén",e:"persona"},
+    {h:"水",p:"shuǐ",e:"agua"},
+    {h:"吃饭",p:"chīfàn",e:"comer (arroz)"},
+    {h:"工作",p:"gōngzuò",e:"trabajo"},
+    {h:"家",p:"jiā",e:"casa / familia"},
+    {h:"朋友",p:"péngyǒu",e:"amigo"},
+    {h:"中国",p:"Zhōngguó",e:"China"},
+    {h:"中文",p:"Zhōngwén",e:"chino (idioma)"},
+    {h:"问题",p:"wèntí",e:"problema / pregunta"},
+    {h:"帮助",p:"bāngzhù",e:"ayuda"},
+    {h:"电话",p:"diànhuà",e:"teléfono"},
+    {h:"手机",p:"shǒujī",e:"celular"},
+    {h:"医院",p:"yīyuàn",e:"hospital"},
+    {h:"警察",p:"jǐngchá",e:"policía"},
+    {h:"厕所",p:"cèsuǒ",e:"baño"},
+  ],
+};
+
+let w150cat = Object.keys(TOP150)[0];
+function init150(){
+  const cats = Object.keys(TOP150);
+  const total = cats.reduce((s,k)=>s+TOP150[k].length,0);
+  document.getElementById('w150count').textContent = '0/'+total;
+  const pillDiv = document.getElementById('w150cats'); pillDiv.innerHTML='';
+  cats.forEach((cat,i)=>{
+    const p=document.createElement('div');
+    p.className='pill'+(i===0?' active':'');
+    p.textContent=cat;
+    p.onclick=()=>{w150cat=cat;document.querySelectorAll('#w150cats .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');render150(cat);};
+    pillDiv.appendChild(p);
+  });
+  render150(cats[0]);
+}
+function render150(cat){
+  const list=document.getElementById('w150list'); list.innerHTML='';
+  TOP150[cat].forEach((w,i)=>{
+    const row=document.createElement('div');
+    row.style.cssText='background:var(--card);border-radius:14px;padding:12px 16px;border:1px solid #222;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .2s';
+    row.innerHTML=
+      '<div style="font-size:2rem;min-width:46px;text-align:center;color:var(--gold)">'+(i+1)+'</div>'+
+      '<div style="font-size:1.8rem;min-width:44px;text-align:center;color:var(--gold)">'+ w.h+'</div>'+
+      '<div style="flex:1"><div style="color:var(--blue);font-size:.82rem">'+w.p+'</div><div style="font-weight:600">'+w.e+'</div></div>'+
+      '<button class="w150speak" style="background:rgba(255,255,255,.07);border:1px solid #333;border-radius:12px;padding:5px 12px;color:#ccc;font-size:.8rem;cursor:pointer">🔊</button>';
+    row.onclick=()=>{
+      row.style.borderColor='var(--gold)';
+      setTimeout(()=>row.style.borderColor='#222',600);
+      player.palabras.add(w.h);
+      addXP(1);
+    };
+    // Attach speak via dataset
+    const speakBtn = row.querySelector('.w150speak');
+    if(speakBtn){speakBtn.onclick=function(e){e.stopPropagation();speakHanzi(w.h,this);};}
+    list.appendChild(row);
+  });
+}
+
+/* ── PINYIN ── */
+function initPinyin(){
+  const vocales=[
+    {p:'a',h:'啊',m:'ah'},{p:'e',h:'鹅',m:'e gutural'},{p:'i',h:'一',m:'i'},
+    {p:'o',h:'哦',m:'o'},{p:'u',h:'乌',m:'u'},{p:'ü',h:'鱼',m:'ü'}
+  ];
+  const iniciales=[
+    {p:'b',h:'爸'},{p:'p',h:'朋'},{p:'m',h:'妈'},{p:'f',h:'飞'},{p:'d',h:'大'},{p:'t',h:'天'},
+    {p:'n',h:'你'},{p:'l',h:'来'},{p:'g',h:'狗'},{p:'k',h:'口'},{p:'h',h:'好'},{p:'j',h:'家'},
+    {p:'q',h:'请'},{p:'x',h:'小'},{p:'zh',h:'中'},{p:'ch',h:'吃'},{p:'sh',h:'水'},{p:'r',h:'人'},
+    {p:'z',h:'字'},{p:'c',h:'菜'},{p:'s',h:'三'},{p:'y',h:'一'},{p:'w',h:'我'}
+  ];
+  const finales=[
+    {p:'ai',h:'爱'},{p:'ei',h:'飞'},{p:'ao',h:'好'},{p:'ou',h:'走'},{p:'an',h:'安'},{p:'en',h:'人'},
+    {p:'ang',h:'房'},{p:'eng',h:'冷'},{p:'ong',h:'中'},{p:'ia',h:'家'},{p:'ie',h:'谢'},{p:'iao',h:'小'},
+    {p:'ian',h:'天'},{p:'iang',h:'两'},{p:'iu',h:'六'},{p:'ua',h:'花'},{p:'uo',h:'多'},{p:'uai',h:'快'},
+    {p:'ui',h:'水'},{p:'uan',h:'远'},{p:'un',h:'春'},{p:'üe',h:'月'},{p:'in',h:'心'},{p:'ing',h:'名'},{p:'er',h:'耳'}
+  ];
+  const tonos=[
+    {t:'1° tono',p:'mā',h:'妈',m:'Mamá',arrow:'— →',color:'#e63946'},
+    {t:'2° tono',p:'má',h:'麻',m:'Cáñamo',arrow:'↗',color:'#f4a261'},
+    {t:'3° tono',p:'mǎ',h:'马',m:'Caballo',arrow:'↘↗',color:'#06d6a0'},
+    {t:'4° tono',p:'mà',h:'骂',m:'Insultar',arrow:'↘',color:'#7b2ff7'}
+  ];
+  const alfabeto=[
+    {l:'A',h:'啊',p:'ā'},{l:'B',h:'爸',p:'bà'},{l:'C',h:'菜',p:'cài'},{l:'D',h:'大',p:'dà'},
+    {l:'E',h:'鹅',p:'é'},{l:'F',h:'飞',p:'fēi'},{l:'G',h:'狗',p:'gǒu'},{l:'H',h:'好',p:'hǎo'},
+    {l:'I',h:'一',p:'yī'},{l:'J',h:'家',p:'jiā'},{l:'K',h:'口',p:'kǒu'},{l:'L',h:'来',p:'lái'},
+    {l:'M',h:'妈',p:'māma'},{l:'N',h:'你',p:'nǐ'},{l:'O',h:'哦',p:'ó'},{l:'P',h:'朋',p:'péng'},
+    {l:'Q',h:'请',p:'qǐng'},{l:'R',h:'人',p:'rén'},{l:'S',h:'三',p:'sān'},{l:'T',h:'天',p:'tiān'},
+    {l:'U',h:'乌',p:'wū'},{l:'V',h:'无',p:'wú'},{l:'W',h:'我',p:'wǒ'},{l:'X',h:'小',p:'xiǎo'},
+    {l:'Y',h:'一',p:'yī'},{l:'Z',h:'字',p:'zì'}
+  ];
+
+  function makeChip(text,hanzi,onclick){
+    const d=document.createElement('div');
+    d.style.cssText='background:var(--card);border:1px solid #2a2a2a;border-radius:10px;padding:8px 12px;cursor:pointer;text-align:center;transition:border-color .15s';
+    d.innerHTML='<div style="font-size:1rem;font-weight:700;color:var(--gold)">'+text+'</div>'+(hanzi?'<div style="font-size:.85rem;color:var(--muted)">'+hanzi+'</div>':'');
+    d.onclick=()=>{
+      d.style.borderColor='var(--green)';d.style.background='rgba(6,214,160,.15)';
+      setTimeout(()=>{d.style.borderColor='#2a2a2a';d.style.background='var(--card)';},1000);
+      onclick();
+    };
+    return d;
+  }
+
+  const vDiv=document.getElementById('pinyinVocales');vDiv.innerHTML='';
+  vocales.forEach(v=>vDiv.appendChild(makeChip(v.p,v.h,()=>speakHanzi(v.h))));
+
+  const iDiv=document.getElementById('pinyinIniciales');iDiv.innerHTML='';
+  iniciales.forEach(i=>iDiv.appendChild(makeChip(i.p,i.h,()=>speakHanzi(i.h))));
+
+  const fDiv=document.getElementById('pinyinFinales');fDiv.innerHTML='';
+  finales.forEach(f=>fDiv.appendChild(makeChip(f.p,f.h,()=>speakHanzi(f.h))));
+
+  const azDiv=document.getElementById('pinyinAZ');if(azDiv){azDiv.innerHTML='';
+  alfabeto.forEach(a=>{
+    const d=document.createElement('div');
+    d.style.cssText='background:var(--card);border:1px solid #2a2a2a;border-radius:10px;padding:8px 10px;cursor:pointer;text-align:center;min-width:60px';
+    d.innerHTML='<div style="font-size:1.1rem;font-weight:700;color:var(--gold)">'+a.l+'</div><div style="font-size:1.2rem">'+a.h+'</div><div style="font-size:.6rem;color:var(--muted)">'+a.p+'</div>';
+    d.onclick=()=>{d.style.borderColor='var(--green)';d.style.background='rgba(6,214,160,.1)';setTimeout(()=>{d.style.borderColor='#2a2a2a';d.style.background='var(--card)';},900);speakHanzi(a.h);};
+    azDiv.appendChild(d);
+  });}
+
+  const tDiv=document.getElementById('tonosDemo');tDiv.innerHTML='';
+  tonos.forEach(t=>{
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:12px;background:#111;border-radius:12px;padding:12px;border:1px solid #222';
+    row.innerHTML='<div style="font-size:2rem;color:'+t.color+';min-width:40px;text-align:center">'+t.h+'</div>'+
+      '<div style="flex:1"><div style="font-weight:700;color:'+t.color+'">'+t.p+' '+t.arrow+'</div><div style="font-size:.8rem;color:var(--muted)">'+t.t+' · '+t.m+'</div></div>';
+    const sb=document.createElement('button');
+    sb.textContent='🔊';sb.style.cssText='background:rgba(255,255,255,.08);border:1px solid #333;border-radius:12px;padding:6px 12px;color:#ccc;font-size:.85rem;cursor:pointer';
+    sb.onclick=()=>speakHanzi(t.h,sb);
+    row.appendChild(sb);
+    tDiv.appendChild(row);
+  });
+}
+
+/* ── FRASES ── */
+const FRASES_DATA=[
+  {h:"你好吗？",p:"nǐ hǎo ma?",e:"¿Cómo estás?"},
+  {h:"我很好",p:"wǒ hěn hǎo",e:"Estoy muy bien"},
+  {h:"你叫什么名字？",p:"nǐ jiào shénme míngzì?",e:"¿Cómo te llamas?"},
+  {h:"我不懂",p:"wǒ bù dǒng",e:"No entiendo"},
+  {h:"多少钱？",p:"duō shǎo qián?",e:"¿Cuánto cuesta?"},
+  {h:"我爱你",p:"wǒ ài nǐ",e:"Te amo"},
+  {h:"加油！",p:"jiā yóu!",e:"¡Ánimo!"},
+  {h:"慢点说",p:"màn diǎn shuō",e:"Habla más despacio"},
+  {h:"没问题",p:"méi wèntí",e:"Sin problema"},
+  {h:"谢谢你",p:"xiè xiè nǐ",e:"Muchas gracias"}
+];
+let fraseState2={idx:0};
+function initFrases(){
+  fraseState2.idx=0;
+  document.getElementById('fraseTotal').textContent=FRASES_DATA.length;
+  renderFrase2();
+}
+function renderFrase2(){
+  const f=FRASES_DATA[fraseState2.idx];
+  document.getElementById('fraseIdx').textContent=fraseState2.idx+1;
+  document.getElementById('flipFrase').classList.remove('flipped');
+  document.getElementById('fraseEsp').textContent=f.e;
+  document.getElementById('fraseHanzi').textContent=f.h;
+  document.getElementById('frasePinyin').textContent=f.p;
+  document.getElementById('fraseEspBack').textContent=f.e;
+}
+function flipFrase(){document.getElementById('flipFrase').classList.toggle('flipped');}
+function nextFrase(){fraseState2.idx=fraseState2.idx<FRASES_DATA.length-1?fraseState2.idx+1:0;renderFrase2();}
+function prevFrase(){fraseState2.idx=fraseState2.idx>0?fraseState2.idx-1:FRASES_DATA.length-1;renderFrase2();}
+function speakFrase(btn){speakHanzi(FRASES_DATA[fraseState2.idx].h,btn);}
+
+/* ── CULTURA ── */
+const CULTURA={
+  "Tradiciones 🎋":[
+    {emoji:"🐉",titulo:"El Año Nuevo Chino",texto:"La festividad más importante de China. Se celebra según el calendario lunar. Hay fuegos artificiales, desfiles de dragones y sobres rojos 红包 con dinero. Cada año tiene un animal del zodiaco.",dato:"2024 fue el año del Dragón 🐉"},
+    {emoji:"🧧",titulo:"El Sobre Rojo 红包",texto:"El 红包 (hóngbāo) es un sobre rojo con dinero que se regala en fiestas y Año Nuevo. El rojo simboliza buena suerte. Hoy también se envían digitalmente por WeChat.",dato:"¡Miles de millones se envían en Año Nuevo!"},
+    {emoji:"🥢",titulo:"Los Palillos",texto:"Los chinos usan palillos 筷子 (kuàizi) hace más de 3000 años. Nunca claves los palillos en el arroz verticalmente — es símbolo de muerte.",dato:"China usa 80.000 millones de palillos desechables por año"},
+    {emoji:"🍵",titulo:"La Cultura del Té",texto:"China inventó el té hace más de 4000 años. Existen más de 1000 variedades. La ceremonia del té 茶道 es todo un arte.",dato:"茶 (chá) = Té — ¡la misma palabra en casi todos los idiomas!"},
+    {emoji:"🏮",titulo:"Festival de los Faroles",texto:"Al final del Año Nuevo se suelta faroles al cielo con deseos escritos. Uno de los espectáculos más impresionantes del mundo.",dato:"Se celebra el día 15 del primer mes lunar"}
+  ],
+  "Historia 📜":[
+    {emoji:"🏯",titulo:"La Gran Muralla",texto:"La Gran Muralla China 长城 mide más de 21.000 km. Se construyó durante siglos para proteger China de invasiones.",dato:"Tardó más de 2000 años en construirse"},
+    {emoji:"👑",titulo:"El Primer Emperador",texto:"Qin Shi Huang unificó China en 221 a.C. Creó el sistema de escritura unificado. Ordenó el Ejército de Terracota: 8000 soldados de arcilla.",dato:"Murió buscando el elixir de la inmortalidad"},
+    {emoji:"🧭",titulo:"Inventos Chinos",texto:"China inventó el papel, la imprenta, la pólvora y la brújula. También la seda, los fideos y el papel moneda.",dato:"La seda fue secreto de estado por 3000 años"},
+    {emoji:"🐼",titulo:"El Panda Gigante",texto:"El panda 大熊猫 es símbolo nacional de China. Solo hay unos 1800 en el mundo. China practica la 'diplomacia del panda'.",dato:"Un panda puede comer 12kg de bambú por día"},
+    {emoji:"🥋",titulo:"El Kung Fu",texto:"El Kung Fu 功夫 nació en el Monasterio Shaolin hace 1500 años. Hay más de 400 estilos diferentes.",dato:"功夫 significa literalmente 'trabajo duro y tiempo'"}
+  ],
+  "Comida 🍜":[
+    {emoji:"🍜",titulo:"Los Fideos — Larga Vida",texto:"Los fideos 面条 nunca se cortan en China — representan larga vida. En cumpleaños se come 长寿面 (fideos de longevidad).",dato:"Los fideos se inventaron en China hace 4000 años"},
+    {emoji:"🥟",titulo:"Las Gyozas 饺子",texto:"Los dumplings 饺子 se comen en Año Nuevo. Su forma imita monedas de oro. A veces se esconde una moneda dentro para dar suerte.",dato:"Una familia puede hacer cientos en una noche"},
+    {emoji:"🍚",titulo:"El Arroz Sagrado",texto:"El arroz 米饭 es el alimento base. Tirar arroz al suelo es de muy mala educación.",dato:"China produce el 30% del arroz mundial"},
+    {emoji:"🦆",titulo:"El Pato Pekín",texto:"El Pato Pekín 北京烤鸭 se prepara en 65 pasos y la receta tiene 600 años. Se come con panqueques finos.",dato:"El restaurante Quanjude lo sirve desde 1864"},
+    {emoji:"🌶️",titulo:"La Cocina Sichuan",texto:"Sichuan usa la pimienta que adormece la boca. En chino se llama 麻辣 (má là): adormecida-picante.",dato:"Sichuan tiene más de 5000 platos registrados"}
+  ],
+  "Comercio 💰":[
+    {emoji:"🤝",titulo:"El Arte de Negociar",texto:"En China negociar es un ritual. La primera oferta siempre es muy alta. Las relaciones 关系 (guānxi) valen más que los contratos. Primero confianza, después precio.",dato:"'Guānxi' es la palabra más importante en los negocios chinos"},
+    {emoji:"💳",titulo:"China sin Efectivo",texto:"WeChat Pay y Alipay dominan todo. En muchos lugares ya no aceptan billetes. El código QR es el rey del comercio chino.",dato:"El 86% de los pagos en China son móviles"},
+    {emoji:"📦",titulo:"El Gigante del E-commerce",texto:"El Día del Soltero 双十一 (11 de noviembre) genera más ventas en un día que todo el Black Friday americano.",dato:"Alibaba vendió USD 18.000 millones en 24hs"},
+    {emoji:"🏭",titulo:"La Fábrica del Mundo",texto:"China produce el 28% de la manufactura mundial. La ciudad de Yiwu 义乌 es el mayor mercado mayorista del mundo con 75.000 puestos.",dato:"Yiwu exporta a más de 200 países"},
+    {emoji:"🎁",titulo:"Los Regalos en Negocios",texto:"Dar regalos 送礼 es esencial. Se reciben con ambas manos y no se abren enfrente. Nunca regales relojes — suena igual que 'asistir al funeral'.",dato:"El baijiu 白酒 es el licor favorito para cerrar acuerdos"},
+    {emoji:"🏮",titulo:"La Feria de Cantón",texto:"La Feria de Cantón 广交会 es la más importante del mundo para importadores. Se hace dos veces por año en Guangzhou. Asisten 200.000 compradores de 200 países.",dato:"La Feria de Cantón existe desde 1957 sin interrupciones"}
+  ],
+  "Filosofía 🧘":[
+    {emoji:"☯️",titulo:"El Taoísmo 道教",texto:"Fundado por Laozi. El 道 (Dào) significa 'el camino'. El Yin-Yang ☯️ representa que todo tiene su opuesto complementario.",dato:"'El que sabe no habla, el que habla no sabe' — Laozi"},
+    {emoji:"📚",titulo:"Confucio",texto:"Confucio 孔子 vivió hace 2500 años. Enseñó que la familia es sagrada, que hay que respetar a los mayores y que la educación es el camino.",dato:"'Aprende como si nunca alcanzaras tu meta' — Confucio"},
+    {emoji:"🎋",titulo:"El Feng Shui",texto:"El Feng Shui 风水 es el arte de organizar espacios para que la energía vital 气 (qì) fluya bien. Muchas empresas en Asia contratan expertos.",dato:"Hong Kong fue diseñada usando principios de Feng Shui"},
+    {emoji:"🀄",titulo:"El Budismo en China",texto:"El Budismo llegó a China desde India hace 2000 años. Creó el Budismo Zen (禅 Chán). Los monjes Shaolin combinaron el Budismo con el Kung Fu.",dato:"China tiene más de 20.000 templos budistas"}
+  ]
+};
+let cultState={cards:[],idx:0,cat:''};
+function initCultura(){
+  const cats=Object.keys(CULTURA);cultState.cat=cats[0];
+  const pillDiv=document.getElementById('cultCats');pillDiv.innerHTML='';
+  cats.forEach((cat,i)=>{
+    const p=document.createElement('div');p.className='pill'+(i===0?' active':'');p.textContent=cat;
+    p.onclick=()=>{cultState.cat=cat;document.querySelectorAll('#cultCats .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');loadCultCat(cat);};
+    pillDiv.appendChild(p);
+  });
+  loadCultCat(cats[0]);
+}
+function loadCultCat(cat){cultState.cards=CULTURA[cat];cultState.idx=0;document.getElementById('cultTotal').textContent=cultState.cards.length;renderCultura();}
+function renderCultura(){
+  const d=cultState.cards[cultState.idx];
+  document.getElementById('cultIdx').textContent=cultState.idx+1;
+  document.getElementById('flipCultura').classList.remove('flipped');
+  document.getElementById('cultEmoji').textContent=d.emoji;
+  document.getElementById('cultTitulo').textContent=d.titulo;
+  document.getElementById('cultEmojiBig').textContent=d.emoji;
+  document.getElementById('cultTituloBack').textContent=d.titulo;
+  document.getElementById('cultTexto').textContent=d.texto;
+  document.getElementById('cultDato').textContent='💡 '+d.dato;
+}
+function flipCultura(){document.getElementById('flipCultura').classList.toggle('flipped');}
+function nextCultura(){cultState.idx=cultState.idx<cultState.cards.length-1?cultState.idx+1:0;renderCultura();}
+function prevCultura(){cultState.idx=cultState.idx>0?cultState.idx-1:cultState.cards.length-1;renderCultura();}
+
+/* ── CIUDADES ── */
+const CIUDADES=[
+  {emoji:"🏛️",nombre:"Pekín",hanzi:"北京",p:"Běijīng",info:"La capital de China. Hogar de la Ciudad Prohibida y la Plaza de Tiananmen. Significa 'Capital del Norte'.",dato:"🏯 La Ciudad Prohibida tiene 9.999 habitaciones"},
+  {emoji:"🌆",nombre:"Shanghái",hanzi:"上海",p:"Shànghǎi",info:"La ciudad más moderna con 26 millones de habitantes. Centro financiero mundial. Su nombre significa 'sobre el mar'.",dato:"💹 Es el puerto de contenedores más activo del mundo"},
+  {emoji:"🐼",nombre:"Chengdu",hanzi:"成都",p:"Chéngdū",info:"Capital de Sichuan, famosa por sus pandas gigantes y cocina picante. Conocida como 'la ciudad del ocio'.",dato:"🐼 Hogar del Centro de Investigación del Panda Gigante"},
+  {emoji:"🏮",nombre:"Xián",hanzi:"西安",p:"Xī'ān",info:"Una de las ciudades más antiguas del mundo. Aquí está el Ejército de Terracota. Punto de inicio de la Ruta de la Seda.",dato:"⚔️ Los 8.000 guerreros de terracota la hicieron famosa"},
+  {emoji:"🌸",nombre:"Hangzhou",hanzi:"杭州",p:"Hángzhōu",info:"Considerada una de las ciudades más bellas de China por el Lago del Oeste 西湖. Sede de Alibaba.",dato:"🍵 Produce el mejor té verde del mundo"},
+  {emoji:"🏔️",nombre:"Guilin",hanzi:"桂林",p:"Guìlín",info:"Famosa por sus montañas de karst. Es el paisaje que aparece en los billetes de 20 yuanes.",dato:"💴 Su paisaje está en el billete de 20 yuanes"},
+  {emoji:"🌊",nombre:"Hong Kong",hanzi:"香港",p:"Xiānggǎng",info:"Región Administrativa Especial. Significa 'Puerto Fragante'. Fusión de cultura china y occidental.",dato:"🎬 Es donde nació el cine de kung fu"},
+  {emoji:"🏙️",nombre:"Chongqing",hanzi:"重庆",p:"Chóngqìng",info:"La ciudad más grande del mundo por área municipal. Ciudad de montaña junto al río Yangtsé. Famosa por su hot pot.",dato:"🌶️ Inventó el Hot Pot más picante del mundo"},
+  {emoji:"🏖️",nombre:"Sanya",hanzi:"三亚",p:"Sānyà",info:"El destino tropical de China en la isla de Hainan. El 'Hawaii chino'.",dato:"🌴 La única ciudad tropical de China continental"},
+  {emoji:"🌿",nombre:"Lijiang",hanzi:"丽江",p:"Lìjiāng",info:"Ciudad antigua Patrimonio de la UNESCO. Hogar del pueblo Naxi con escritura pictográfica única.",dato:"📜 Tiene la única escritura pictográfica viva del mundo"}
+];
+let ciudState={idx:0};
+function initCiudades(){ciudState.idx=0;document.getElementById('ciudTotal').textContent=CIUDADES.length;renderCiudad();}
+function renderCiudad(){
+  const d=CIUDADES[ciudState.idx];
+  document.getElementById('ciudIdx').textContent=ciudState.idx+1;
+  document.getElementById('flipCiudad').classList.remove('flipped');
+  document.getElementById('ciudEmoji').textContent=d.emoji;
+  document.getElementById('ciudNombre').textContent=d.nombre;
+  document.getElementById('ciudHanzi').textContent=d.hanzi;
+  document.getElementById('ciudEmojiBig').textContent=d.emoji;
+  document.getElementById('ciudNombreBack').textContent=d.nombre+' '+d.hanzi;
+  document.getElementById('ciudPinyin').textContent=d.p;
+  document.getElementById('ciudInfo').textContent=d.info;
+  document.getElementById('ciudDato').textContent='💡 '+d.dato;
+}
+function flipCiudad(){document.getElementById('flipCiudad').classList.toggle('flipped');}
+function nextCiudad(){ciudState.idx=ciudState.idx<CIUDADES.length-1?ciudState.idx+1:0;renderCiudad();}
+function prevCiudad(){ciudState.idx=ciudState.idx>0?ciudState.idx-1:CIUDADES.length-1;renderCiudad();}
+
+/* ── CONVERSACIONES ── */
+const CONV={
+  "🚇 Metro":[
+    {h:"请问地铁站在哪里？",p:"qǐngwèn dìtiě zhàn zài nǎlǐ?",e:"¿Dónde está la estación de metro?"},
+    {h:"我要去天安门",p:"wǒ yào qù Tiān'ānmén",e:"Quiero ir a Tiananmen"},
+    {h:"下一站是什么？",p:"xià yī zhàn shì shénme?",e:"¿Cuál es la próxima parada?"},
+    {h:"我迷路了",p:"wǒ mí lù le",e:"Estoy perdido"},
+    {h:"请让一让",p:"qǐng ràng yī ràng",e:"Por favor déjeme pasar"}
+  ],
+  "🛒 Supermercado":[
+    {h:"这个多少钱？",p:"zhège duōshǎo qián?",e:"¿Cuánto cuesta esto?"},
+    {h:"有没有打折？",p:"yǒu méiyǒu dǎzhé?",e:"¿Hay descuento?"},
+    {h:"可以刷卡吗？",p:"kěyǐ shuā kǎ ma?",e:"¿Puedo pagar con tarjeta?"},
+    {h:"收银台在哪里？",p:"shōuyín tái zài nǎlǐ?",e:"¿Dónde está la caja?"},
+    {h:"不要塑料袋",p:"bù yào sùliào dài",e:"No quiero bolsa plástica"}
+  ],
+  "🍜 Restaurante":[
+    {h:"有没有菜单？",p:"yǒu méiyǒu càidān?",e:"¿Tienen menú?"},
+    {h:"不辣的，谢谢",p:"bù là de, xièxiè",e:"Sin picante, gracias"},
+    {h:"好吃！",p:"hǎo chī!",e:"¡Está delicioso!"},
+    {h:"买单！",p:"mǎi dān!",e:"¡La cuenta por favor!"},
+    {h:"有素食吗？",p:"yǒu sùshí ma?",e:"¿Tienen comida vegetariana?"}
+  ],
+  "🏫 Escuela":[
+    {h:"老师好！",p:"lǎoshī hǎo!",e:"¡Buenos días, profesor!"},
+    {h:"我不明白",p:"wǒ bù míngbái",e:"No entiendo"},
+    {h:"请再说一遍",p:"qǐng zài shuō yī biàn",e:"¿Puede repetir?"},
+    {h:"考试什么时候？",p:"kǎoshì shénme shíhou?",e:"¿Cuándo es el examen?"},
+    {h:"我学习汉语",p:"wǒ xuéxí hànyǔ",e:"Estudio chino mandarín"}
+  ],
+  "💼 Trabajo":[
+    {h:"很高兴认识你",p:"hěn gāoxìng rènshi nǐ",e:"Encantado de conocerte"},
+    {h:"会议几点开始？",p:"huìyì jǐ diǎn kāishǐ?",e:"¿A qué hora empieza la reunión?"},
+    {h:"能帮我一下吗？",p:"néng bāng wǒ yīxià ma?",e:"¿Me puedes ayudar?"},
+    {h:"截止日期是什么时候？",p:"jiézhǐ rìqī shì shénme shíhou?",e:"¿Cuál es la fecha límite?"},
+    {h:"今天加班吗？",p:"jīntiān jiābān ma?",e:"¿Hay horas extra hoy?"}
+  ],
+  "🏥 Médico":[
+    {h:"我不舒服",p:"wǒ bù shūfu",e:"No me siento bien"},
+    {h:"我头疼",p:"wǒ tóuténg",e:"Me duele la cabeza"},
+    {h:"医院在哪里？",p:"yīyuàn zài nǎlǐ?",e:"¿Dónde está el hospital?"},
+    {h:"我发烧了",p:"wǒ fāshāo le",e:"Tengo fiebre"},
+    {h:"这里很疼",p:"zhèlǐ hěn téng",e:"Aquí me duele mucho"}
+  ],
+  "🏨 Hotel":[
+    {h:"我有预订",p:"wǒ yǒu yùdìng",e:"Tengo una reserva"},
+    {h:"WiFi密码是什么？",p:"WiFi mìmǎ shì shénme?",e:"¿Cuál es la contraseña del WiFi?"},
+    {h:"几点退房？",p:"jǐ diǎn tuìfáng?",e:"¿A qué hora es el check-out?"},
+    {h:"空调坏了",p:"kōngtiáo huài le",e:"El aire acondicionado no funciona"},
+    {h:"早餐包括吗？",p:"zǎocān bāokuò ma?",e:"¿El desayuno está incluido?"}
+  ],
+  "🛍️ Comercio y Regateo":[
+    {h:"太贵了！",p:"tài guì le!",e:"¡Es muy caro!"},
+    {h:"能便宜一点吗？",p:"néng piányí yīdiǎn ma?",e:"¿Puede ser más barato?"},
+    {h:"最低多少钱？",p:"zuì dī duōshǎo qián?",e:"¿Precio mínimo?"},
+    {h:"可以用微信支付吗？",p:"kěyǐ yòng Wēixìn zhīfù ma?",e:"¿Puedo pagar con WeChat Pay?"},
+    {h:"这是正品吗？",p:"zhè shì zhèngpǐn ma?",e:"¿Es producto original?"},
+    {h:"可以退货吗？",p:"kěyǐ tuìhuò ma?",e:"¿Se puede devolver?"}
+  ],
+  "🏭 Comercio Exterior":[
+    {h:"你们有最小订购量吗？",p:"nǐmen yǒu zuì xiǎo dìnggòu liàng ma?",e:"¿Tienen cantidad mínima?"},
+    {h:"能提供样品吗？",p:"néng tígōng yàngpǐn ma?",e:"¿Pueden enviar muestras?"},
+    {h:"交货期是多久？",p:"jiāohuò qī shì duōjiǔ?",e:"¿Cuál es el plazo de entrega?"},
+    {h:"付款方式是什么？",p:"fùkuǎn fāngshì shì shénme?",e:"¿Condiciones de pago?"},
+    {h:"我们需要签合同",p:"wǒmen xūyào qiān hétong",e:"Necesitamos firmar un contrato"},
+    {h:"可以验货吗？",p:"kěyǐ yàn huò ma?",e:"¿Podemos inspeccionar la mercadería?"}
+  ],
+  "💃 Ocio":[
+    {h:"我们去哪里玩？",p:"wǒmen qù nǎlǐ wán?",e:"¿Adónde vamos?"},
+    {h:"我喜欢跳舞",p:"wǒ xǐhuān tiàowǔ",e:"Me gusta bailar"},
+    {h:"门票多少钱？",p:"ménpiào duōshǎo qián?",e:"¿Cuánto cuesta la entrada?"},
+    {h:"我们去唱歌吧",p:"wǒmen qù chàng gē ba",e:"Vamos a karaoke"},
+    {h:"太好玩了！",p:"tài hǎowán le!",e:"¡Qué divertido!"}
+  ]
+};
+let convState={cat:''};
+function initConv(){
+  const cats=Object.keys(CONV);convState.cat=cats[0];
+  const pillDiv=document.getElementById('convCats');pillDiv.innerHTML='';
+  cats.forEach((cat,i)=>{
+    const p=document.createElement('div');p.className='pill'+(i===0?' active':'');p.textContent=cat;
+    p.onclick=()=>{convState.cat=cat;document.querySelectorAll('#convCats .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');renderConv(cat);};
+    pillDiv.appendChild(p);
+  });
+  renderConv(cats[0]);
+}
+function renderConv(cat){
+  const list=document.getElementById('convList');list.innerHTML='';
+  CONV[cat].forEach(f=>{
+    const row=document.createElement('div');
+    row.style.cssText='background:var(--card);border-radius:14px;padding:14px 16px;border:1px solid #222;display:flex;flex-direction:column;gap:6px';
+    row.innerHTML='<div style="font-size:1.3rem;color:var(--gold)">'+f.h+'</div>'+
+      '<div style="font-size:.8rem;color:var(--blue)">'+f.p+'</div>'+
+      '<div style="font-size:.9rem;font-weight:600">'+f.e+'</div>';
+    const sb=document.createElement('button');
+    sb.textContent='🔊 Escuchar';
+    sb.style.cssText='align-self:flex-start;background:rgba(255,255,255,.07);border:1px solid #333;border-radius:12px;padding:5px 14px;color:#ccc;font-size:.8rem;cursor:pointer;margin-top:2px';
+    sb.onclick=()=>speakHanzi(f.h,sb);
+    row.appendChild(sb);
+    list.appendChild(row);
+  });
+}
+
+/* ── COMPLETAR ── */
+const COMPLETAR_DATA = {
+  0: [
+    {esp:"Buenos ___",                   hanzi:"早上 ___",         blank:"好", blankEsp:"días",        blankP:"hǎo",    p:"zǎoshàng ___",              ops:[{h:"好",e:"días"},{h:"晚",e:"noches"},{h:"早",e:"mañana"},{h:"再",e:"otra vez"}]},
+    {esp:"Buenas ___",                   hanzi:"晚上 ___",         blank:"好", blankEsp:"noches",      blankP:"hǎo",    p:"wǎnshàng ___",              ops:[{h:"好",e:"noches"},{h:"早",e:"días"},{h:"来",e:"vengo"},{h:"去",e:"voy"}]},
+    {esp:"___, ¿cómo estás?",            hanzi:"___, 你好吗？",    blank:"你好",blankEsp:"Hola",       blankP:"nǐ hǎo", p:"___, nǐ hǎo ma?",           ops:[{h:"你好",e:"Hola"},{h:"再见",e:"Adiós"},{h:"谢谢",e:"Gracias"},{h:"对不起",e:"Lo siento"}]},
+    {esp:"Estoy muy ___",                hanzi:"我很 ___",         blank:"好", blankEsp:"bien",        blankP:"hǎo",    p:"wǒ hěn ___",                ops:[{h:"好",e:"bien"},{h:"累",e:"cansado"},{h:"忙",e:"ocupado"},{h:"饿",e:"hambriento"}]},
+    {esp:"___, me equivoqué",            hanzi:"___，我错了",      blank:"对不起",blankEsp:"Perdón",   blankP:"duìbuqǐ",p:"___, wǒ cuò le",             ops:[{h:"对不起",e:"Perdón"},{h:"你好",e:"Hola"},{h:"再见",e:"Adiós"},{h:"谢谢",e:"Gracias"}]},
+    {esp:"___, me ayudaste mucho",       hanzi:"___，你帮了我很多",blank:"谢谢",blankEsp:"Gracias",   blankP:"xièxiè", p:"___, nǐ bāng le wǒ hěn duō",ops:[{h:"谢谢",e:"Gracias"},{h:"你好",e:"Hola"},{h:"再见",e:"Adiós"},{h:"请",e:"Por favor"}]},
+    {esp:"___, ¿puedes repetir?",        hanzi:"___，再说一遍",    blank:"请", blankEsp:"Por favor",   blankP:"qǐng",   p:"___, zài shuō yī biàn",     ops:[{h:"请",e:"Por favor"},{h:"谢谢",e:"Gracias"},{h:"你好",e:"Hola"},{h:"再见",e:"Adiós"}]},
+    {esp:"¿___ cuesta esto?",            hanzi:"这个 ___ 钱？",    blank:"多少",blankEsp:"Cuánto",    blankP:"duōshǎo",p:"zhège ___ qián?",            ops:[{h:"多少",e:"Cuánto"},{h:"什么",e:"Qué"},{h:"哪里",e:"Dónde"},{h:"为什么",e:"Por qué"}]},
+    {esp:"___, estoy perdido",           hanzi:"___，我迷路了",    blank:"请", blankEsp:"Disculpe",    blankP:"qǐng",   p:"___, wǒ mí lù le",          ops:[{h:"请",e:"Disculpe"},{h:"谢谢",e:"Gracias"},{h:"你好",e:"Hola"},{h:"再见",e:"Adiós"}]},
+    {esp:"___ (adiós)",                  hanzi:"___",             blank:"再见",blankEsp:"Hasta luego",blankP:"zàijiàn",p:"___",                        ops:[{h:"再见",e:"Hasta luego"},{h:"你好",e:"Hola"},{h:"谢谢",e:"Gracias"},{h:"请",e:"Por favor"}]},
+  ],
+  1: [
+    {esp:"No ___ nada de lo que dices",  hanzi:"我不 ___ 你说的",  blank:"懂", blankEsp:"entiendo",   blankP:"dǒng",   p:"wǒ bù ___ nǐ shuō de",     ops:[{h:"懂",e:"entiendo"},{h:"知道",e:"sé"},{h:"听",e:"escucho"},{h:"看",e:"veo"}]},
+    {esp:"Este precio es muy ___",       hanzi:"这个价格太 ___了",  blank:"贵", blankEsp:"caro",        blankP:"guì",    p:"zhège jiàgé tài ___ le",    ops:[{h:"贵",e:"caro"},{h:"便宜",e:"barato"},{h:"好",e:"bueno"},{h:"高",e:"alto"}]},
+    {esp:"¿___ pagar con tarjeta?",      hanzi:"___ 刷卡吗？",     blank:"可以",blankEsp:"Puedo",     blankP:"kěyǐ",   p:"___ shuā kǎ ma?",           ops:[{h:"可以",e:"Puedo"},{h:"不能",e:"No puedo"},{h:"应该",e:"Debería"},{h:"想",e:"Quiero"}]},
+    {esp:"___ la cuenta, por favor",     hanzi:"___ 买单",         blank:"请", blankEsp:"Tráigame",   blankP:"qǐng",   p:"___ mǎi dān",               ops:[{h:"请",e:"Por favor"},{h:"谢谢",e:"Gracias"},{h:"对不起",e:"Perdón"},{h:"你好",e:"Hola"}]},
+    {esp:"Habla un poco más ___",        hanzi:"请你说 ___ 一点",  blank:"慢", blankEsp:"despacio",    blankP:"màn",    p:"qǐng nǐ shuō ___ yīdiǎn",  ops:[{h:"慢",e:"despacio"},{h:"快",e:"rápido"},{h:"大",e:"fuerte"},{h:"小",e:"suave"}]},
+    {esp:"¿___ está la estación?",       hanzi:"地铁站 ___ 哪里？", blank:"在", blankEsp:"Dónde",       blankP:"zài",    p:"dìtiě zhàn ___ nǎlǐ?",     ops:[{h:"在",e:"está"},{h:"是",e:"es"},{h:"有",e:"hay"},{h:"去",e:"va"}]},
+    {esp:"¿___ hay descuento?",          hanzi:"___ 有打折吗？",   blank:"有没有",blankEsp:"Acaso",   blankP:"yǒuméiyǒu",p:"___ yǒu dǎzhé ma?",        ops:[{h:"有没有",e:"¿Hay?"},{h:"可以",e:"¿Puedo?"},{h:"什么",e:"¿Qué?"},{h:"为什么",e:"¿Por qué?"}]},
+    {esp:"Quiero ir ___",                hanzi:"我想 ___ 天安门",  blank:"去", blankEsp:"a Tiananmen", blankP:"qù",     p:"wǒ xiǎng ___ Tiān'ānmén",  ops:[{h:"去",e:"ir a"},{h:"来",e:"venir a"},{h:"看",e:"ver"},{h:"买",e:"comprar"}]},
+    {esp:"¿___ está el baño?",           hanzi:"洗手间 ___ 哪里？",blank:"在", blankEsp:"Dónde",       blankP:"zài",    p:"xǐshǒujiān ___ nǎlǐ?",     ops:[{h:"在",e:"está"},{h:"是",e:"es"},{h:"有",e:"hay"},{h:"去",e:"va"}]},
+    {esp:"Habla más ___",                hanzi:"请 ___ 说",        blank:"慢慢",blankEsp:"despacio",   blankP:"mànmàn", p:"qǐng ___ shuō",             ops:[{h:"慢慢",e:"despacio"},{h:"快快",e:"rápido"},{h:"大声",e:"fuerte"},{h:"小声",e:"suave"}]},
+  ],
+  2: [
+    {esp:"¿___ es la cantidad mínima?",  hanzi:"___ 是最小订购量？",blank:"什么",blankEsp:"Cuál",    blankP:"shénme", p:"___ shì zuì xiǎo dìnggòu liàng?",ops:[{h:"什么",e:"Cuál es"},{h:"多少",e:"Cuánto"},{h:"为什么",e:"Por qué"},{h:"哪里",e:"Dónde"}]},
+    {esp:"___ firmar el contrato hoy",   hanzi:"我们 ___ 今天签合同",blank:"可以",blankEsp:"Podemos", blankP:"kěyǐ",   p:"wǒmen ___ jīntiān qiān hétong",ops:[{h:"可以",e:"Podemos"},{h:"不能",e:"No podemos"},{h:"想",e:"Queremos"},{h:"应该",e:"Deberíamos"}]},
+    {esp:"¿___ nos envían las muestras?",hanzi:"___ 可以发样品？",  blank:"什么时候",blankEsp:"Cuándo",blankP:"shénme shíhòu",p:"___ kěyǐ fā yàngpǐn?",ops:[{h:"什么时候",e:"Cuándo"},{h:"为什么",e:"Por qué"},{h:"哪里",e:"Dónde"},{h:"多少",e:"Cuánto"}]},
+    {esp:"El precio ___ el envío",       hanzi:"价格 ___ 运费",    blank:"包括",blankEsp:"incluye",   blankP:"bāokuò", p:"jiàgé ___ yùnfèi",          ops:[{h:"包括",e:"incluye"},{h:"不包括",e:"no incluye"},{h:"是",e:"es"},{h:"有",e:"tiene"}]},
+    {esp:"Las relaciones ___ importantes",hanzi:"关系 ___ 重要",   blank:"很", blankEsp:"son muy",     blankP:"hěn",    p:"guānxi ___ zhòngyào",       ops:[{h:"很",e:"son/muy"},{h:"不",e:"no son"},{h:"也",e:"también"},{h:"都",e:"siempre"}]},
+    {esp:"¿___ aceptan carta de crédito?",hanzi:"___ 接受信用证？",blank:"你们",blankEsp:"Ustedes",  blankP:"nǐmen",  p:"___ jiēshòu xìnyòngzhèng?", ops:[{h:"你们",e:"Ustedes"},{h:"我们",e:"Nosotros"},{h:"他们",e:"Ellos"},{h:"可以",e:"¿Pueden?"}]},
+    {esp:"Somos ___ a largo plazo",      hanzi:"我们是 ___ 客户",  blank:"长期",blankEsp:"clientes",  blankP:"chángqī",p:"wǒmen shì ___ kèhù",        ops:[{h:"长期",e:"clientes fijos"},{h:"新",e:"nuevos"},{h:"老",e:"antiguos"},{h:"重要",e:"importantes"}]},
+    {esp:"¿El precio ___ el envío?",     hanzi:"价格 ___ 运费吗？",blank:"包括",blankEsp:"incluye",   blankP:"bāokuò", p:"jiàgé ___ yùnfèi ma?",      ops:[{h:"包括",e:"incluye"},{h:"不包括",e:"no incluye"},{h:"是",e:"es"},{h:"有",e:"tiene"}]},
+    {esp:"¿___ fabrican con mi marca?",  hanzi:"___ 可以OEM生产？",blank:"你们",blankEsp:"Ustedes",  blankP:"nǐmen",  p:"___ kěyǐ OEM shēngchǎn?",   ops:[{h:"你们",e:"Ustedes"},{h:"我们",e:"Nosotros"},{h:"他们",e:"Ellos"},{h:"可以",e:"¿Pueden?"}]},
+    {esp:"¿___ mínima de pedido?",       hanzi:"最小 ___ 是多少？",blank:"订购量",blankEsp:"Cantidad",blankP:"dìnggòu liàng",p:"zuì xiǎo ___ shì duōshǎo?",ops:[{h:"订购量",e:"Cantidad"},{h:"价格",e:"Precio"},{h:"质量",e:"Calidad"},{h:"数量",e:"Número"}]},
+  ]
+};
+let compState={nivel:0,qs:[],idx:0,correct:0,xpGained:0};
+function setCompNivel(n){
+  compState.nivel=n;
+  [0,1,2].forEach(i=>document.getElementById('compN'+i).classList.toggle('active',i===n));
+  initCompletar();
+}
+function initCompletar(){
+  const pool=COMPLETAR_DATA[compState.nivel];
+  compState.qs=shuffle(pool).slice(0,10);
+  compState.idx=0;compState.correct=0;compState.xpGained=0;gameState.xpGained=0;
+  document.getElementById('compTotal').textContent=compState.qs.length;
+  buildCompPips(compState.qs.length);
+  renderCompletar();
+}
+function buildCompPips(n){
+  const row=document.getElementById('compPips');row.innerHTML='';
+  for(let i=0;i<n;i++){const p=document.createElement('div');p.className='pip';p.id='cpip'+i;if(i===0)p.style.background='var(--gold)';row.appendChild(p);}
+}
+function renderCompletar(){
+  const q=compState.qs[compState.idx];
+  document.getElementById('compIdx').textContent=compState.idx+1;
+  const fraseDiv=document.getElementById('compFraseDisplay');fraseDiv.innerHTML='';
+  const espRow=document.createElement('div');espRow.style.cssText='margin-bottom:10px;font-size:.95rem;color:var(--muted)';
+  const espParts=q.esp.split('___');
+  if(espParts.length>1){
+    espRow.appendChild(document.createTextNode(espParts[0]));
+    const espSlot=document.createElement('span');espSlot.id='blankSlotEsp';
+    espSlot.style.cssText='display:inline-block;min-width:60px;border-bottom:2px solid var(--muted);margin:0 4px;text-align:center;color:var(--gold)';
+    espSlot.textContent=' ';espRow.appendChild(espSlot);espRow.appendChild(document.createTextNode(espParts[1]));
+  } else {espRow.textContent=q.esp;}
+  fraseDiv.appendChild(espRow);
+  const div=document.createElement('div');div.style.cssText='height:1px;background:#333;margin:8px 0';fraseDiv.appendChild(div);
+  const zhRow=document.createElement('div');zhRow.style.cssText='font-size:1.8rem;letter-spacing:4px;color:var(--text)';
+  const zhParts=q.hanzi.split('___');
+  if(zhParts.length>1){
+    zhRow.appendChild(document.createTextNode(zhParts[0]));
+    const zhSlot=document.createElement('span');zhSlot.id='blankSlot';
+    zhSlot.style.cssText='display:inline-block;min-width:44px;border-bottom:3px solid var(--gold);margin:0 4px;vertical-align:bottom;text-align:center;color:var(--gold)';
+    zhSlot.textContent=' ';zhRow.appendChild(zhSlot);zhRow.appendChild(document.createTextNode(zhParts[1]));
+  } else {zhRow.textContent=q.hanzi;}
+  fraseDiv.appendChild(zhRow);
+  document.getElementById('compPinyin').textContent=q.p;
+  document.getElementById('compFeedback').style.display='none';
+  document.getElementById('compNext').style.display='none';
+  const opDiv=document.getElementById('compOpciones');opDiv.innerHTML='';
+  shuffle(q.ops).forEach((op,i)=>{
+    const btn=document.createElement('button');btn.className='opt-btn';
+    btn.innerHTML='<div class="opt-num">'+(i+1)+'</div><span style="font-size:1.4rem;min-width:36px">'+op.h+'</span><span style="font-size:.8rem;color:var(--muted);margin-left:6px">'+op.e+'</span>';
+    btn.onclick=()=>checkCompletar(op.h,q,btn);
+    opDiv.appendChild(btn);
+  });
+}
+
+document.getElementById('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter')startGame();});
+</script>
+</body>
+</html>
