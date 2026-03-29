@@ -313,7 +313,7 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
       <div class="icon">✏️</div><div class="label">Trazos</div><div class="desc">Dibuja con el dedo</div>
     </div>
     <div class="menu-btn" onclick="show('s-palabras');initPalabras()">
-      <div class="icon">📖</div><div class="label">Palabras</div><div class="desc">Vocabulario visual</div>
+      <div class="icon">💰</div><div class="label">Comercio</div><div class="desc">Import/Export</div>
     </div>
     <div class="menu-btn" onclick="startQuiz()">
       <div class="icon">🎯</div><div class="label">Quiz</div><div class="desc">Opción múltiple</div>
@@ -333,9 +333,7 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
     <div class="menu-btn" onclick="show('s-cultura');initCultura()">
       <div class="icon">🏮</div><div class="label">Cultura China</div><div class="desc">Historia y tradiciones</div>
     </div>
-    <div class="menu-btn" onclick="show('s-ciudad');initCiudad()">
-      <div class="icon">🏙️</div><div class="label">Ciudades</div><div class="desc">Conocé China</div>
-    </div>
+
     <div class="menu-btn" onclick="show('s-frases');initFrases()">
       <div class="icon">💬</div><div class="label">Frases</div><div class="desc">Frases del día</div>
     </div>
@@ -765,37 +763,6 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
     <button class="btn btn-primary" onclick="nextCultura()" style="flex:1;padding:12px">Siguiente →</button>
   </div>
 </div>
-<!-- CIUDADES DE CHINA -->
-<div id="s-ciudad" class="screen">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
-    <div class="section-title">🏙️ Ciudades de China</div>
-    <div style="font-size:.85rem;color:var(--muted)"><span id="ciudIdx">1</span>/<span id="ciudTotal">1</span></div>
-  </div>
-  <div class="cat-pill" id="ciudCats"></div>
-  <div class="flip-scene" onclick="flipCiudad()">
-    <div class="flip-card" id="flipCiudad">
-      <div class="flip-front" style="background:linear-gradient(145deg,#0a0a2a,#1a0a1a);border-color:#2a1a4a">
-        <div class="card-emoji" id="ciudEmoji">🏙️</div>
-        <div id="ciudNombre" style="font-size:1.4rem;font-weight:700;color:var(--gold)"></div>
-        <div id="ciudHanzi" style="font-family:'Noto Serif SC',serif;font-size:1.8rem;color:var(--blue)"></div>
-        <div style="font-size:.75rem;color:var(--muted)">Toca para conocerla 👆</div>
-      </div>
-      <div class="flip-back" style="background:linear-gradient(145deg,#0a0a2a,#1a0a1a);border-color:#2a1a4a;gap:10px;padding:20px">
-        <div id="ciudEmojiBig" style="font-size:2rem"></div>
-        <div id="ciudNombreBack" style="font-family:'Noto Serif SC',serif;font-size:1rem;color:var(--gold);font-weight:700"></div>
-        <div id="ciudPinyin" style="color:var(--blue);font-size:.9rem"></div>
-        <div id="ciudInfo" style="font-size:.8rem;color:var(--muted);text-align:center;line-height:1.5;max-height:120px;overflow-y:auto"></div>
-        <div id="ciudDato" style="font-size:.75rem;color:var(--green);font-style:italic;text-align:center"></div>
-      </div>
-    </div>
-  </div>
-  <p style="font-size:.75rem;color:var(--muted);text-align:center">👆 Tocá la tarjeta para conocer la ciudad</p>
-  <div style="display:flex;gap:10px">
-    <button class="btn btn-ghost" onclick="prevCiudad()" style="flex:1;padding:12px">← Anterior</button>
-    <button class="btn btn-gold" onclick="nextCiudad()" style="flex:1;padding:12px">Siguiente →</button>
-  </div>
-</div>
 
 <!-- CONVERSACIONES -->
 <div id="s-conv" class="screen">
@@ -950,7 +917,7 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
 <div id="s-palabras" class="screen">
   <div class="row">
     <button class="back-btn" onclick="goMenu()">✕ Salir</button>
-    <div class="section-title">📖 Vocabulario</div>
+    <div class="section-title">💰 Comercio Internacional</div>
     <div style="width:60px"></div>
   </div>
   <div class="cat-pill" id="palabrasCats"></div>
@@ -995,39 +962,47 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
 <script>
 /* ── DATOS ── */
 const VOCAB={
-  "Saludos 👋":[
-    {h:"你好",p:"nǐ hǎo",e:"Hola",img:"👋"},{h:"再见",p:"zài jiàn",e:"Adiós",img:"🙏"},
-    {h:"谢谢",p:"xiè xiè",e:"Gracias",img:"🙌"},{h:"对不起",p:"duì bu qǐ",e:"Lo siento",img:"😔"},
-    {h:"没关系",p:"méi guān xì",e:"No hay problema",img:"😊"},{h:"早上好",p:"zǎo shàng hǎo",e:"Buenos días",img:"🌅"},
-    {h:"晚上好",p:"wǎn shàng hǎo",e:"Buenas noches",img:"🌙"},{h:"请",p:"qǐng",e:"Por favor",img:"🤲"},
-    {h:"是",p:"shì",e:"Sí",img:"✅"},{h:"不",p:"bù",e:"No",img:"❌"}
+  "💰 Comercio":[
+    {h:"商业",p:"shāngyè",e:"Comercio",img:"💰"},{h:"市场",p:"shìchǎng",e:"Mercado",img:"🏪"},
+    {h:"买",p:"mǎi",e:"Comprar",img:"🛒"},{h:"卖",p:"mài",e:"Vender",img:"💵"},
+    {h:"价格",p:"jiàgé",e:"Precio",img:"💲"},{h:"折扣",p:"zhékòu",e:"Descuento",img:"🔖"},
+    {h:"付款",p:"fùkuǎn",e:"Pago",img:"💳"},{h:"发票",p:"fāpiào",e:"Factura",img:"📄"},
+    {h:"库存",p:"kùcún",e:"Inventario",img:"📦"},{h:"供应商",p:"gōngyìngshāng",e:"Proveedor",img:"🏭"}
   ],
-  "Números 🔢":[
-    {h:"一",p:"yī",e:"Uno",img:"1️⃣"},{h:"二",p:"èr",e:"Dos",img:"2️⃣"},{h:"三",p:"sān",e:"Tres",img:"3️⃣"},
-    {h:"四",p:"sì",e:"Cuatro",img:"4️⃣"},{h:"五",p:"wǔ",e:"Cinco",img:"5️⃣"},{h:"六",p:"liù",e:"Seis",img:"6️⃣"},
-    {h:"七",p:"qī",e:"Siete",img:"7️⃣"},{h:"八",p:"bā",e:"Ocho",img:"8️⃣"},{h:"九",p:"jiǔ",e:"Nueve",img:"9️⃣"},
-    {h:"十",p:"shí",e:"Diez",img:"🔟"}
+  "🏭 Comercio Exterior":[
+    {h:"进出口",p:"jìnchūkǒu",e:"Importación-Exportación",img:"🌍"},{h:"贸易",p:"màoyì",e:"Comercio",img:"🤝"},
+    {h:"出口",p:"chūkǒu",e:"Exportación",img:"📤"},{h:"进口",p:"jìnkǒu",e:"Importación",img:"📥"},
+    {h:"海关",p:"hǎiguān",e:"Aduana",img:"🏛️"},{h:"关税",p:"guānsuì",e:"Arancel",img:"💰"},
+    {h:"商业发票",p:"shāngyè fāpiào",e:"Factura comercial",img:"📋"},{h:"提单",p:"tídān",e:"Conocimiento de embarque",img:"🚢"},
+    {h:"单据",p:"dānjù",e:"Documentación",img:"📃"},{h:"清关",p:"qīngguān",e:"Despacho aduanal",img:"✅"}
   ],
-  "Comida 🍜":[
-    {h:"米饭",p:"mǐ fàn",e:"Arroz",img:"🍚"},{h:"面条",p:"miàn tiáo",e:"Fideos",img:"🍜"},
-    {h:"水",p:"shuǐ",e:"Agua",img:"💧"},{h:"茶",p:"chá",e:"Té",img:"🍵"},
-    {h:"苹果",p:"píng guǒ",e:"Manzana",img:"🍎"},{h:"肉",p:"ròu",e:"Carne",img:"🥩"},
-    {h:"鱼",p:"yú",e:"Pescado",img:"🐟"},{h:"面包",p:"miàn bāo",e:"Pan",img:"🍞"},
-    {h:"鸡蛋",p:"jī dàn",e:"Huevo",img:"🥚"},{h:"牛奶",p:"niú nǎi",e:"Leche",img:"🥛"}
+  "📦 Fletes y Transporte":[
+    {h:"运费",p:"yùnfèi",e:"Flete",img:"🚚"},{h:"运输",p:"yùnshū",e:"Transporte",img:"🚛"},
+    {h:"海运",p:"hǎiyùn",e:"Transporte marítimo",img:"⛴️"},{h:"空运",p:"kōngyùn",e:"Transporte aéreo",img:"✈️"},
+    {h:"陆运",p:"lùyùn",e:"Transporte terrestre",img:"🚂"},{h:"快递",p:"kuàidì",e:"Courier/Envío rápido",img:"📮"},
+    {h:"集装箱",p:"jízhuāngxiāng",e:"Contenedor",img:"📦"},{h:"运单",p:"yùndān",e:"Guía de transporte",img:"📝"},
+    {h:"追踪",p:"zhuīzōng",e:"Rastreo",img:"📍"},{h:"交货",p:"jiāohuò",e:"Entrega",img:"📫"}
   ],
-  "Colores 🎨":[
-    {h:"红色",p:"hóng sè",e:"Rojo",img:"🔴"},{h:"蓝色",p:"lán sè",e:"Azul",img:"🔵"},
-    {h:"绿色",p:"lǜ sè",e:"Verde",img:"🟢"},{h:"黄色",p:"huáng sè",e:"Amarillo",img:"🟡"},
-    {h:"黑色",p:"hēi sè",e:"Negro",img:"⚫"},{h:"白色",p:"bái sè",e:"Blanco",img:"⚪"},
-    {h:"紫色",p:"zǐ sè",e:"Morado",img:"🟣"},{h:"粉色",p:"fěn sè",e:"Rosa",img:"🌸"},
-    {h:"橙色",p:"chéng sè",e:"Naranja",img:"🟠"},{h:"灰色",p:"huī sè",e:"Gris",img:"🩶"}
+  "📋 Incoterms":[
+    {h:"FOB",p:"FOB",e:"Free on Board",img:"🚢"},{h:"CIF",p:"CIF",e:"Cost Insurance Freight",img:"⚓"},
+    {h:"CFR",p:"CFR",e:"Cost and Freight",img:"🌊"},{h:"EXW",p:"EXW",e:"Ex Works",img:"🏭"},
+    {h:"DDP",p:"DDP",e:"Delivered Duty Paid",img:"✅"},{h:"DDU",p:"DDU",e:"Delivered Duty Unpaid",img:"💳"},
+    {h:"DAP",p:"DAP",e:"Delivered at Place",img:"📍"},{h:"FCA",p:"FCA",e:"Free Carrier",img:"🚐"},
+    {h:"CPT",p:"CPT",e:"Carriage Paid To",img:"🛫"},{h:"CIP",p:"CIP",e:"Carriage and Insurance",img:"🛡️"}
   ],
-  "Animales 🐾":[
-    {h:"猫",p:"māo",e:"Gato",img:"🐱"},{h:"狗",p:"gǒu",e:"Perro",img:"🐶"},
-    {h:"鸟",p:"niǎo",e:"Pájaro",img:"🐦"},{h:"兔子",p:"tù zi",e:"Conejo",img:"🐰"},
-    {h:"熊猫",p:"xióng māo",e:"Panda",img:"🐼"},{h:"老虎",p:"lǎo hǔ",e:"Tigre",img:"🐯"},
-    {h:"大象",p:"dà xiàng",e:"Elefante",img:"🐘"},{h:"猴子",p:"hóu zi",e:"Mono",img:"🐒"},
-    {h:"龙",p:"lóng",e:"Dragón",img:"🐉"},{h:"马",p:"mǎ",e:"Caballo",img:"🐴"}
+  "📜 Reglas y Términos":[
+    {h:"合同",p:"hétonɡ",e:"Contrato",img:"📜"},{h:"条款",p:"tiáokuǎn",e:"Términos",img:"⚖️"},
+    {h:"签署",p:"qiānshǔ",e:"Firmar",img:"✍️"},{h:"有效",p:"yǒuxiào",e:"Válido",img:"✅"},
+    {h:"责任",p:"zérèn",e:"Responsabilidad",img:"⚠️"},{h:"风险",p:"fēngxiǎn",e:"Riesgo",img:"⛔"},
+    {h:"保险",p:"bǎoxiǎn",e:"Seguro",img:"🛡️"},{h:"索赔",p:"suǒpèi",e:"Reclamación",img:"📢"},
+    {h:"罚款",p:"fákuǎn",e:"Multa",img:"💸"},{h:"条例",p:"tiáolì",e:"Regulación",img:"📋"}
+  ],
+  "🚀 Forwarder y Logística":[
+    {h:"货代",p:"huòdài",e:"Agente de carga",img:"🚀"},{h:"物流",p:"wùliú",e:"Logística",img:"📦"},
+    {h:"仓库",p:"cānɡkù",e:"Almacén",img:"🏢"},{h:"转运",p:"zhuǎnyùn",e:"Transbordo",img:"🔄"},
+    {h:"报关",p:"bàoɡuān",e:"Declaración aduanal",img:"📋"},{h:"保税",p:"bǎoshuì",e:"Zona de libre comercio",img:"🏛️"},
+    {h:"配送",p:"pèisòng",e:"Distribución",img:"🚚"},{h:"上门",p:"shànɡmén",e:"Recogida",img:"🚪"},
+    {h:"分拨",p:"fēnbō",e:"Distribución de centro",img:"📍"},{h:"溯源",p:"sùyuán",e:"Trazabilidad",img:"🔍"}
   ]
 };
 const BASICOS=[
@@ -1058,7 +1033,7 @@ const PALABRASTRAZO=[
 /* ── ESTADO ── */
 let player={nombre:'',nivel:1,xp:0,racha:0,mejorRacha:0,correctas:0,incorrectas:0,palabras:new Set()};
 let gameState={mode:'',questions:[],idx:0,correct:0,xpGained:0,lastMode:''};
-let flashState={cards:[],idx:0,cat:'Saludos 👋'};
+let flashState={cards:[],idx:0,cat:'💰 Comercio'};
 let desafioTimer=null;
 let canvas,ctx,drawing=false,drawMode=false;
 let currentSymList=BASICOS,currentSymIdx=0;
@@ -1986,54 +1961,6 @@ function renderCultura(){
 function flipCultura(){document.getElementById('flipCultura').classList.toggle('flipped');}
 function nextCultura(){cultState.idx=cultState.idx<cultState.cards.length-1?cultState.idx+1:0;renderCultura();}
 function prevCultura(){cultState.idx=cultState.idx>0?cultState.idx-1:cultState.cards.length-1;renderCultura();}
-
-/* ── CIUDADES DE CHINA ── */
-const CIUDADES={
-  "Capitales & Mega 🏛":[
-    {emoji:"🏛",nombre:"Beijing",hanzi:"北京",pinyin:"Běijīng",poblacion:"21.5M",fundacion:"~1045 a.C.",famosa:"La Muralla & Palacio",info:"Capital de China y centro político. Hogar de la Ciudad Prohibida 故宫, la Plaza Tiananmén y el Templo del Cielo. Una de las ciudades más antiguas del mundo.",dato:"La Ciudad Prohibida tiene 9.999 habitaciones"},
-    {emoji:"🌆",nombre:"Shanghái",hanzi:"上海",pinyin:"Shànghǎi",poblacion:"24.9M",fundacion:"~1000 d.C.",famosa:"El Bund & Pudong",info:"La ciudad más poblada de China y centro financiero global. El skyline de Pudong es icónico. El puerto de Shanghái es el más activo del mundo.",dato:"El maglev de Shanghái alcanza 430 km/h"},
-    {emoji:"🌺",nombre:"Guangzhou",hanzi:"广州",pinyin:"Guǎngzhōu",poblacion:"18.7M",fundacion:"~214 a.C.",famosa:"La Feria de Cantón",info:"Capital de Guangdong y cuna de la cocina cantonesa. Sede de la Feria de Cantón, la feria comercial más grande del mundo.",dato:"Los dim sum nacieron aquí hace más de 2500 años"},
-    {emoji:"💻",nombre:"Shenzhen",hanzi:"深圳",pinyin:"Shēnzhèn",poblacion:"17.5M",fundacion:"1979",famosa:"Capital tech de China",info:"De pueblo pesquero a megalópolis tech en 40 años. Sede de Huawei, Tencent, BYD y DJI. Es la Silicon Valley de China.",dato:"Shenzhen pasó de 30.000 a 17 millones de habitantes"}
-  ],
-  "Historia & Cultura 🏺":[
-    {emoji:"⚔️",nombre:"Xi'an",hanzi:"西安",pinyin:"Xī'ān",poblacion:"13M",fundacion:"~1100 a.C.",famosa:"Guerreros de Terracota",info:"Antigua capital imperial durante 13 dinastías. Inicio de la Ruta de la Seda. Hogar de los 8.000 guerreros de terracota del emperador Qin.",dato:"La muralla de Xi'an (14 km) se puede recorrer en bici"},
-    {emoji:"🏯",nombre:"Nanjing",hanzi:"南京",pinyin:"Nánjīng",poblacion:"9.3M",fundacion:"~495 a.C.",famosa:"Capital de 6 dinastías",info:"'Capital del Sur'. Fue capital de China en múltiples períodos. El Mausoleo de Sun Yat-sen y la muralla más larga del mundo están aquí.",dato:"La muralla de Nanjing mide 35 km de largo"},
-    {emoji:"🎭",nombre:"Chengdu",hanzi:"成都",pinyin:"Chéngdū",poblacion:"16.3M",fundacion:"~316 a.C.",famosa:"Pandas & Ópera Sichuan",info:"Capital de Sichuan, famosa por los pandas gigantes, la comida picante y la ópera con cambio de máscaras. Ciudad UNESCO de Gastronomía.",dato:"El primer papel moneda del mundo se creó aquí en el año 1023"}
-  ],
-  "Naturaleza & Moderna 🌿":[
-    {emoji:"🌄",nombre:"Guilin",hanzi:"桂林",pinyin:"Guìlín",poblacion:"5.4M",fundacion:"~314 a.C.",famosa:"Montañas kársticas",info:"Sus paisajes de montañas kársticas y el río Li son los más fotografiados de China. Aparecen en el billete de 20 yuanes.",dato:"'Las montañas de Guilin son las mejores bajo el cielo' — dicho chino"},
-    {emoji:"🌉",nombre:"Chongqing",hanzi:"重庆",pinyin:"Chóngqìng",poblacion:"32M",fundacion:"~316 a.C.",famosa:"Ciudad de las montañas",info:"La ciudad más grande del mundo por área. Construida sobre montañas con puentes y monorrieles que pasan entre edificios. Famosa por su hotpot picante.",dato:"Tiene más de 13.000 puentes y se llama 'Ciudad Puente'"},
-    {emoji:"🏝️",nombre:"Hong Kong",hanzi:"香港",pinyin:"Xiānggǎng",poblacion:"7.5M",fundacion:"~200 a.C.",famosa:"Skyline & dim sum",info:"Región Administrativa Especial con identidad única. Mezcla de cultura china y británica. Centro financiero global con el skyline más espectacular de Asia.",dato:"Hong Kong significa 'Puerto Fragante' 香港"}
-  ]
-};
-let ciudState={cards:[],idx:0,cat:''};
-function initCiudad(){
-  const cats=Object.keys(CIUDADES);ciudState.cat=cats[0];
-  const pillDiv=document.getElementById('ciudCats');pillDiv.innerHTML='';
-  cats.forEach((cat,i)=>{
-    const p=document.createElement('div');p.className='pill'+(i===0?' active':'');p.textContent=cat;
-    p.onclick=()=>{ciudState.cat=cat;document.querySelectorAll('#ciudCats .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');loadCiudadCat(cat);};
-    pillDiv.appendChild(p);
-  });
-  loadCiudadCat(cats[0]);
-}
-function loadCiudadCat(cat){ciudState.cards=CIUDADES[cat];ciudState.idx=0;document.getElementById('ciudTotal').textContent=ciudState.cards.length;renderCiudad();}
-function renderCiudad(){
-  const d=ciudState.cards[ciudState.idx];
-  document.getElementById('ciudIdx').textContent=ciudState.idx+1;
-  document.getElementById('flipCiudad').classList.remove('flipped');
-  document.getElementById('ciudEmoji').textContent=d.emoji;
-  document.getElementById('ciudNombre').textContent=d.nombre;
-  document.getElementById('ciudHanzi').textContent=d.hanzi;
-  document.getElementById('ciudEmojiBig').textContent=d.emoji;
-  document.getElementById('ciudNombreBack').textContent=d.nombre+' '+d.hanzi;
-  document.getElementById('ciudPinyin').textContent=d.pinyin;
-  document.getElementById('ciudInfo').textContent=d.info;
-  document.getElementById('ciudDato').textContent='💡 '+d.dato;
-}
-function flipCiudad(){document.getElementById('flipCiudad').classList.toggle('flipped');}
-function nextCiudad(){ciudState.idx=ciudState.idx<ciudState.cards.length-1?ciudState.idx+1:0;renderCiudad();}
-function prevCiudad(){ciudState.idx=ciudState.idx>0?ciudState.idx-1:ciudState.cards.length-1;renderCiudad();}
 
 
 /* ── CONVERSACIONES ── */
