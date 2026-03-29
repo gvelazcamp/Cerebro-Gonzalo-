@@ -10,7 +10,16 @@
 <link rel="manifest" href="manifest.json">
 <script>
 if('serviceWorker' in navigator && !location.hostname.includes('claudeusercontent')){
-  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){r.update();}).catch(function(e){console.log('SW failed',e)});
+  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){
+    r.update();
+    r.addEventListener('updatefound',function(){
+      var nw=r.installing;
+      if(nw){nw.addEventListener('statechange',function(){
+        if(nw.state==='activated'){window.location.reload();}
+      });}
+    });
+  }).catch(function(e){console.log('SW failed',e)});
+  navigator.serviceWorker.addEventListener('controllerchange',function(){window.location.reload();});
 }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
