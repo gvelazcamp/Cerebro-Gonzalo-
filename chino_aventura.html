@@ -10,7 +10,7 @@
 <link rel="manifest" href="manifest.json">
 <script>
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').then(function(r){console.log('SW registered',r.scope)}).catch(function(e){console.log('SW failed',e)});
+  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){console.log('SW registered',r.scope);r.update();}).catch(function(e){console.log('SW failed',e)});
 }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
