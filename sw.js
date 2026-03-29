@@ -1,5 +1,5 @@
 // Service Worker Chino Aventura - Flash Header Fix v11
-var CACHE_NAME = 'chino-aventura-v11-header-fix';
+var CACHE_NAME = 'chino-aventura-v5';
 var urlsToCache = [
   '/Cerebro-Gonzalo-/chino_aventura.html',
   '/Cerebro-Gonzalo-/manifest.json'
