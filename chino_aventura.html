@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="theme-color" content="#0d0d0d">
-<meta name="description" content="Aprende chino para negocios y viajes">
+<meta name="description" content="Aprende chino mandarín para negocios e importación con China. Tarjetas, quiz, trazos y modo audio.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Chino Aventura">
@@ -20,7 +20,7 @@
     var regs = await navigator.serviceWorker.getRegistrations();
     await Promise.all(regs.map(function(r){ return r.unregister(); }));
     // 3. Registrar el nuevo SW limpio
-    var reg = await navigator.serviceWorker.register('sw.js?v=18', {updateViaCache:'none'});
+    var reg = await navigator.serviceWorker.register('sw.js?v=19', {updateViaCache:'none'});
     reg.update();
     navigator.serviceWorker.addEventListener('controllerchange', function(){ location.reload(); });
   } catch(e){ console.log('SW setup error', e); }
@@ -481,10 +481,6 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
 <!-- MENÚ -->
 <div id="s-menu" class="screen" style="gap:0;padding:16px 14px">
 
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-    <button onclick="show('s-onboarding')" style="background:none;border:none;color:var(--muted);font-size:.9rem;cursor:pointer;padding:4px 0">← Cambiar objetivo</button>
-    <button onclick="salirDelJuego()" style="background:none;border:none;color:var(--red);font-size:.9rem;cursor:pointer;padding:4px 0">🚪 Salir</button>
-  </div>
   <!-- GOAL BANNER -->
   <div id="goalBanner" style="background:linear-gradient(135deg,#001220,#002010);border:1px solid #004466;border-radius:12px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px">
     <div id="goalIcon" style="font-size:1.4rem">🏭</div>
@@ -506,6 +502,12 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
     <div><div class="stat-val" id="st-racha">0</div><div class="stat-lbl">🔥 Días seguidos</div></div>
     <div><div class="stat-val" id="st-palabras">0</div><div class="stat-lbl">📚 Palabras</div></div>
     <div><div class="stat-val" id="st-correctas">0</div><div class="stat-lbl">✅ Correctas</div></div>
+  </div>
+
+  <!-- NAV BUTTONS -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding:0 2px">
+    <button onclick="show('s-onboarding')" style="background:none;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:6px 0">← Cambiar objetivo</button>
+    <button onclick="salirDelJuego()" style="background:none;border:none;color:var(--red);font-size:.85rem;cursor:pointer;padding:6px 0">🚪 Salir</button>
   </div>
 
   <!-- SECCIÓN 1: CAMINO DEL DRAGÓN -->
@@ -3710,10 +3712,8 @@ function showOnboarding(){
       player.nombre=saved.username;player.email=saved.email||email;
       var sg=localStorage.getItem('ca_goal'); if(sg) userGoal=sg;
       var sl=localStorage.getItem('ca_level'); if(sl) userLevel=sl;
-      updateHUD();
-      if(typeof updateMenuProgBar==='function') updateMenuProgBar();
-      if(typeof updateGoalBanner==='function') updateGoalBanner();
-      show('s-menu');
+      // Show onboarding so user picks objective each session
+      show('s-onboarding');
       return;
     }
   }catch(e){}
