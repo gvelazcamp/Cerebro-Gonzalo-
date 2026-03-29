@@ -962,6 +962,44 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
 <script>
 /* ── DATOS ── */
 const VOCAB={
+  "Saludos 👋":[
+    {h:"你好",p:"nǐ hǎo",e:"Hola",img:"👋"},{h:"再见",p:"zài jiàn",e:"Adiós",img:"🙏"},
+    {h:"谢谢",p:"xiè xiè",e:"Gracias",img:"🙌"},{h:"对不起",p:"duì bu qǐ",e:"Lo siento",img:"😔"},
+    {h:"没关系",p:"méi guān xì",e:"No hay problema",img:"😊"},{h:"早上好",p:"zǎo shàng hǎo",e:"Buenos días",img:"🌅"},
+    {h:"晚上好",p:"wǎn shàng hǎo",e:"Buenas noches",img:"🌙"},{h:"请",p:"qǐng",e:"Por favor",img:"🤲"},
+    {h:"是",p:"shì",e:"Sí",img:"✅"},{h:"不",p:"bù",e:"No",img:"❌"}
+  ],
+  "Números 🔢":[
+    {h:"一",p:"yī",e:"Uno",img:"1️⃣"},{h:"二",p:"èr",e:"Dos",img:"2️⃣"},{h:"三",p:"sān",e:"Tres",img:"3️⃣"},
+    {h:"四",p:"sì",e:"Cuatro",img:"4️⃣"},{h:"五",p:"wǔ",e:"Cinco",img:"5️⃣"},{h:"六",p:"liù",e:"Seis",img:"6️⃣"},
+    {h:"七",p:"qī",e:"Siete",img:"7️⃣"},{h:"八",p:"bā",e:"Ocho",img:"8️⃣"},{h:"九",p:"jiǔ",e:"Nueve",img:"9️⃣"},
+    {h:"十",p:"shí",e:"Diez",img:"🔟"}
+  ],
+  "Comida 🍜":[
+    {h:"米饭",p:"mǐ fàn",e:"Arroz",img:"🍚"},{h:"面条",p:"miàn tiáo",e:"Fideos",img:"🍜"},
+    {h:"水",p:"shuǐ",e:"Agua",img:"💧"},{h:"茶",p:"chá",e:"Té",img:"🍵"},
+    {h:"苹果",p:"píng guǒ",e:"Manzana",img:"🍎"},{h:"肉",p:"ròu",e:"Carne",img:"🥩"},
+    {h:"鱼",p:"yú",e:"Pescado",img:"🐟"},{h:"面包",p:"miàn bāo",e:"Pan",img:"🍞"},
+    {h:"鸡蛋",p:"jī dàn",e:"Huevo",img:"🥚"},{h:"牛奶",p:"niú nǎi",e:"Leche",img:"🥛"}
+  ],
+  "Colores 🎨":[
+    {h:"红色",p:"hóng sè",e:"Rojo",img:"🔴"},{h:"蓝色",p:"lán sè",e:"Azul",img:"🔵"},
+    {h:"绿色",p:"lǜ sè",e:"Verde",img:"🟢"},{h:"黄色",p:"huáng sè",e:"Amarillo",img:"🟡"},
+    {h:"黑色",p:"hēi sè",e:"Negro",img:"⚫"},{h:"白色",p:"bái sè",e:"Blanco",img:"⚪"},
+    {h:"紫色",p:"zǐ sè",e:"Morado",img:"🟣"},{h:"粉色",p:"fěn sè",e:"Rosa",img:"🌸"},
+    {h:"橙色",p:"chéng sè",e:"Naranja",img:"🟠"},{h:"灰色",p:"huī sè",e:"Gris",img:"🩶"}
+  ],
+  "Animales 🐾":[
+    {h:"猫",p:"māo",e:"Gato",img:"🐱"},{h:"狗",p:"gǒu",e:"Perro",img:"🐶"},
+    {h:"鸟",p:"niǎo",e:"Pájaro",img:"🐦"},{h:"兔子",p:"tù zi",e:"Conejo",img:"🐰"},
+    {h:"熊猫",p:"xióng māo",e:"Panda",img:"🐼"},{h:"老虎",p:"lǎo hǔ",e:"Tigre",img:"🐯"},
+    {h:"大象",p:"dà xiàng",e:"Elefante",img:"🐘"},{h:"猴子",p:"hóu zi",e:"Mono",img:"🐒"},
+    {h:"龙",p:"lóng",e:"Dragón",img:"🐉"},{h:"马",p:"mǎ",e:"Caballo",img:"🐴"}
+  ]
+};
+
+// VOCABULARIO COMERCIO — para menú Palabras
+const VOCAB_COMERCIO={
   "💰 Comercio":[
     {h:"商业",p:"shāngyè",e:"Comercio",img:"💰"},{h:"市场",p:"shìchǎng",e:"Mercado",img:"🏪"},
     {h:"买",p:"mǎi",e:"Comprar",img:"🛒"},{h:"卖",p:"mài",e:"Vender",img:"💵"},
@@ -1033,7 +1071,7 @@ const PALABRASTRAZO=[
 /* ── ESTADO ── */
 let player={nombre:'',nivel:1,xp:0,racha:0,mejorRacha:0,correctas:0,incorrectas:0,palabras:new Set()};
 let gameState={mode:'',questions:[],idx:0,correct:0,xpGained:0,lastMode:''};
-let flashState={cards:[],idx:0,cat:'💰 Comercio'};
+let flashState={cards:[],idx:0,cat:'Saludos 👋'};
 let desafioTimer=null;
 let canvas,ctx,drawing=false,drawMode=false;
 let currentSymList=BASICOS,currentSymIdx=0;
@@ -1281,10 +1319,10 @@ function checkStroke(){
 }
 
 /* ── PALABRAS ── */
-let palabrasCat=Object.keys(VOCAB)[0];
+let palabrasCat=Object.keys(VOCAB_COMERCIO)[0];
 function initPalabras(){
   const pillDiv=document.getElementById('palabrasCats');pillDiv.innerHTML='';
-  Object.keys(VOCAB).forEach(c=>{
+  Object.keys(VOCAB_COMERCIO).forEach(c=>{
     const p=document.createElement('div');p.className='pill'+(c===palabrasCat?' active':'');p.textContent=c;
     p.onclick=()=>{palabrasCat=c;document.querySelectorAll('#palabrasCats .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');renderWordList(c);};
     pillDiv.appendChild(p);
@@ -1293,7 +1331,7 @@ function initPalabras(){
 }
 function renderWordList(cat){
   const list=document.getElementById('wordList');list.innerHTML='';
-  VOCAB[cat].forEach(w=>{
+  VOCAB_COMERCIO[cat].forEach(w=>{
     const row=document.createElement('div');row.className='word-row';
     row.innerHTML='<div class="word-emoji">'+w.img+'</div><div class="word-hanzi">'+w.h+'</div><div class="word-info"><div class="word-pinyin">'+w.p+'</div><div class="word-esp">'+w.e+'</div></div>';
     row.onclick=()=>{player.palabras.add(w.h);addXP(1);row.style.borderColor='var(--gold)';setTimeout(()=>row.style.borderColor='',600);};
