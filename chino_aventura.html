@@ -320,6 +320,9 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
     <div class="menu-btn" onclick="show('s-cultura');initCultura()">
       <div class="icon">🏮</div><div class="label">Cultura China</div><div class="desc">Historia y tradiciones</div>
     </div>
+    <div class="menu-btn" onclick="show('s-ciudad');initCiudad()">
+      <div class="icon">🏙️</div><div class="label">Ciudades</div><div class="desc">Conocé China</div>
+    </div>
     <div class="menu-btn" onclick="show('s-frases');initFrases()">
       <div class="icon">💬</div><div class="label">Frases</div><div class="desc">Frases del día</div>
     </div>
@@ -749,8 +752,14 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
     <button class="btn btn-primary" onclick="nextCultura()" style="flex:1;padding:12px">Siguiente →</button>
   </div>
 </div>
+<!-- CIUDADES DE CHINA -->
+<div id="s-ciudad" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">🏙️ Ciudades de China</div>
     <div style="font-size:.85rem;color:var(--muted)"><span id="ciudIdx">1</span>/<span id="ciudTotal">1</span></div>
   </div>
+  <div class="cat-pill" id="ciudCats"></div>
   <div class="flip-scene" onclick="flipCiudad()">
     <div class="flip-card" id="flipCiudad">
       <div class="flip-front" style="background:linear-gradient(145deg,#0a0a2a,#1a0a1a);border-color:#2a1a4a">
@@ -768,7 +777,7 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
       </div>
     </div>
   </div>
-  <p style="font-size:.75rem;color:var(--muted);text-align:center">👆 Toca para conocer la ciudad</p>
+  <p style="font-size:.75rem;color:var(--muted);text-align:center">👆 Tocá la tarjeta para conocer la ciudad</p>
   <div style="display:flex;gap:10px">
     <button class="btn btn-ghost" onclick="prevCiudad()" style="flex:1;padding:12px">← Anterior</button>
     <button class="btn btn-gold" onclick="nextCiudad()" style="flex:1;padding:12px">Siguiente →</button>
@@ -1964,6 +1973,54 @@ function renderCultura(){
 function flipCultura(){document.getElementById('flipCultura').classList.toggle('flipped');}
 function nextCultura(){cultState.idx=cultState.idx<cultState.cards.length-1?cultState.idx+1:0;renderCultura();}
 function prevCultura(){cultState.idx=cultState.idx>0?cultState.idx-1:cultState.cards.length-1;renderCultura();}
+
+/* ── CIUDADES DE CHINA ── */
+const CIUDADES={
+  "Capitales & Mega 🏛":[
+    {emoji:"🏛",nombre:"Beijing",hanzi:"北京",pinyin:"Běijīng",poblacion:"21.5M",fundacion:"~1045 a.C.",famosa:"La Muralla & Palacio",info:"Capital de China y centro político. Hogar de la Ciudad Prohibida 故宫, la Plaza Tiananmén y el Templo del Cielo. Una de las ciudades más antiguas del mundo.",dato:"La Ciudad Prohibida tiene 9.999 habitaciones"},
+    {emoji:"🌆",nombre:"Shanghái",hanzi:"上海",pinyin:"Shànghǎi",poblacion:"24.9M",fundacion:"~1000 d.C.",famosa:"El Bund & Pudong",info:"La ciudad más poblada de China y centro financiero global. El skyline de Pudong es icónico. El puerto de Shanghái es el más activo del mundo.",dato:"El maglev de Shanghái alcanza 430 km/h"},
+    {emoji:"🌺",nombre:"Guangzhou",hanzi:"广州",pinyin:"Guǎngzhōu",poblacion:"18.7M",fundacion:"~214 a.C.",famosa:"La Feria de Cantón",info:"Capital de Guangdong y cuna de la cocina cantonesa. Sede de la Feria de Cantón, la feria comercial más grande del mundo.",dato:"Los dim sum nacieron aquí hace más de 2500 años"},
+    {emoji:"💻",nombre:"Shenzhen",hanzi:"深圳",pinyin:"Shēnzhèn",poblacion:"17.5M",fundacion:"1979",famosa:"Capital tech de China",info:"De pueblo pesquero a megalópolis tech en 40 años. Sede de Huawei, Tencent, BYD y DJI. Es la Silicon Valley de China.",dato:"Shenzhen pasó de 30.000 a 17 millones de habitantes"}
+  ],
+  "Historia & Cultura 🏺":[
+    {emoji:"⚔️",nombre:"Xi'an",hanzi:"西安",pinyin:"Xī'ān",poblacion:"13M",fundacion:"~1100 a.C.",famosa:"Guerreros de Terracota",info:"Antigua capital imperial durante 13 dinastías. Inicio de la Ruta de la Seda. Hogar de los 8.000 guerreros de terracota del emperador Qin.",dato:"La muralla de Xi'an (14 km) se puede recorrer en bici"},
+    {emoji:"🏯",nombre:"Nanjing",hanzi:"南京",pinyin:"Nánjīng",poblacion:"9.3M",fundacion:"~495 a.C.",famosa:"Capital de 6 dinastías",info:"'Capital del Sur'. Fue capital de China en múltiples períodos. El Mausoleo de Sun Yat-sen y la muralla más larga del mundo están aquí.",dato:"La muralla de Nanjing mide 35 km de largo"},
+    {emoji:"🎭",nombre:"Chengdu",hanzi:"成都",pinyin:"Chéngdū",poblacion:"16.3M",fundacion:"~316 a.C.",famosa:"Pandas & Ópera Sichuan",info:"Capital de Sichuan, famosa por los pandas gigantes, la comida picante y la ópera con cambio de máscaras. Ciudad UNESCO de Gastronomía.",dato:"El primer papel moneda del mundo se creó aquí en el año 1023"}
+  ],
+  "Naturaleza & Moderna 🌿":[
+    {emoji:"🌄",nombre:"Guilin",hanzi:"桂林",pinyin:"Guìlín",poblacion:"5.4M",fundacion:"~314 a.C.",famosa:"Montañas kársticas",info:"Sus paisajes de montañas kársticas y el río Li son los más fotografiados de China. Aparecen en el billete de 20 yuanes.",dato:"'Las montañas de Guilin son las mejores bajo el cielo' — dicho chino"},
+    {emoji:"🌉",nombre:"Chongqing",hanzi:"重庆",pinyin:"Chóngqìng",poblacion:"32M",fundacion:"~316 a.C.",famosa:"Ciudad de las montañas",info:"La ciudad más grande del mundo por área. Construida sobre montañas con puentes y monorrieles que pasan entre edificios. Famosa por su hotpot picante.",dato:"Tiene más de 13.000 puentes y se llama 'Ciudad Puente'"},
+    {emoji:"🏝️",nombre:"Hong Kong",hanzi:"香港",pinyin:"Xiānggǎng",poblacion:"7.5M",fundacion:"~200 a.C.",famosa:"Skyline & dim sum",info:"Región Administrativa Especial con identidad única. Mezcla de cultura china y británica. Centro financiero global con el skyline más espectacular de Asia.",dato:"Hong Kong significa 'Puerto Fragante' 香港"}
+  ]
+};
+let ciudState={cards:[],idx:0,cat:''};
+function initCiudad(){
+  const cats=Object.keys(CIUDADES);ciudState.cat=cats[0];
+  const pillDiv=document.getElementById('ciudCats');pillDiv.innerHTML='';
+  cats.forEach((cat,i)=>{
+    const p=document.createElement('div');p.className='pill'+(i===0?' active':'');p.textContent=cat;
+    p.onclick=()=>{ciudState.cat=cat;document.querySelectorAll('#ciudCats .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');loadCiudadCat(cat);};
+    pillDiv.appendChild(p);
+  });
+  loadCiudadCat(cats[0]);
+}
+function loadCiudadCat(cat){ciudState.cards=CIUDADES[cat];ciudState.idx=0;document.getElementById('ciudTotal').textContent=ciudState.cards.length;renderCiudad();}
+function renderCiudad(){
+  const d=ciudState.cards[ciudState.idx];
+  document.getElementById('ciudIdx').textContent=ciudState.idx+1;
+  document.getElementById('flipCiudad').classList.remove('flipped');
+  document.getElementById('ciudEmoji').textContent=d.emoji;
+  document.getElementById('ciudNombre').textContent=d.nombre;
+  document.getElementById('ciudHanzi').textContent=d.hanzi;
+  document.getElementById('ciudEmojiBig').textContent=d.emoji;
+  document.getElementById('ciudNombreBack').textContent=d.nombre+' '+d.hanzi;
+  document.getElementById('ciudPinyin').textContent=d.pinyin;
+  document.getElementById('ciudInfo').textContent=d.info;
+  document.getElementById('ciudDato').textContent='💡 '+d.dato;
+}
+function flipCiudad(){document.getElementById('flipCiudad').classList.toggle('flipped');}
+function nextCiudad(){ciudState.idx=ciudState.idx<ciudState.cards.length-1?ciudState.idx+1:0;renderCiudad();}
+function prevCiudad(){ciudState.idx=ciudState.idx>0?ciudState.idx-1:ciudState.cards.length-1;renderCiudad();}
 
 
 /* ── CONVERSACIONES ── */
