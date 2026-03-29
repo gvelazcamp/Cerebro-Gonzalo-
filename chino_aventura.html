@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="Chino Aventura">
 <link rel="manifest" href="manifest.json">
 <script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){console.log('SW registered',r.scope);r.update();}).catch(function(e){console.log('SW failed',e)});
+if('serviceWorker' in navigator && location.hostname !== 'www.claudeusercontent.com' && !location.hostname.includes('localhost')){
+  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){r.update();console.log('SW registered',r.scope);}).catch(function(e){console.log('SW failed',e)});
 }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
@@ -1988,19 +1988,28 @@ const CIUDADES=[
   {emoji:"🌿",nombre:"Lijiang",hanzi:"丽江",p:"Lìjiāng",info:"Ciudad antigua Patrimonio de la UNESCO. Hogar del pueblo Naxi con escritura pictográfica única.",dato:"📜 Tiene la única escritura pictográfica viva del mundo"}
 ];
 let ciudState={idx:0};
-function initCiudades(){ciudState.idx=0;document.getElementById('ciudTotal').textContent=CIUDADES.length;renderCiudad();}
+function initCiudades(){
+  try{
+    ciudState.idx=0;
+    document.getElementById('ciudTotal').textContent=CIUDADES.length;
+    setTimeout(renderCiudad,50);
+  }catch(e){console.log('initCiudades error:',e);}
+}
 function renderCiudad(){
-  const d=CIUDADES[ciudState.idx];
-  document.getElementById('ciudIdx').textContent=ciudState.idx+1;
-  document.getElementById('flipCiudad').classList.remove('flipped');
-  document.getElementById('ciudEmoji').textContent=d.emoji;
-  document.getElementById('ciudNombre').textContent=d.nombre;
-  document.getElementById('ciudHanzi').textContent=d.hanzi;
-  document.getElementById('ciudEmojiBig').textContent=d.emoji;
-  document.getElementById('ciudNombreBack').textContent=d.nombre+' '+d.hanzi;
-  document.getElementById('ciudPinyin').textContent=d.p;
-  document.getElementById('ciudInfo').textContent=d.info;
-  document.getElementById('ciudDato').textContent='💡 '+d.dato;
+  try{
+    const d=CIUDADES[ciudState.idx];
+    if(!d){console.log('renderCiudad: no data at idx',ciudState.idx);return;}
+    document.getElementById('ciudIdx').textContent=ciudState.idx+1;
+    document.getElementById('flipCiudad').classList.remove('flipped');
+    document.getElementById('ciudEmoji').textContent=d.emoji;
+    document.getElementById('ciudNombre').textContent=d.nombre;
+    document.getElementById('ciudHanzi').textContent=d.hanzi;
+    document.getElementById('ciudEmojiBig').textContent=d.emoji;
+    document.getElementById('ciudNombreBack').textContent=d.nombre+' '+d.hanzi;
+    document.getElementById('ciudPinyin').textContent=d.p;
+    document.getElementById('ciudInfo').textContent=d.info;
+    document.getElementById('ciudDato').textContent='💡 '+d.dato;
+  }catch(e){console.log('renderCiudad error:',e);}
 }
 function flipCiudad(){document.getElementById('flipCiudad').classList.toggle('flipped');}
 function nextCiudad(){ciudState.idx=ciudState.idx<CIUDADES.length-1?ciudState.idx+1:0;renderCiudad();}
