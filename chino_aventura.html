@@ -1361,12 +1361,23 @@ function flashBtn(btn){
 }
 var _fallbackAudio=null;
 function _gtts(text,lang,rate,cb){
-  if(_fallbackAudio){try{_fallbackAudio.pause();}catch(e){}}
-  _fallbackAudio=new Audio('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl='+encodeURIComponent(lang)+'&q='+encodeURIComponent(text));
-  _fallbackAudio.playbackRate=rate||1;
-  if(cb)_fallbackAudio.onended=function(){setTimeout(cb,300);};
-  _fallbackAudio.onerror=function(){if(cb)cb();};
-  _fallbackAudio.play().catch(function(){if(cb)cb();});
+  if(_fallbackAudio){try{_fallbackAudio.pause();_fallbackAudio.src='';}catch(e){}}
+  var urls=[
+    'https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl='+encodeURIComponent(lang)+'&q='+encodeURIComponent(text),
+    'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl='+encodeURIComponent(lang)+'&q='+encodeURIComponent(text)
+  ];
+  var idx=0;
+  function tryNext(){
+    if(idx>=urls.length){if(cb)cb();return;}
+    _fallbackAudio=new Audio(urls[idx]);
+    _fallbackAudio.setAttribute('playsinline','');
+    _fallbackAudio.volume=1;
+    if(rate&&rate!==1)try{_fallbackAudio.playbackRate=rate;}catch(e){}
+    if(cb)_fallbackAudio.onended=function(){setTimeout(cb,300);};
+    _fallbackAudio.onerror=function(){idx++;tryNext();};
+    _fallbackAudio.play().then(function(){}).catch(function(){idx++;tryNext();});
+  }
+  tryNext();
 }
 function speakHanzi(text,btn){
   if(!text||!text.trim())return;
