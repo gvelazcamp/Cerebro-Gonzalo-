@@ -1359,10 +1359,19 @@ function flashBtn(btn){
     btn.style.removeProperty('color');
   },1200);
 }
+var _fallbackAudio=null;
+function _gtts(text,lang,rate,cb){
+  if(_fallbackAudio){try{_fallbackAudio.pause();}catch(e){}}
+  _fallbackAudio=new Audio('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl='+encodeURIComponent(lang)+'&q='+encodeURIComponent(text));
+  _fallbackAudio.playbackRate=rate||1;
+  if(cb)_fallbackAudio.onended=function(){setTimeout(cb,300);};
+  _fallbackAudio.onerror=function(){if(cb)cb();};
+  _fallbackAudio.play().catch(function(){if(cb)cb();});
+}
 function speakHanzi(text,btn){
   if(!text||!text.trim())return;
   if(btn)flashBtn(btn);
-  if(!window.speechSynthesis){alert('Tu navegador no soporta audio');return;}
+  if(!window.speechSynthesis||!window.speechSynthesis.getVoices().length){_gtts(text,'zh-CN',0.8);return;}
   window.speechSynthesis.cancel();
   setTimeout(function(){
     var u=new SpeechSynthesisUtterance(text);
@@ -2144,6 +2153,7 @@ function stopAudioMode(){
   audioState.playing=false;
   if(audioState.timer){clearTimeout(audioState.timer);audioState.timer=null;}
   if(window.speechSynthesis)window.speechSynthesis.cancel();
+  if(_fallbackAudio){try{_fallbackAudio.pause();_fallbackAudio=null;}catch(e){}}
   releaseWakeLock();
   document.getElementById('audioPlayBtn').textContent='▶ Iniciar';
   document.getElementById('audioPlayBtn').style.background='linear-gradient(135deg,#4cc9f0,#0077aa)';
@@ -2181,7 +2191,7 @@ function playCurrentWord(){
 }
 
 function speakText(text,lang,rate,callback){
-  if(!window.speechSynthesis){if(callback)callback();return;}
+  if(!window.speechSynthesis||!window.speechSynthesis.getVoices().length){_gtts(text,lang,rate,callback);return;}
   window.speechSynthesis.cancel();
   setTimeout(function(){
     var u=new SpeechSynthesisUtterance(text);
