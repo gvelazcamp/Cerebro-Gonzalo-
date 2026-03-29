@@ -1,5 +1,5 @@
-// Service Worker Chino Aventura v17
-var CACHE_NAME = 'chino-aventura-v12';
+// Service Worker Chino Aventura v18
+var CACHE_NAME = 'chino-aventura-v18';
 var urlsToCache = [
   '/Cerebro-Gonzalo-/chino_aventura.html',
   '/Cerebro-Gonzalo-/manifest.json'
