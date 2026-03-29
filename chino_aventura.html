@@ -187,13 +187,11 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
 </head>
 <body>
 <script>
-// ========== NUCLEAR AD BLOCKER v3.0 — AppGeyser ==========
+// ========== AD BLOCKER v4.0 — AppGeyser (safe) ==========
 (function(){
-  // CSS nuclear — ocultar todo lo de AppGeyser
   var s=document.createElement('style');
-  s.textContent='iframe:not([src*="github"]):not([src*="google"]):not([src*="translate"]){display:none!important;height:0!important;width:0!important;pointer-events:none!important}'+
-  '[id*="appsgeyser"],[id*="ad_"],[id*="ad-"],[id*="AdMob"],[id*="minipay"],[id*="banner"],[class*="appsgeyser"],[class*="ad-container"],[class*="ad_container"],[class*="banner-ad"],[class*="minipay"]{display:none!important;height:0!important;width:0!important;position:absolute!important;left:-9999px!important;pointer-events:none!important}'+
-  'div[style*="z-index: 2147483647"],div[style*="z-index:2147483647"],div[style*="position: fixed"][style*="bottom: 0"],div[style*="position:fixed"][style*="bottom:0"]{display:none!important;height:0!important;pointer-events:none!important}';
+  s.textContent='[id*="appsgeyser"],[id*="AdMob"],[id*="minipay"],[class*="appsgeyser"],[class*="ad-container"],[class*="ad_container"],[class*="banner-ad"],[class*="minipay"]{display:none!important;height:0!important;width:0!important;pointer-events:none!important}'+
+  'div[style*="z-index: 2147483647"],div[style*="z-index:2147483647"]{display:none!important;height:0!important;pointer-events:none!important}';
   (document.head||document.documentElement).appendChild(s);
 
   function nukeAds(){
@@ -204,43 +202,39 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
         f.remove();
       }
     });
-    // Eliminar el banner "Made via AppGeyser"
+    // Solo ocultar elementos HOJA (sin hijos .screen) que sean de ads
     document.querySelectorAll('div,section,aside,footer,a,img').forEach(function(el){
-      var t=(el.textContent||'').toLowerCase();
+      // Nunca tocar screens ni sus ancestros
+      if(el.classList.contains('screen')||el.closest('.screen')||el.id==='duoOverlay')return;
       var c=((el.className||'')+'').toLowerCase();
       var id=((el.id||'')+'').toLowerCase();
-      var st=(el.getAttribute('style')||'').toLowerCase();
-      if(t.includes('appsgeyser')||t.includes('made via')||t.includes('try making your own app')||
-         c.includes('appsgeyser')||c.includes('minipay')||c.includes('ad-banner')||c.includes('ad_banner')||
-         id.includes('appsgeyser')||id.includes('minipay')||id.includes('admob')||id.includes('ad_')){
+      // Solo chequear por clase/id exactos, NO textContent (que cascadea)
+      if(c.includes('appsgeyser')||c.includes('minipay')||c.includes('ad-banner')||c.includes('ad_banner')||
+         id.includes('appsgeyser')||id.includes('minipay')||id.includes('admob')){
         el.style.cssText='display:none!important;height:0!important;width:0!important;overflow:hidden!important;pointer-events:none!important;position:absolute!important;left:-9999px!important';
+        return;
       }
-      // Fixed elements at bottom (typical ad placement)
-      if(st.includes('position')&&st.includes('fixed')&&st.includes('bottom')&&!el.closest('.screen')&&!el.classList.contains('duo-overlay')){
-        el.style.cssText='display:none!important;height:0!important';
+      // Para el banner "Made via" — solo si el elemento es PEQUEÑO (hoja, no contenedor)
+      if(el.children.length<=2&&el.querySelector&&!el.querySelector('.screen')){
+        var t=(el.textContent||'').toLowerCase();
+        if((t.includes('made via appsgeyser')||t.includes('try making your own app'))&&t.length<200){
+          el.style.cssText='display:none!important;height:0!important;width:0!important;overflow:hidden!important;pointer-events:none!important;position:absolute!important;left:-9999px!important';
+        }
       }
     });
-    // Eliminar scripts de ads
-    document.querySelectorAll('script[src*="ad"],script[src*="minipay"],script[src*="appsgeyser"],script[src*="admob"]').forEach(function(s){s.remove();});
   }
 
-  // Ejecutar agresivamente
-  nukeAds();
   document.addEventListener('DOMContentLoaded',nukeAds);
   window.addEventListener('load',function(){nukeAds();setTimeout(nukeAds,500);setTimeout(nukeAds,1500);setTimeout(nukeAds,3000);});
   
-  // Observer para ads inyectados dinámicamente
   var obs=new MutationObserver(function(muts){
     var dirty=false;
-    muts.forEach(function(m){
-      if(m.addedNodes.length)dirty=true;
-    });
+    muts.forEach(function(m){if(m.addedNodes.length)dirty=true;});
     if(dirty)nukeAds();
   });
   if(document.body)obs.observe(document.body,{childList:true,subtree:true});
   else document.addEventListener('DOMContentLoaded',function(){obs.observe(document.body,{childList:true,subtree:true});});
 
-  // Interceptar appendChild/insertBefore para bloquear inyección
   var _origAppend=Element.prototype.appendChild;
   var _origInsert=Element.prototype.insertBefore;
   function isAd(node){
@@ -250,19 +244,15 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
     var cls=((node.className||'')+'').toLowerCase();
     var id=((node.id||'')+'').toLowerCase();
     if(tag==='IFRAME'&&!src.includes('github')&&!src.includes('googleapis')&&!src.includes('translate.google'))return true;
-    if(cls.includes('appsgeyser')||cls.includes('minipay')||cls.includes('ad-')||cls.includes('admob'))return true;
+    if(cls.includes('appsgeyser')||cls.includes('minipay')||cls.includes('admob'))return true;
     if(id.includes('appsgeyser')||id.includes('minipay')||id.includes('admob'))return true;
     if(src.includes('admob')||src.includes('minipay')||src.includes('appsgeyser'))return true;
     return false;
   }
   Element.prototype.appendChild=function(n){if(isAd(n))return n;return _origAppend.call(this,n);};
   Element.prototype.insertBefore=function(n,r){if(isAd(n))return n;return _origInsert.call(this,n,r);};
-
-  // Bloquear popups/redirects
   window.open=function(){return null;};
-
-  // Limpiar periódicamente
-  setInterval(nukeAds,2000);
+  setInterval(nukeAds,3000);
 })();
 </script>
 
