@@ -1,30 +1,29 @@
-// Service Worker Chino Aventura - Ciudades Fix v12
-var CACHE_NAME = 'chino-aventura-v7';
+// Service Worker Chino Aventura - Force Update v15
+var CACHE_NAME = 'chino-aventura-v10';
 var urlsToCache = [
   '/Cerebro-Gonzalo-/chino_aventura.html',
   '/Cerebro-Gonzalo-/manifest.json'
 ];
 
 self.addEventListener('install', function(event) {
-  console.log('SW Install v12 - Ciudades Fix');
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(urlsToCache);
+      return Promise.all(urlsToCache.map(function(url) {
+        return fetch(new Request(url, {cache: 'no-cache'})).then(function(resp) {
+          return cache.put(url, resp);
+        });
+      }));
     })
   );
   self.skipWaiting();
 });
 
 self.addEventListener('activate', function(event) {
-  console.log('SW Activate v12 - Cleaning old caches');
   event.waitUntil(
     caches.keys().then(function(names) {
       return Promise.all(
         names.filter(function(name) { return name !== CACHE_NAME; })
-             .map(function(name) { 
-               console.log('Deleting cache:', name);
-               return caches.delete(name); 
-             })
+             .map(function(name) { return caches.delete(name); })
       );
     })
   );
@@ -32,15 +31,26 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    fetch(event.request).then(function(response) {
-      var clone = response.clone();
-      caches.open(CACHE_NAME).then(function(cache) {
-        cache.put(event.request, clone);
-      });
-      return response;
-    }).catch(function() {
-      return caches.match(event.request);
-    })
-  );
+  var url = event.request.url;
+  if (url.endsWith('.html') || url.endsWith('.json')) {
+    event.respondWith(
+      fetch(new Request(event.request, {cache: 'no-cache'})).then(function(response) {
+        var clone = response.clone();
+        caches.open(CACHE_NAME).then(function(cache) { cache.put(event.request, clone); });
+        return response;
+      }).catch(function() {
+        return caches.match(event.request);
+      })
+    );
+  } else {
+    event.respondWith(
+      caches.match(event.request).then(function(cached) {
+        return cached || fetch(event.request).then(function(response) {
+          var clone = response.clone();
+          caches.open(CACHE_NAME).then(function(cache) { cache.put(event.request, clone); });
+          return response;
+        });
+      })
+    );
+  }
 });
