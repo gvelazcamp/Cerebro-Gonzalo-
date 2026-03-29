@@ -1361,31 +1361,49 @@ function flashBtn(btn){
 }
 var _fallbackAudio=null;
 function _gtts(text,lang,rate,cb){
-  // Pausar audio anterior
   if(_fallbackAudio){
     try{_fallbackAudio.pause();}catch(e){}
   }
   
-  // URL de Google Translate TTS (voz de mujer en español/chino)
-  var url='https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(text)+'&tl='+encodeURIComponent(lang)+'&client=tw-ob';
+  var urls=[
+    'https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(text)+'&tl='+encodeURIComponent(lang)+'&client=tw-ob',
+    'https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl='+encodeURIComponent(lang)+'&q='+encodeURIComponent(text)
+  ];
   
-  _fallbackAudio=new Audio(url);
-  _fallbackAudio.volume=1;
-  if(rate&&rate!==1)try{_fallbackAudio.playbackRate=rate;}catch(e){}
+  var urlIdx=0;
   
-  _fallbackAudio.onended=function(){
-    if(cb)setTimeout(cb,300);
-  };
+  function tryUrl(){
+    if(urlIdx>=urls.length){
+      console.log('No TTS disponible');
+      if(cb)cb();
+      return;
+    }
+    
+    _fallbackAudio=new Audio();
+    _fallbackAudio.crossOrigin='anonymous';
+    _fallbackAudio.volume=1;
+    if(rate&&rate!==1)try{_fallbackAudio.playbackRate=rate;}catch(e){}
+    
+    _fallbackAudio.onended=function(){
+      if(cb)setTimeout(cb,300);
+    };
+    
+    _fallbackAudio.onerror=function(){
+      console.log('Error en URL:',urls[urlIdx]);
+      urlIdx++;
+      tryUrl();
+    };
+    
+    _fallbackAudio.src=urls[urlIdx];
+    
+    _fallbackAudio.play().catch(function(e){
+      console.log('Error al reproducir:',e);
+      urlIdx++;
+      tryUrl();
+    });
+  }
   
-  _fallbackAudio.onerror=function(){
-    console.log('Error Google TTS, intentando fallback...');
-    if(cb)cb();
-  };
-  
-  _fallbackAudio.play().catch(function(e){
-    console.log('Error play:',e);
-    if(cb)cb();
-  });
+  tryUrl();
 }
 function speakHanzi(text,btn){
   if(!text||!text.trim())return;
