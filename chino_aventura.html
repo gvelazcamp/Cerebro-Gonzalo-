@@ -19,6 +19,18 @@ if('serviceWorker' in navigator){
 <style>
 :root{--red:#e63946;--gold:#ffd166;--dark:#0d0d0d;--card:#1a1a1a;--text:#f0e6d3;--muted:#888;--green:#06d6a0;--blue:#4cc9f0;--purple:#7b2ff7}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+/* Hide ads/banners silently */
+[class*="ad"]{display:none!important}
+[id*="ad"]{display:none!important}
+[class*="banner"]{display:none!important}
+[id*="banner"]{display:none!important}
+.appads,.adsbygoogle,.adsbygoogle iframe,.adcontainer{display:none!important}
+iframe[src*="ads"],iframe[src*="banner"],iframe[src*="minipay"]{display:none!important}
+.goog-inline-block,.google-auto-placed{display:none!important}
+/* AppGeyser specific */
+[class*="appgeyser"],[id*="appgeyser"]{display:none!important}
+/* Generic popup/overlay ads */
+.popup-ad,.modal-ad,.sticky-ad,.floating-ad{display:none!important}
 body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden;background-image:radial-gradient(ellipse at 20% 20%,#2a0a0a,transparent 60%),radial-gradient(ellipse at 80% 80%,#1a0a00,transparent 60%)}
 .screen{display:none;padding:18px;max-width:480px;margin:0 auto;min-height:100vh;flex-direction:column;gap:14px}
 .screen.active{display:flex}
@@ -174,6 +186,61 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
 <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
 </head>
 <body>
+<script>
+// ========== ANTI-ANUNCIOS BRUTAL ==========
+// Ejecutar inmediatamente
+(function(){
+  // 1. Bloquear iframes de anuncios al instante
+  document.querySelectorAll('iframe').forEach(function(f){
+    if(f.src.includes('ad')||f.src.includes('banner')||f.src.includes('minipay')||f.src.includes('appgeyser')||f.src.includes('popup')){
+      f.remove();
+    }
+  });
+  
+  // 2. Observar cambios en el DOM para anuncios nuevos
+  var observer=new MutationObserver(function(mutations){
+    mutations.forEach(function(m){
+      // Eliminar iframes de anuncios
+      if(m.addedNodes){
+        m.addedNodes.forEach(function(node){
+          if(node.nodeType===1){
+            // Es un elemento
+            if(node.tagName==='IFRAME'&&(node.src.includes('ad')||node.src.includes('minipay')||node.src.includes('banner')||node.src.includes('popup'))){
+              node.remove();
+            }
+            // Eliminar divs/sections con clases de anuncios
+            if(node.className&&(node.className.includes('ad')||node.className.includes('banner')||node.className.includes('popup')||node.className.includes('modal'))){
+              node.remove();
+            }
+          }
+        });
+      }
+    });
+  });
+  
+  observer.observe(document.body,{childList:true,subtree:true,attributes:false});
+  
+  // 3. Bloquear appendChild dinámico
+  var origAppend=Element.prototype.appendChild;
+  Element.prototype.appendChild=function(node){
+    if(node.nodeType===1){
+      if(node.tagName==='IFRAME'&&node.src&&(node.src.includes('ad')||node.src.includes('minipay')||node.src.includes('banner'))){
+        return node;
+      }
+      if(node.className&&typeof node.className==='string'&&(node.className.includes('ad')||node.className.includes('popup')||node.className.includes('modal'))){
+        return node;
+      }
+    }
+    return origAppend.call(this,node);
+  };
+  
+  // 4. Limpiar cada 500ms por si acaso
+  setInterval(function(){
+    document.querySelectorAll('iframe[src*="minipay"],iframe[src*="ad"],iframe[src*="banner"]').forEach(function(f){f.remove();});
+    document.querySelectorAll('[class*="minipay"],[class*="adsbygoogle"],[class*="banner-ad"]').forEach(function(el){el.remove();});
+  },500);
+})();
+</script>
 
 <!-- DUOLINGO OVERLAY -->
 <div class="duo-overlay" id="duoOverlay">
