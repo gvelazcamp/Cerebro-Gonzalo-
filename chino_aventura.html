@@ -195,6 +195,124 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
 @keyframes slideIn{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes fadeOut{to{opacity:0;transform:translateY(-10px)}}
 .section-title{font-family:'Noto Serif SC',serif;font-size:1.2rem;color:var(--gold);font-weight:700;text-align:center;flex:1}
+
+/* ══════════════════════════════
+   MODO HISTORIA — CAMINO DEL DRAGÓN
+══════════════════════════════ */
+@keyframes pulse-gold{0%,100%{box-shadow:0 0 0 0 rgba(255,209,102,.5)}50%{box-shadow:0 0 0 14px rgba(255,209,102,0)}}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,.5)}50%{box-shadow:0 0 0 14px rgba(230,57,70,0)}}
+@keyframes slideUp{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* MAPA */
+.h-header{display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#0d0d0d 75%,transparent);padding-bottom:8px;margin-bottom:0}
+.mundo-banner{background:linear-gradient(135deg,#1a0a00,#0a1a00);border:1px solid #4a3a00;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;animation:slideUp .35s ease}
+.mundo-icon{font-size:2rem;animation:float 3s ease-in-out infinite}
+.mundo-info{flex:1}
+.mundo-title{font-family:'Noto Serif SC',serif;font-size:.95rem;color:var(--gold);font-weight:700}
+.mundo-desc{font-size:.72rem;color:var(--muted);margin-top:2px}
+.mundo-prog-wrap{background:#2a2000;border-radius:20px;height:5px;margin-top:7px;overflow:hidden}
+.mundo-prog-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--gold),var(--red));transition:width .8s cubic-bezier(.4,0,.2,1)}
+
+.map-wrap{position:relative;display:flex;flex-direction:column;align-items:center;gap:0;padding:8px 0 40px}
+.map-path{position:absolute;left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%);background:repeating-linear-gradient(to bottom,#2a2a2a 0,#2a2a2a 14px,transparent 14px,transparent 26px);z-index:0}
+
+.map-node{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;margin:8px 0;animation:popIn .3s ease both}
+.map-node.right{align-items:flex-end;padding-right:52px;align-self:flex-end;width:100%}
+.map-node.left{align-items:flex-start;padding-left:52px;align-self:flex-start;width:100%}
+.map-node.center{align-items:center}
+
+.node-btn{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;border:none;cursor:pointer;position:relative;transition:transform .15s;flex-shrink:0}
+.node-btn:active{transform:scale(.9)}
+.node-btn.done{background:linear-gradient(135deg,var(--green),#05a880);box-shadow:0 5px 18px rgba(6,214,160,.4)}
+.node-btn.open{background:linear-gradient(135deg,var(--gold),#f4a261);box-shadow:0 5px 18px rgba(255,209,102,.5);animation:pulse-gold 2s infinite}
+.node-btn.locked{background:#1c1c1c;border:2px solid #2a2a2a;cursor:not-allowed;opacity:.45;font-size:1.2rem}
+.node-btn.boss-btn{width:80px;height:80px;font-size:2rem;background:linear-gradient(135deg,var(--red),#7a0010);box-shadow:0 7px 24px rgba(230,57,70,.5)}
+.node-btn.boss-btn.open{animation:pulse-red 1.5s infinite}
+.node-btn.chest-btn{width:64px;height:64px;font-size:1.5rem;background:linear-gradient(135deg,#5a2a9a,#2a0a5a);box-shadow:0 5px 18px rgba(123,47,247,.4)}
+
+.node-stars{display:flex;gap:1px;position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-size:.7rem;white-space:nowrap}
+.node-label{background:var(--card);border:1px solid #272727;border-radius:9px;padding:5px 11px;font-size:.68rem;font-weight:600;text-align:center;max-width:105px;margin-top:5px;line-height:1.3}
+.node-label.dim{color:var(--muted)}
+
+.world-sep{width:100%;display:flex;align-items:center;gap:10px;margin:18px 0 8px;z-index:2;position:relative}
+.world-sep-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,#3a2800,transparent)}
+.world-sep-tag{background:linear-gradient(135deg,#2a1800,#1a0800);border:1px solid #5a3200;border-radius:18px;padding:5px 14px;font-size:.72rem;font-weight:700;color:var(--gold);white-space:nowrap;font-family:'Noto Serif SC',serif}
+
+/* DETALLE NIVEL */
+.nv-hero{background:linear-gradient(145deg,#180a00,#0a180a);border:1px solid #3a2800;border-radius:22px;padding:26px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:9px}
+.nv-emoji{font-size:3.8rem;animation:float 3s ease-in-out infinite}
+.nv-title{font-family:'Noto Serif SC',serif;font-size:1.3rem;color:var(--gold);font-weight:900}
+.nv-desc{font-size:.82rem;color:var(--muted);line-height:1.5;max-width:270px}
+.nv-stars{display:flex;gap:5px;font-size:1.7rem;margin-top:3px}
+.nv-stats{display:flex;gap:9px}
+.nv-stat{background:var(--card);border:1px solid #252525;border-radius:13px;padding:13px;flex:1;text-align:center}
+.nv-stat-val{font-size:1.2rem;font-weight:700;color:var(--gold)}
+.nv-stat-lbl{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+.dlg-preview{background:var(--card);border:1px solid #252525;border-radius:15px;padding:15px;display:flex;flex-direction:column;gap:9px}
+.dlg-ttl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px}
+.dlg-row{display:flex;gap:10px;align-items:flex-start}
+.dlg-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2a1800,#0a1a20);border:1px solid #4a3200;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.dlg-bubble{background:#111;border-radius:11px;border-top-left-radius:3px;padding:9px 13px;flex:1}
+.dlg-hanzi{font-family:'Noto Serif SC',serif;font-size:1.05rem;color:var(--gold)}
+.dlg-pinyin{font-size:.68rem;color:var(--blue);margin-top:3px}
+.dlg-esp{font-size:.76rem;color:var(--muted);margin-top:2px}
+
+/* GAMEPLAY */
+.gp-header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.gp-bar-wrap{background:#1a1a1a;border-radius:5px;height:7px;flex:1;overflow:hidden}
+.gp-bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--gold),var(--red));transition:width .4s cubic-bezier(.4,0,.2,1)}
+.vidas{display:flex;gap:3px;font-size:.9rem}
+
+.scene{background:linear-gradient(145deg,#0c1820,#180c00);border:1px solid #252515;border-radius:22px;padding:18px 16px;display:flex;flex-direction:column;gap:13px;animation:slideUp .3s ease}
+.scene-loc{font-size:.66rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.npc-row{display:flex;gap:11px;align-items:flex-end}
+.npc-av{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#2a1800,#1a0a20);border:2px solid #4a3200;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.npc-nm{font-size:.6rem;color:var(--muted);margin-bottom:3px;text-align:center}
+.bbl{background:#1e1e1e;border:1px solid #2a2a2a;border-radius:15px;border-bottom-left-radius:3px;padding:13px 15px;flex:1}
+.bbl-hanzi{font-family:'Noto Serif SC',serif;font-size:1.5rem;color:var(--gold);line-height:1.2}
+.bbl-pinyin{font-size:.76rem;color:var(--blue);margin-top:3px;letter-spacing:.4px}
+
+.q-box{background:var(--card);border-radius:13px;padding:11px 15px;border:1px solid #222}
+.q-lbl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.q-text{font-size:.92rem;color:var(--text)}
+
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{background:var(--card);border:2px solid #252525;border-radius:13px;padding:13px 16px;color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;text-align:left;display:flex;align-items:center;gap:11px;transition:all .15s}
+.opt:active{transform:scale(.98)}
+.opt.ok{background:rgba(6,214,160,.12);border-color:var(--green);color:var(--green)}
+.opt.fail{background:rgba(230,57,70,.12);border-color:var(--red);color:var(--red)}
+.opt-num{background:#252525;border-radius:7px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.76rem;font-weight:700;flex-shrink:0}
+.opt-zh{font-family:'Noto Serif SC',serif;font-size:.95rem;color:var(--gold);margin-left:auto}
+
+.fb-bar{border-radius:13px;padding:13px 16px;text-align:center;font-weight:600;animation:popIn .2s ease;display:none}
+.fb-bar.ok{background:rgba(6,214,160,.12);color:var(--green);border:1px solid var(--green)}
+.fb-bar.fail{background:rgba(230,57,70,.12);color:var(--red);border:1px solid var(--red)}
+
+/* RESULTADO NIVEL */
+#s-hn-result{align-items:center;justify-content:center;text-align:center;gap:18px}
+.hn-trophy{font-size:5rem;animation:float 2s infinite}
+.hn-stars{display:flex;gap:9px;justify-content:center}
+.hn-star{font-size:2.6rem;opacity:.18;transition:opacity .4s,transform .4s}
+.hn-star.lit{opacity:1;transform:scale(1.2)}
+.hn-rtitle{font-family:'Noto Serif SC',serif;font-size:1.7rem;font-weight:900;color:var(--gold)}
+.hn-rsub{font-size:.88rem;color:var(--muted)}
+.hn-rewards{background:var(--card);border-radius:15px;padding:15px;width:100%;display:flex;justify-content:space-around;border:1px solid #252525}
+.hn-ritem{text-align:center}
+.hn-rval{font-size:1.15rem;font-weight:700;color:var(--gold)}
+.hn-rlbl{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.hn-story{background:linear-gradient(135deg,#0a1800,#001808);border-radius:15px;padding:15px;border:1px solid #1a4200;width:100%;text-align:left}
+.hn-story-lbl{font-size:.66rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:7px}
+.hn-story-txt{font-size:.83rem;color:var(--text);line-height:1.55}
+
+/* TOOLTIP NPC */
+.npc-tip{position:fixed;bottom:0;left:0;right:0;padding:16px 18px 28px;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:400;max-width:480px;margin:0 auto;background:linear-gradient(to top,#0d0d0d 70%,transparent)}
+.npc-tip.show{transform:translateY(0)}
+.npc-tip-inner{background:var(--card);border:1px solid #252525;border-radius:18px;padding:16px;display:flex;gap:13px;align-items:center}
+.npc-tip-av{font-size:2.4rem;flex-shrink:0}
+.npc-tip-name{font-weight:700;font-size:.9rem;color:var(--gold)}
+.npc-tip-txt{font-size:.79rem;color:var(--muted);margin-top:3px;line-height:1.4}
 </style>
 <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
 </head>
@@ -349,6 +467,14 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
     <div class="menu-btn" onclick="show('s-audio');initAudioMode()" style="grid-column:span 2;background:linear-gradient(135deg,#001a2a,#002a1a);border-color:#004a3a">
       <div class="icon">🎧</div><div class="label" style="color:#4cc9f0">Modo Audio — Caminando</div><div class="desc">Escuchá chino + español sin mirar el cel</div>
     </div>
+  </div>
+  <div class="menu-btn" onclick="initHistoria()" style="flex-direction:row;align-items:center;background:linear-gradient(135deg,#1a0800,#001a10,#0a0020);border:2px solid #5a3200;margin-top:4px">
+    <div style="font-size:2rem;margin-right:6px">🐉</div>
+    <div style="text-align:left;flex:1">
+      <div class="label" style="color:var(--gold);font-size:.9rem">Camino del Dragón</div>
+      <div class="desc">Historia · Feria Cantón · Regateo · Negocios</div>
+    </div>
+    <div style="background:var(--red);color:#fff;font-size:.6rem;font-weight:700;padding:3px 7px;border-radius:8px;white-space:nowrap;margin-left:8px">NUEVO</div>
   </div>
 </div>
 
@@ -2365,6 +2491,593 @@ function audioPrev(){
 }
 
 document.getElementById('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter')startGame();});
+
+/* ═══════════════════════════════════════
+   MODO HISTORIA — DATOS COMPLETOS
+═══════════════════════════════════════ */
+const MUNDOS_H=[
+{id:'m1',icon:'✈️',titulo:'Mundo 1 · Llegada a China',desc:'Aeropuerto, hotel, saludos y números',color:var_gold,niveles:[
+  {id:'n1a',tipo:'dlg',titulo:'Aeropuerto de Shanghai',emoji:'🛬',npc:{av:'👩‍✈️',nm:'Azafata Chen'},lugar:'Aeropuerto Pudong, Shanghai',xp:50,
+  pregs:[
+    {zh:'你好！欢迎来中国！',py:'nǐ hǎo! huānyíng lái zhōngguó!',q:'¿Qué te dice la azafata?',
+     opts:[{t:'¡Hola! ¡Bienvenido a China!',zh:'你好+欢迎',ok:true},{t:'¿Adónde vas?',zh:'去哪里',ok:false},{t:'Tu pasaporte por favor',zh:'护照请',ok:false},{t:'¿Necesitás ayuda?',zh:'需要帮助',ok:false}],
+     fok:'✅ 你好 = Hola · 欢迎 = Bienvenido · 中国 = China',ffail:'你好 = Hola / 欢迎 = Bienvenido / 中国 = China'},
+    {zh:'请出示您的护照',py:'qǐng chūshì nín de hùzhào',q:'¿Qué te pide ahora?',
+     opts:[{t:'Tu pasaporte',zh:'护照',ok:true},{t:'Tu equipaje',zh:'行李',ok:false},{t:'Tu billete de avión',zh:'机票',ok:false},{t:'Tu tarjeta de embarque',zh:'登机牌',ok:false}],
+     fok:'✅ 护照 = pasaporte · 请 = por favor · 出示 = mostrar',ffail:'护照 = pasaporte. Siempre llevalo a mano! 🛂'},
+    {zh:'您要去哪个酒店？',py:'nín yào qù nǎge jiǔdiàn?',q:'¿Qué te pregunta el taxista del aeropuerto?',
+     opts:[{t:'¿A qué hotel va?',zh:'哪个酒店',ok:true},{t:'¿Cuánto equipaje tiene?',zh:'多少行李',ok:false},{t:'¿Necesita cambio de dinero?',zh:'换钱吗',ok:false},{t:'¿Tiene reserva?',zh:'有预订',ok:false}],
+     fok:'✅ 酒店 = hotel · 哪个 = cuál · 要去 = querer ir',ffail:'酒店 = hotel / 哪个 = cuál. Básico para moverse! 🚕'},
+    {zh:'谢谢！祝您旅途愉快！',py:'xièxiè! zhù nín lǚtú yúkuài!',q:'¿Qué te desea la azafata al irse?',
+     opts:[{t:'¡Gracias! ¡Buen viaje!',zh:'谢谢+祝',ok:true},{t:'¡Hasta luego! ¡Cuídese!',zh:'再见+保重',ok:false},{t:'¡Buenas noches! ¡Descanse!',zh:'晚安+休息',ok:false},{t:'¡Suerte! ¡Hasta pronto!',zh:'加油+很快',ok:false}],
+     fok:'🌟 谢谢 = gracias · 祝 = desear · 旅途愉快 = buen viaje',ffail:'祝 = desear / 旅途 = viaje / 愉快 = agradable → buen viaje'}
+  ],
+  historia:'¡Pasaste la aduana sin problemas! El taxista te recogió y ya vas hacia el hotel. Tu aventura china empieza. 🗺️'},
+
+  {id:'n1b',tipo:'dlg',titulo:'Check-in en el hotel',emoji:'🏨',npc:{av:'👩‍💼',nm:'Recepcionista Liu'},lugar:'Hotel en el centro de Shanghai',xp:45,
+  pregs:[
+    {zh:'您好，有预订吗？',py:'nín hǎo, yǒu yùdìng ma?',q:'¿Qué te pregunta la recepcionista?',
+     opts:[{t:'¿Tiene reserva?',zh:'有预订',ok:true},{t:'¿Cuántas noches?',zh:'几晚',ok:false},{t:'¿Individual o doble?',zh:'单双间',ok:false},{t:'¿Tiene documento?',zh:'有证件',ok:false}],
+     fok:'✅ 有 = tener · 预订 = reserva/booking · 吗 = ¿?',ffail:'有预订 = tener reserva. La primera pregunta en todo hotel!'},
+    {zh:'您住几晚？',py:'nín zhù jǐ wǎn?',q:'¿Cuántas noches?',
+     opts:[{t:'¿Cuántas noches se queda?',zh:'几晚',ok:true},{t:'¿A qué hora sale?',zh:'几点走',ok:false},{t:'¿Quiere desayuno incluido?',zh:'含早餐',ok:false},{t:'¿Cuál es su nombre?',zh:'您叫什么',ok:false}],
+     fok:'✅ 住 = alojarse · 几 = cuántos · 晚 = noche',ffail:'住 = quedarse/alojarse · 几晚 = cuántas noches'},
+    {zh:'早餐从七点开始',py:'zǎocān cóng qī diǎn kāishǐ',q:'¿Qué te informa sobre el desayuno?',
+     opts:[{t:'El desayuno empieza a las 7',zh:'从七点开始',ok:true},{t:'El desayuno cuesta 70 yuanes',zh:'七十元',ok:false},{t:'El desayuno está incluido',zh:'包含早餐',ok:false},{t:'El desayuno es en el 7° piso',zh:'七楼',ok:false}],
+     fok:'🌟 早餐 = desayuno · 七点 = 7:00 · 开始 = comenzar',ffail:'早餐 = desayuno · 从 = desde · 七点 = las 7 · 开始 = empezar'}
+  ],
+  historia:'Tenés tu habitación con vista a Shanghai. Desde la ventana ves las luces de la ciudad. Mañana empezás tu aventura de negocios. 🌃'},
+
+  {id:'n1boss',tipo:'boss',titulo:'💀 Desafío: Números 1-100',emoji:'🔢',npc:{av:'👹',nm:'Guardián de los Números'},lugar:'Templo de los Números',xp:80,
+  pregs:[
+    {zh:'价格是多少？四十五元',py:'jiàgé shì duōshǎo? sìshíwǔ yuán',q:'¿Cuánto cuesta?',
+     opts:[{t:'45 yuanes',zh:'四十五',ok:true},{t:'54 yuanes',zh:'五十四',ok:false},{t:'14 yuanes',zh:'十四',ok:false},{t:'40 yuanes',zh:'四十',ok:false}],
+     fok:'🔥 四十五 = 4×10+5 = 45. ¡Esencial para regatear!',ffail:'四 = 4 · 十 = 10 · 五 = 5 → 四十五 = 45'},
+    {zh:'一共多少钱？两百八十',py:'yīgòng duōshǎo qián? liǎngbǎi bāshí',q:'¿Cuánto es en total?',
+     opts:[{t:'280 yuanes',zh:'两百八十',ok:true},{t:'208 yuanes',zh:'两百零八',ok:false},{t:'820 yuanes',zh:'八百二十',ok:false},{t:'28 yuanes',zh:'二十八',ok:false}],
+     fok:'✅ 两百 = 200 · 八十 = 80 → 280. ¡Bien calculado!',ffail:'两百 = 200 · 八十 = 80 → 两百八十 = 280'},
+    {zh:'打折后是多少？七折',py:'dǎzhé hòu shì duōshǎo? qī zhé',q:'¿Cuánto descuento es 七折?',
+     opts:[{t:'30% de descuento (precio al 70%)',zh:'七折=70%',ok:true},{t:'70% de descuento',zh:'七折=30%',ok:false},{t:'7 yuanes de descuento',zh:'减七元',ok:false},{t:'El precio original',zh:'原价',ok:false}],
+     fok:'🌟 折 es 10% del precio → 七折 = 70% del precio original = 30% off',ffail:'En China: 七折 = pagar el 70% → 30% de descuento. ¡Importante en ferias!'}
+  ],
+  historia:'¡Derrotaste al Guardián de los Números! Ahora podés negociar precios sin que te engañen. El Mundo 2 está desbloqueado. 🏆'}
+]},
+
+{id:'m2',icon:'🍜',titulo:'Mundo 2 · El Restaurante',desc:'Pedí comida, menú, gustos y precios',color:'#e63946',niveles:[
+  {id:'n2a',tipo:'dlg',titulo:'Primer almuerzo chino',emoji:'🥢',npc:{av:'👨‍🍳',nm:'Chef Lao Wei'},lugar:'Restaurante local, cerca del hotel',xp:55,
+  pregs:[
+    {zh:'您要点什么？',py:'nín yào diǎn shénme?',q:'¿Qué te pregunta el mozo?',
+     opts:[{t:'¿Qué va a pedir?',zh:'点什么',ok:true},{t:'¿Le gusta la comida?',zh:'喜欢吃',ok:false},{t:'¿Tiene hambre?',zh:'饿了吗',ok:false},{t:'¿Quiere la carta?',zh:'要菜单',ok:false}],
+     fok:'✅ 要 = querer · 点 = ordenar · 什么 = qué',ffail:'要点 = querer ordenar / 什么 = qué. Lo primero que escuchás en un restó!'},
+    {zh:'这个辣吗？',py:'zhège là ma?',q:'¿Qué preguntás antes de pedir?',
+     opts:[{t:'¿Esto es picante?',zh:'辣吗',ok:true},{t:'¿Esto es caro?',zh:'贵吗',ok:false},{t:'¿Esto es fresco?',zh:'新鲜吗',ok:false},{t:'¿Esto es vegetariano?',zh:'素食吗',ok:false}],
+     fok:'✅ 辣 = picante · 吗 = ¿? Si sos sensible al picante, ¡aprendé esta!',ffail:'辣 = picante. Muy importante en China donde la comida puede ser MUY picante! 🌶️'},
+    {zh:'米饭还是面条？',py:'mǐfàn háishi miàntiáo?',q:'¿Qué te ofrecen para elegir?',
+     opts:[{t:'¿Arroz o fideos?',zh:'米饭/面条',ok:true},{t:'¿Carne o pescado?',zh:'肉/鱼',ok:false},{t:'¿Agua o té?',zh:'水/茶',ok:false},{t:'¿Sopa o ensalada?',zh:'汤/沙拉',ok:false}],
+     fok:'🌟 米饭 = arroz · 面条 = fideos · 还是 = o (para elegir)',ffail:'米饭 = arroz · 面条 = fideos. Las dos bases de la cocina china!'},
+    {zh:'买单！',py:'mǎidān!',q:'¿Qué decís cuando querés pagar?',
+     opts:[{t:'¡La cuenta, por favor!',zh:'买单',ok:true},{t:'¡Estuvo rico!',zh:'很好吃',ok:false},{t:'¡Muchas gracias!',zh:'谢谢',ok:false},{t:'¡Hasta luego!',zh:'再见',ok:false}],
+     fok:'✅ 买单 = pedir la cuenta. ¡La frase más importante al terminar de comer!',ffail:'买单 = literalmente "comprar la cuenta" → pedir la cuenta. Muy coloquial!'}
+  ],
+  historia:'Comiste como un local. El chef quedó tan impresionado que te regaló la receta de sus fideos. +1 Reputación. 🍜'},
+
+  {id:'n2b',tipo:'dlg',titulo:'Negociando en el mercado',emoji:'🛍️',npc:{av:'🧓',nm:'Vendedor Sr. Ma'},lugar:'Mercado de Yuyuan, Shanghai',xp:65,
+  pregs:[
+    {zh:'这个多少钱？',py:'zhège duōshǎo qián?',q:'¿Cómo preguntás el precio?',
+     opts:[{t:'¿Cuánto cuesta esto?',zh:'多少钱',ok:true},{t:'¿Esto es de calidad?',zh:'质量好吗',ok:false},{t:'¿Tenés descuento?',zh:'有折扣吗',ok:false},{t:'¿Es auténtico?',zh:'是真的吗',ok:false}],
+     fok:'✅ 多少 = cuánto · 钱 = dinero. ¡La frase MÁS útil de China!',ffail:'多少钱 = ¿cuánto cuesta? La aprenderás de memoria en un día de mercado!'},
+    {zh:'太贵了！便宜一点！',py:'tài guì le! piányí yīdiǎn!',q:'¿Qué le estás diciendo al vendedor?',
+     opts:[{t:'¡Es muy caro! ¡Más barato!',zh:'太贵+便宜',ok:true},{t:'¡Me gusta! ¡Lo llevo!',zh:'喜欢+要',ok:false},{t:'¡Es muy lindo! ¿Tiene más?',zh:'很好+有吗',ok:false},{t:'¡Está bien! ¿Cuántos?',zh:'好的+几个',ok:false}],
+     fok:'🔥 太...了 = demasiado... · 贵 = caro · 便宜 = barato · 一点 = un poco. ¡La frase del regateo!',ffail:'太贵了 = muy caro / 便宜一点 = un poco más barato. ¡El regateo empieza acá!'},
+    {zh:'能便宜多少？',py:'néng piányí duōshǎo?',q:'¿Qué le preguntás ahora?',
+     opts:[{t:'¿Cuánto puede bajar?',zh:'能便宜多少',ok:true},{t:'¿Cuál es tu último precio?',zh:'最低多少',ok:false},{t:'¿Me hacés un descuento?',zh:'给我打折',ok:false},{t:'¿Podemos negociar?',zh:'可以谈吗',ok:false}],
+     fok:'✅ 能 = poder · 便宜 = barato/bajar · 多少 = cuánto',ffail:'能 = poder · 便宜 = barato · 多少 = cuánto → ¿Cuánto puede bajar?'},
+    {zh:'我再看看别的',py:'wǒ zài kàn kàn biéde',q:'¿Qué técnica de regateo usás?',
+     opts:[{t:'Decís que vas a ver otras opciones (para que baje)',zh:'再看别的',ok:true},{t:'Aceptás el precio sin más',zh:'好的接受',ok:false},{t:'Le decís que es falso',zh:'是假的',ok:false},{t:'Llamás a un amigo',zh:'打电话',ok:false}],
+     fok:'🌟 ¡Técnica clásica! "Voy a ver otros" = el vendedor suele bajar el precio. 心理战!',ffail:'Decir "voy a ver otros" hace que el vendedor baje el precio por miedo a perder la venta. ¡Pura psicología!'}
+  ],
+  historia:'Regateaste como un profesional y conseguiste 40% de descuento. El Sr. Ma quedó boquiabierto. Sos un verdadero comerciante. 💪'},
+
+  {id:'n2boss',tipo:'boss',titulo:'💀 Desafío: Regateo intenso',emoji:'⚡',npc:{av:'👹',nm:'Vendedor Astuto'},lugar:'Mercado de antigüedades',xp:85,
+  pregs:[
+    {zh:'最低多少？',py:'zuìdī duōshǎo?',q:'¿Qué preguntás para obtener el precio mínimo?',
+     opts:[{t:'¿Cuál es tu precio mínimo?',zh:'最低多少',ok:true},{t:'¿Cuánto cuesta en total?',zh:'一共多少',ok:false},{t:'¿Tenés algo más barato?',zh:'有更便宜',ok:false},{t:'¿Cuánto me hacés de rebaja?',zh:'减多少',ok:false}],
+     fok:'🔥 最低 = el más bajo/mínimo · 多少 = cuánto. ¡Directo al punto!',ffail:'最低 = mínimo/lo más bajo + 多少 = cuánto → precio mínimo'},
+    {zh:'我们都是朋友，给你个好价格',py:'wǒmen dōu shì péngyǒu, gěi nǐ gè hǎo jiàgé',q:'El vendedor dice: "somos amigos, te doy buen precio". ¿Qué significa?',
+     opts:[{t:'Técnica de presión: finge amistad para no bajar',zh:'心理战',ok:true},{t:'Realmente te quiere dar precio especial',zh:'真心话',ok:false},{t:'Ya bajó todo lo que podía',zh:'价格最低',ok:false},{t:'Sos su cliente favorito',zh:'最爱客户',ok:false}],
+     fok:'🧠 ¡Correcto! "Somos amigos" es una táctica clásica china para crear presión emocional. ¡No caigas!',ffail:'En el mercado, "somos amigos" es presión psicológica. Sé amable pero firme en el precio.'},
+    {zh:'好，成交！',py:'hǎo, chéngjião!',q:'¿Qué significa cuando el vendedor dice esto?',
+     opts:[{t:'¡Trato hecho!',zh:'成交',ok:true},{t:'¡Imposible!',zh:'不可能',ok:false},{t:'Lo pienso...',zh:'想想',ok:false},{t:'¡Otro día!',zh:'下次',ok:false}],
+     fok:'✅ 成交 = trato hecho / deal closed. ¡La palabra más dulce en el regateo!',ffail:'成交 = trato cerrado/deal. Cuando escuchás esto, ¡ganaste la negociación!'}
+  ],
+  historia:'¡Trato cerrado! Conseguiste el mejor precio del mercado. Los otros vendedores te aplauden. Desbloqueaste el Mundo 3: Feria Cantón. 🏆'}
+]},
+
+{id:'m3',icon:'🏭',titulo:'Mundo 3 · Feria de Cantón',desc:'La feria de importación más grande del mundo',color:'#4cc9f0',bloqueado:true,niveles:[
+  {id:'n3a',tipo:'dlg',titulo:'Registro en la feria',emoji:'📋',npc:{av:'👩‍💼',nm:'Staff Sra. Zhang'},lugar:'Canton Fair, Guangzhou — Entrada principal',xp:60,
+  pregs:[
+    {zh:'您是来参展还是采购？',py:'nín shì lái cānzhǎn háishi cǎigòu?',q:'¿Qué te pregunta el staff?',
+     opts:[{t:'¿Viene a exponer o a comprar?',zh:'参展/采购',ok:true},{t:'¿Tiene cita previa?',zh:'有预约吗',ok:false},{t:'¿Cuál es su empresa?',zh:'哪个公司',ok:false},{t:'¿Cuántos días estará?',zh:'来几天',ok:false}],
+     fok:'✅ 参展 = participar como expositor · 采购 = comprar/sourcing',ffail:'参展 = exponer en la feria · 采购 = sourcing/compras. Las dos razones de ir a Cantón!'},
+    {zh:'我是来找供应商的',py:'wǒ shì lái zhǎo gōngyìngshāng de',q:'¿Qué le decís al staff?',
+     opts:[{t:'Vine a buscar proveedores',zh:'找供应商',ok:true},{t:'Vine a vender mis productos',zh:'卖产品',ok:false},{t:'Vine a aprender del mercado',zh:'了解市场',ok:false},{t:'Vine a reunirme con socios',zh:'见合伙人',ok:false}],
+     fok:'✅ 找 = buscar · 供应商 = proveedor/supplier. ¡Tu misión en Cantón!',ffail:'找 = buscar · 供应商 = proveedor. La frase clave para quien va a hacer sourcing!'},
+    {zh:'展位号是多少？',py:'zhǎnwèi hào shì duōshǎo?',q:'¿Qué preguntás para ubicar a un proveedor?',
+     opts:[{t:'¿Cuál es el número de stand?',zh:'展位号',ok:true},{t:'¿Cuál es su empresa?',zh:'公司名',ok:false},{t:'¿Qué productos tienen?',zh:'有什么产品',ok:false},{t:'¿Cuándo abren?',zh:'几点开',ok:false}],
+     fok:'✅ 展位 = stand/booth · 号 = número. Indispensable en la feria!',ffail:'展位 = stand · 号 = número. La feria es enorme, ¡necesitás saber el número de stand!'},
+    {zh:'我们的产品目录给您',py:'wǒmen de chǎnpǐn mùlù gěi nín',q:'¿Qué te da el expositor?',
+     opts:[{t:'El catálogo de productos',zh:'产品目录',ok:true},{t:'La lista de precios',zh:'价格表',ok:false},{t:'Una muestra gratis',zh:'免费样品',ok:false},{t:'Su tarjeta de visita',zh:'名片',ok:false}],
+     fok:'🌟 产品 = producto · 目录 = catálogo. Guardá todos los catálogos, los necesitarás!',ffail:'产品 = producto · 目录 = catálogo/listado'}
+  ],
+  historia:'Te registraste en la feria. El badge en mano, entrás a uno de los salones más grandes del mundo. Hay miles de proveedores esperando. 🏭'},
+
+  {id:'n3b',tipo:'dlg',titulo:'Conversación con proveedor',emoji:'🤝',npc:{av:'👔',nm:'Sr. Chen — Proveedor'},lugar:'Pabellón de electrónica, Stand B-1024',xp:75,
+  pregs:[
+    {zh:'您需要什么产品？',py:'nín xūyào shénme chǎnpǐn?',q:'¿Qué te pregunta el proveedor?',
+     opts:[{t:'¿Qué producto necesita?',zh:'什么产品',ok:true},{t:'¿Cuánto quiere gastar?',zh:'多少预算',ok:false},{t:'¿De dónde es usted?',zh:'您从哪来',ok:false},{t:'¿Cuándo necesita la entrega?',zh:'什么时候交货',ok:false}],
+     fok:'✅ 需要 = necesitar · 什么 = qué · 产品 = producto',ffail:'需要 = necesitar · 产品 = producto. La primera pregunta de todo proveedor!'},
+    {zh:'最小起订量是多少？',py:'zuì xiǎo qǐdìng liàng shì duōshǎo?',q:'¿Qué preguntás sobre el MOQ?',
+     opts:[{t:'¿Cuál es la cantidad mínima de pedido?',zh:'最小起订量',ok:true},{t:'¿Cuál es el precio unitario?',zh:'单价多少',ok:false},{t:'¿Cuánto tarda la producción?',zh:'生产多久',ok:false},{t:'¿Aceptan pago parcial?',zh:'能预付吗',ok:false}],
+     fok:'🔥 最小起订量 = MOQ (Minimum Order Quantity). ¡La pregunta más importante del sourcing!',ffail:'最小起订量 = MOQ. Básico antes de cualquier negociación de precio!'},
+    {zh:'可以提供样品吗？',py:'kěyǐ tígōng yàngpǐn ma?',q:'¿Qué le estás pidiendo?',
+     opts:[{t:'¿Pueden enviar una muestra?',zh:'提供样品',ok:true},{t:'¿Tienen fotos del producto?',zh:'有产品图',ok:false},{t:'¿Cuál es el lead time?',zh:'交期多少',ok:false},{t:'¿Tienen certificaciones?',zh:'有认证吗',ok:false}],
+     fok:'✅ 可以 = poder · 提供 = proveer · 样品 = muestra/sample',ffail:'样品 = sample/muestra. Siempre pedí muestras antes de hacer un pedido grande!'},
+    {zh:'交货期多长时间？',py:'jiāohuò qī duō cháng shíjiān?',q:'¿Cuándo te van a entregar?',
+     opts:[{t:'¿Cuál es el plazo de entrega?',zh:'交货期',ok:true},{t:'¿Cómo van a enviar?',zh:'怎么运输',ok:false},{t:'¿Quién paga el flete?',zh:'谁付运费',ok:false},{t:'¿Dónde está el depósito?',zh:'仓库在哪',ok:false}],
+     fok:'🌟 交货期 = lead time/plazo de entrega · 多长时间 = cuánto tiempo',ffail:'交货期 = plazo de entrega (lead time). Fundamental para planificar tu stock!'}
+  ],
+  historia:'Encontraste tu primer proveedor potencial en la feria. Te dieron el catálogo, los precios y prometieron enviarte muestras. 📦'},
+
+  {id:'n3c',tipo:'dlg',titulo:'Negociación de precios FOB',emoji:'💼',npc:{av:'👩‍💼',nm:'Sra. Wang — Directora Comercial'},lugar:'Sala de reuniones, Hotel cerca de la feria',xp:90,
+  pregs:[
+    {zh:'这个FOB价格是多少？',py:'zhège FOB jiàgé shì duōshǎo?',q:'¿Qué preguntás sobre el precio?',
+     opts:[{t:'¿Cuál es el precio FOB?',zh:'FOB价格',ok:true},{t:'¿El precio incluye flete?',zh:'含运费',ok:false},{t:'¿Cuál es el precio CIF?',zh:'CIF价格',ok:false},{t:'¿Hay precio mayorista?',zh:'批发价',ok:false}],
+     fok:'✅ FOB价格 = precio FOB (Free On Board). ¡El más común en exportaciones chinas!',ffail:'FOB = Free On Board. El precio más común que te cotizarán en China'},
+    {zh:'数量越多，价格越低',py:'shùliàng yuè duō, jiàgé yuè dī',q:'¿Qué te está diciendo la directora?',
+     opts:[{t:'A más cantidad, menor precio',zh:'越多越低',ok:true},{t:'El precio es fijo independiente',zh:'价格固定',ok:false},{t:'Necesitan pago por adelantado',zh:'预付款',ok:false},{t:'El precio incluye el envío',zh:'含运费',ok:false}],
+     fok:'🔥 越...越... = cuanto más... más... · 数量 = cantidad · 价格低 = precio bajo',ffail:'越多越低 = cuanto más cantidad, más bajo el precio. ¡Economía de escala en chino!'},
+    {zh:'付款方式是T/T还是L/C？',py:'fùkuǎn fāngshì shì T/T háishi L/C?',q:'¿Sobre qué te está preguntando?',
+     opts:[{t:'¿Pagan por transferencia o carta de crédito?',zh:'T/T o L/C',ok:true},{t:'¿Prefieren pago en efectivo o tarjeta?',zh:'现金/卡',ok:false},{t:'¿Cuándo quieren el pago?',zh:'何时付款',ok:false},{t:'¿Qué moneda prefieren?',zh:'什么货币',ok:false}],
+     fok:'✅ T/T = Telegraphic Transfer (transferencia) · L/C = Letter of Credit (carta de crédito)',ffail:'T/T = wire transfer / L/C = letter of credit. Los dos métodos más comunes en comercio internacional con China!'},
+    {zh:'我们可以给你30%定金，70%见提单',py:'wǒmen kěyǐ gěi nǐ 30% dìnjīn, 70% jiàn tídān',q:'¿Qué condición de pago proponen?',
+     opts:[{t:'30% de adelanto, 70% contra B/L',zh:'30%+70%提单',ok:true},{t:'50% ahora, 50% al llegar',zh:'50%+50%到货',ok:false},{t:'100% por adelantado',zh:'全部预付',ok:false},{t:'Pago a 60 días',zh:'60天后付',ok:false}],
+     fok:'🌟 定金 = depósito/adelanto · 见提单 = contra conocimiento de embarque. ¡Estándar del comercio China!',ffail:'定金 = adelanto · 提单 = B/L (conocimiento de embarque) → 30% ahora, 70% cuando está embarcado'}
+  ],
+  historia:'Cerraste condiciones comerciales con la Sra. Wang. 30/70 T/T, precio FOB Guangzhou. ¡Tu primer contrato internacional está casi listo! 📜'},
+
+  {id:'n3boss',tipo:'boss',titulo:'💀 Desafío Final: Cierre del contrato',emoji:'⚡',npc:{av:'👹',nm:'Director de Exportaciones'},lugar:'Oficina corporativa, Guangzhou',xp:110,
+  pregs:[
+    {zh:'合同上的条款你都同意吗？',py:'hétong shàng de tiáokuǎn nǐ dōu tóngyì ma?',q:'¿Qué te pregunta el director?',
+     opts:[{t:'¿Estás de acuerdo con todas las cláusulas del contrato?',zh:'合同条款',ok:true},{t:'¿Podemos firmar el contrato ahora?',zh:'现在签',ok:false},{t:'¿Necesita un abogado?',zh:'需要律师',ok:false},{t:'¿Quiere modificar el contrato?',zh:'修改合同',ok:false}],
+     fok:'✅ 合同 = contrato · 条款 = cláusulas · 同意 = estar de acuerdo',ffail:'合同 = contrato · 条款 = términos/cláusulas · 同意 = acordar'},
+    {zh:'如果有质量问题怎么办？',py:'rúguǒ yǒu zhìliàng wèntí zěnme bàn?',q:'¿Qué consulta importante hacés?',
+     opts:[{t:'¿Qué pasa si hay problemas de calidad?',zh:'质量问题',ok:true},{t:'¿Qué pasa si hay retrasos?',zh:'延误问题',ok:false},{t:'¿Qué pasa con las garantías?',zh:'保修问题',ok:false},{t:'¿Qué pasa con el seguro?',zh:'保险问题',ok:false}],
+     fok:'🔥 如果 = si · 质量问题 = problema de calidad · 怎么办 = qué se hace. ¡Fundamental en contratos!',ffail:'质量问题 = problemas de calidad. Siempre preguntar esto antes de firmar! Las reclamaciones en China son difíciles.'},
+    {zh:'我们负责换货或退款',py:'wǒmen fùzé huàn huò huò tuìkuǎn',q:'¿Qué garantía te ofrecen?',
+     opts:[{t:'Reemplazo del producto o devolución del dinero',zh:'换货/退款',ok:true},{t:'Solo un descuento en el próximo pedido',zh:'下次折扣',ok:false},{t:'Reparación del producto defectuoso',zh:'修理产品',ok:false},{t:'No tienen política de garantía',zh:'没有保证',ok:false}],
+     fok:'✅ 换货 = cambiar mercadería · 退款 = devolver dinero. ¡Buena garantía!',ffail:'换货 = replace goods · 退款 = refund. ¡Que quede en el contrato por escrito!'}
+  ],
+  historia:'¡CONTRATO FIRMADO! Tu primer negocio con China está cerrado. El director te invita a cenar para celebrar. Sos un verdadero comerciante internacional. 🏆🎉'}
+]},
+
+{id:'m4',icon:'💰',titulo:'Mundo 4 · Negocios Avanzados',desc:'Proveedores, logística, correos y estrategia',color:'#7b2ff7',bloqueado:true,niveles:[
+  {id:'n4a',tipo:'dlg',titulo:'Email al proveedor',emoji:'📧',npc:{av:'💻',nm:'Tu proveedor vía WeChat'},lugar:'Desde tu oficina',xp:70,
+  pregs:[
+    {zh:'您好，我想询问产品价格',py:'nín hǎo, wǒ xiǎng xúnwèn chǎnpǐn jiàgé',q:'¿Qué escribís en el email/WeChat?',
+     opts:[{t:'Hola, quisiera consultar el precio del producto',zh:'询问价格',ok:true},{t:'Hola, tengo un pedido urgente',zh:'紧急订单',ok:false},{t:'Hola, quiero cancelar el pedido',zh:'取消订单',ok:false},{t:'Hola, ¿cuándo llega mi pedido?',zh:'什么时候到',ok:false}],
+     fok:'✅ 询问 = consultar/preguntar · 价格 = precio. ¡El inicio de toda negociación!',ffail:'询问 = preguntar/inquire · 价格 = precio. Siempre empezar por el precio!'},
+    {zh:'请发给我最新价格表',py:'qǐng fā gěi wǒ zuìxīn jiàgé biǎo',q:'¿Qué le pedís al proveedor?',
+     opts:[{t:'Por favor enviame la lista de precios actualizada',zh:'最新价格表',ok:true},{t:'Por favor enviame el contrato',zh:'发合同',ok:false},{t:'Por favor confirmame el pedido',zh:'确认订单',ok:false},{t:'Por favor enviame fotos del producto',zh:'发产品图',ok:false}],
+     fok:'✅ 最新 = más reciente/actualizado · 价格表 = lista de precios · 发 = enviar',ffail:'最新 = latest/actualizado · 价格表 = price list · 发 = enviar/mandar'},
+    {zh:'我们的订单量大概是500件',py:'wǒmen de dìngdān liàng dàgài shì 500 jiàn',q:'¿Qué informás sobre tu pedido?',
+     opts:[{t:'Nuestro volumen de pedido es aproximadamente 500 unidades',zh:'500件',ok:true},{t:'Necesitamos entrega en 500 días',zh:'500天',ok:false},{t:'El precio máximo es 500 yuanes',zh:'500元',ok:false},{t:'Tenemos 500 clientes',zh:'500客户',ok:false}],
+     fok:'🌟 件 = pieza/unidad · 大概 = aproximadamente · 订单量 = volumen de pedido',ffail:'件 = pieza/unidad · 大概 = aprox · 订单量 = order quantity'}
+  ],
+  historia:'Tu comunicación escrita en chino impresionó al proveedor. Te dio precios especiales y pasaste a ser cliente VIP. 💎'},
+
+  {id:'n4b',tipo:'dlg',titulo:'En la fábrica',emoji:'🏭',npc:{av:'👷',nm:'Gerente de Producción'},lugar:'Fábrica en Dongguan, Guangdong',xp:80,
+  pregs:[
+    {zh:'这是我们的生产线',py:'zhè shì wǒmen de shēngchǎn xiàn',q:'¿Qué te muestra el gerente?',
+     opts:[{t:'Esta es nuestra línea de producción',zh:'生产线',ok:true},{t:'Este es nuestro almacén',zh:'仓库',ok:false},{t:'Este es nuestro showroom',zh:'展厅',ok:false},{t:'Este es nuestro laboratorio',zh:'实验室',ok:false}],
+     fok:'✅ 生产线 = línea de producción. ¡Visitar la fábrica es clave para verificar calidad!',ffail:'生产线 = production line. Siempre visitá la fábrica antes de hacer pedidos grandes!'},
+    {zh:'质量控制是如何做的？',py:'zhìliàng kòngzhì shì rúhé zuò de?',q:'¿Qué le preguntás sobre calidad?',
+     opts:[{t:'¿Cómo hacen el control de calidad?',zh:'质量控制',ok:true},{t:'¿Cuántos trabajadores tienen?',zh:'多少工人',ok:false},{t:'¿Cuánto producen por día?',zh:'每天产量',ok:false},{t:'¿Tienen certificado ISO?',zh:'有ISO',ok:false}],
+     fok:'🔥 质量控制 = quality control/QC · 如何 = cómo. ¡Pregunta obligada en toda visita!',ffail:'质量控制 = QC / control de calidad. La pregunta más importante en una visita a fábrica!'},
+    {zh:'有没有第三方检验？',py:'yǒu méiyǒu dìsānfāng jiǎnyàn?',q:'¿Qué tipo de verificación preguntás?',
+     opts:[{t:'¿Hacen inspección de terceros?',zh:'第三方检验',ok:true},{t:'¿Tienen seguro de producto?',zh:'产品保险',ok:false},{t:'¿Exportan a Europa?',zh:'出口欧洲',ok:false},{t:'¿Aceptan visitas sorpresa?',zh:'随时参观',ok:false}],
+     fok:'✅ 第三方 = terceros · 检验 = inspección. ¡Importante para asegurar calidad independiente!',ffail:'第三方检验 = third-party inspection. Empresas como SGS, BV, Intertek hacen estas inspecciones'}
+  ],
+  historia:'La visita a la fábrica fue exitosa. Viste el proceso completo y acordaste inspecciones de calidad antes del embarque. 🏭'},
+
+  {id:'n4boss',tipo:'boss',titulo:'💀 Desafío: Logística y Aduana',emoji:'🚢',npc:{av:'👹',nm:'Agente de Aduanas'},lugar:'Puerto de Shangai',xp:100,
+  pregs:[
+    {zh:'提单上的HS Code是什么？',py:'tídān shàng de HS Code shì shénme?',q:'¿Qué pregunta el agente de aduanas?',
+     opts:[{t:'¿Cuál es el código arancelario en el conocimiento de embarque?',zh:'HS Code',ok:true},{t:'¿Cuál es el número de contenedor?',zh:'集装箱号',ok:false},{t:'¿Cuál es el valor declarado?',zh:'申报价值',ok:false},{t:'¿Cuántos bultos hay?',zh:'多少箱',ok:false}],
+     fok:'✅ 提单 = B/L · HS Code = código arancelario · Fundamental para la aduana!',ffail:'提单 = Bill of Lading · HS Code = código arancelario. ¡Sin este, tu mercadería no pasa la aduana!'},
+    {zh:'清关需要哪些文件？',py:'qīngguān xūyào nǎxiē wénjian?',q:'¿Qué necesitás para despachar en aduana?',
+     opts:[{t:'¿Qué documentos se necesitan para el despacho?',zh:'清关文件',ok:true},{t:'¿Cuánto cuesta el despacho?',zh:'清关费用',ok:false},{t:'¿Cuánto demora el despacho?',zh:'清关时间',ok:false},{t:'¿Quién hace el despacho?',zh:'谁做清关',ok:false}],
+     fok:'🔥 清关 = despacho aduanero · 文件 = documentos. Necesitás: B/L, factura comercial, packing list, certificado de origen',ffail:'清关 = customs clearance. Documentos básicos: 提单(B/L)+商业发票(invoice)+装箱单(packing list)'},
+    {zh:'关税是多少？',py:'guānsuì shì duōshǎo?',q:'¿Sobre qué preguntás?',
+     opts:[{t:'¿Cuánto es el arancel/impuesto de importación?',zh:'关税',ok:true},{t:'¿Cuánto es el IVA?',zh:'增值税',ok:false},{t:'¿Cuánto es el flete?',zh:'运费',ok:false},{t:'¿Cuánto es el seguro?',zh:'保险费',ok:false}],
+     fok:'✅ 关税 = arancel de importación. Varía según el HS Code de tu producto!',ffail:'关税 = customs duty/arancel. Siempre calcularlo ANTES de importar para saber el costo real!'}
+  ],
+  historia:'¡Despachaste tu primer contenedor! El agente quedó impresionado con tu manejo del chino técnico. Tu carga llegará en 35 días. 🚢🎉'}
+]}
+];
+
+/* ── HELPER: acceder a variable CSS gold ── */
+var var_gold='#ffd166';
+
+/* ═══════════════════════════════════════
+   ESTADO HISTORIA
+═══════════════════════════════════════ */
+var hs={
+  mundoIdx:0,
+  nivel:null,
+  pregIdx:0,
+  correctas:0,
+  vidas:3,
+  prog:{},  // {nivelId:{done,stars,xp}}
+  respondido:false
+};
+
+/* ═══════════════════════════════════════
+   INIT HISTORIA
+═══════════════════════════════════════ */
+function initHistoria(){
+  try{var s=localStorage.getItem('hs_prog');if(s)hs.prog=JSON.parse(s);}catch(e){}
+  buildMapH();
+  show('s-historia');
+}
+function saveHsProg(){try{localStorage.setItem('hs_prog',JSON.stringify(hs.prog));}catch(e){}}
+
+/* ═══════════════════════════════════════
+   CONSTRUIR MAPA
+═══════════════════════════════════════ */
+function buildMapH(){
+  var wrap=document.getElementById('hMapWrap');
+  wrap.innerHTML='<div class="map-path"></div>';
+  var pos=['right','left','center','right','left'];
+  var gIdx=0;
+  MUNDOS_H.forEach(function(mundo,mi){
+    var sep=document.createElement('div');
+    sep.className='world-sep';
+    sep.innerHTML='<div class="world-sep-line"></div><div class="world-sep-tag">'+mundo.icon+' '+mundo.titulo+'</div><div class="world-sep-line"></div>';
+    wrap.appendChild(sep);
+    mundo.niveles.forEach(function(nv,ni){
+      gIdx++;
+      var done=hs.prog[nv.id];
+      var stars=done?done.stars:0;
+      var estado= done?'done': (mundo.bloqueado?'locked': (esAbiertoH(mundo,nv,mi,ni)?'open':'locked'));
+      var node=document.createElement('div');
+      node.className='map-node '+(pos[ni%pos.length]||'center');
+      node.style.animationDelay=(gIdx*0.05)+'s';
+      var isBoss=nv.tipo==='boss';
+      var isChest=nv.tipo==='cofre';
+      var btnCls='node-btn'+(isBoss?' boss-btn':isChest?' chest-btn':'')+' '+estado;
+      var icon=estado==='done'?'✓':estado==='locked'?'🔒':(isBoss?'💀':isChest?'📦':nv.emoji);
+      var starsHtml=done?'<div class="node-stars">'+'⭐'.repeat(stars)+'☆'.repeat(3-stars)+'</div>':'';
+      var onclick=estado!=='locked'?'abrirNivelH("'+nv.id+'","'+mundo.id+'")':(mundo.bloqueado?'hTip("🔒","Mundo bloqueado","Completá el mundo anterior para desbloquear este 💪")':'hTip("🔒","Nivel bloqueado","Completá el nivel anterior primero 💪")');
+      node.innerHTML='<button class="'+btnCls+'" onclick="'+onclick+'">'+icon+starsHtml+'</button><div class="node-label'+(estado==='locked'?' dim':'')+'">'+nv.titulo+'</div>';
+      wrap.appendChild(node);
+    });
+  });
+  updateMundoBannerH();
+}
+
+function esAbiertoH(mundo,nv,mi,ni){
+  if(mundo.bloqueado)return false;
+  if(mi===0&&ni===0)return true;
+  if(ni>0){var ant=mundo.niveles[ni-1];return!!hs.prog[ant.id];}
+  if(mi>0){var ma=MUNDOS_H[mi-1];var ul=ma.niveles[ma.niveles.length-1];return!!hs.prog[ul.id];}
+  return false;
+}
+
+function updateMundoBannerH(){
+  var mActivo=MUNDOS_H[0];var done=0;var total=0;
+  for(var i=0;i<MUNDOS_H.length;i++){
+    var m=MUNDOS_H[i];if(m.bloqueado)break;
+    var allDone=true;var d=0;
+    m.niveles.forEach(function(n){total=m.niveles.length;if(hs.prog[n.id])d++;else allDone=false;});
+    done=d;mActivo=m;
+    if(!allDone)break;
+  }
+  document.getElementById('hMundoIcon').textContent=mActivo.icon;
+  document.getElementById('hMundoTitle').textContent=mActivo.titulo;
+  document.getElementById('hMundoDesc').textContent=mActivo.desc;
+  document.getElementById('hMundoFill').style.width=(total>0?Math.round(done/total*100):0)+'%';
+  document.getElementById('hMundoPct').textContent=done+'/'+total;
+}
+
+/* ═══════════════════════════════════════
+   ABRIR NIVEL
+═══════════════════════════════════════ */
+function abrirNivelH(nid,mid){
+  var mundo=MUNDOS_H.find(function(m){return m.id===mid;});
+  var nv=mundo.niveles.find(function(n){return n.id===nid;});
+  if(!nv)return;
+  hs.nivel=nv;
+  var prog=hs.prog[nid];
+  var stars=prog?prog.stars:0;
+  document.getElementById('hnTitle').textContent=nv.titulo;
+  document.getElementById('hnEmoji').textContent=nv.emoji;
+  document.getElementById('hnTitleBig').textContent=nv.titulo;
+  document.getElementById('hnDesc').textContent=nv.pregs&&nv.pregs.length?nv.pregs[0].q:'Completá este nivel';
+  document.getElementById('hnPalab').textContent=nv.pregs?nv.pregs.length:0;
+  document.getElementById('hnXP').textContent='+'+nv.xp;
+  document.getElementById('hnTipo').textContent=nv.tipo==='boss'?'💀':nv.tipo==='dlg'?'💬':'📝';
+  document.getElementById('hnStars').innerHTML='⭐'.repeat(stars)+'☆'.repeat(3-stars);
+  if(nv.npc){
+    document.getElementById('hnNpcAv').textContent=nv.npc.av;
+    document.getElementById('hnNpcNm').textContent=nv.npc.nm;
+  }
+  if(nv.pregs&&nv.pregs.length){
+    var p=nv.pregs[0];
+    document.getElementById('hnPrevZh').textContent=p.zh;
+    document.getElementById('hnPrevPy').textContent=p.py;
+    document.getElementById('hnPrevEsp').textContent=p.opts.find(function(o){return o.ok;}).t;
+  }
+  show('s-hn-nivel');
+}
+
+/* ═══════════════════════════════════════
+   GAMEPLAY
+═══════════════════════════════════════ */
+function iniciarNivelH(){
+  var nv=hs.nivel;
+  if(!nv||!nv.pregs||!nv.pregs.length)return;
+  hs.pregIdx=0;hs.correctas=0;hs.vidas=3;hs.respondido=false;
+  document.getElementById('hnLocTxt').textContent=nv.lugar||'';
+  if(nv.npc){document.getElementById('hnNpcAv2').textContent=nv.npc.av;document.getElementById('hnNpcNm2').textContent=nv.npc.nm;}
+  renderPregH();
+  show('s-hn-game');
+}
+
+function renderPregH(){
+  var nv=hs.nivel;
+  var p=nv.pregs[hs.pregIdx];
+  if(!p)return;
+  hs.respondido=false;
+  var pct=Math.round(hs.pregIdx/nv.pregs.length*100);
+  document.getElementById('hnProgFill').style.width=pct+'%';
+  document.getElementById('hnVidas').textContent='❤️'.repeat(hs.vidas)+'🖤'.repeat(3-hs.vidas);
+  document.getElementById('hnBblZh').textContent=p.zh;
+  document.getElementById('hnBblPy').textContent=p.py;
+  document.getElementById('hnQTxt').textContent=p.q;
+  var optDiv=document.getElementById('hnOpts');optDiv.innerHTML='';
+  var shuffled=[].concat(p.opts).sort(function(){return Math.random()-.5;});
+  shuffled.forEach(function(opt,i){
+    var btn=document.createElement('button');
+    btn.className='opt';
+    btn.innerHTML='<div class="opt-num">'+(i+1)+'</div><span>'+opt.t+'</span><span class="opt-zh">'+opt.zh+'</span>';
+    btn.onclick=function(){if(!hs.respondido)elegirH(opt,p,btn);};
+    optDiv.appendChild(btn);
+  });
+  document.getElementById('hnNextBtn').style.display='none';
+  var fb=document.getElementById('hnFb');fb.style.display='none';fb.className='fb-bar';
+  document.getElementById('hnScene').style.animation='none';
+  void document.getElementById('hnScene').offsetWidth;
+  document.getElementById('hnScene').style.animation='slideUp .3s ease';
+}
+
+function elegirH(opt,preg,btnEl){
+  if(hs.respondido)return;
+  hs.respondido=true;
+  document.querySelectorAll('.opt').forEach(function(b){b.onclick=null;});
+  if(opt.ok){
+    hs.correctas++;
+    btnEl.classList.add('ok');
+    addXP(8);
+    launchConfetti();
+    hShowDuo(true,preg.fok);
+  } else {
+    hs.vidas--;
+    btnEl.classList.add('fail');
+    document.querySelectorAll('.opt').forEach(function(b){
+      var sp=b.querySelectorAll('span')[0];
+      if(sp&&preg.opts.find(function(o){return o.ok&&o.t===sp.textContent;}))b.classList.add('ok');
+    });
+    hShowDuo(false,preg.ffail);
+  }
+}
+
+function hShowDuo(ok,msg){
+  var ov=document.getElementById('duoOverlay');
+  var circ=ov.querySelector('.duo-circle');
+  var lbl=ov.querySelector('.duo-label');
+  var mn=document.getElementById('duoMeaning');
+  var btn=ov.querySelector('.duo-continue');
+  circ.textContent=ok?'✓':'✗';
+  circ.className='duo-circle '+(ok?'ok':'fail');
+  if(!ok){circ.style.background='var(--red)';circ.style.boxShadow='0 0 80px rgba(230,57,70,.8)';}
+  else{circ.style.background='';circ.style.boxShadow='';}
+  lbl.textContent=ok?'¡Correcto!':'¡Incorrecto!';
+  lbl.style.color=ok?'var(--green)':'var(--red)';
+  mn.textContent=msg;
+  btn.style.background=ok?'var(--green)':'var(--red)';
+  btn.style.color=ok?'#111':'#fff';
+  btn.onclick=function(){closeDuo();nextPregH();};
+  if(ok)launchConfetti();
+  ov.classList.add('show');
+}
+
+function nextPregH(){
+  hs.pregIdx++;
+  if(hs.pregIdx>=hs.nivel.pregs.length){terminarNivelH();return;}
+  renderPregH();
+}
+
+function terminarNivelH(){
+  var nv=hs.nivel;
+  var tot=nv.pregs.length;
+  var pct=hs.correctas/tot;
+  var stars=pct===1?3:pct>=0.66?2:1;
+  var xpG=Math.round(nv.xp*pct);
+  var prev=hs.prog[nv.id];
+  hs.prog[nv.id]={done:true,stars:Math.max(stars,prev?prev.stars:0),xp:xpG};
+  saveHsProg();
+  addXP(xpG);
+  var trophy=pct===1?'🏆':pct>=0.66?'🌟':'💪';
+  document.getElementById('hnRTrophy').textContent=trophy;
+  document.getElementById('hnRTitle').textContent=pct===1?'¡Perfecto!':pct>=0.66?'¡Nivel completado!':'¡Seguí adelante!';
+  document.getElementById('hnRSub').textContent=hs.correctas+' de '+tot+' respuestas correctas';
+  document.getElementById('hnRCorr').textContent=hs.correctas+'/'+tot;
+  document.getElementById('hnRXP').textContent='+'+xpG+' XP';
+  document.getElementById('hnRRacha').textContent='🔥 x'+hs.correctas;
+  document.getElementById('hnRStory').textContent=nv.historia;
+  var starEls=document.querySelectorAll('.hn-star');
+  starEls.forEach(function(s){s.classList.remove('lit');});
+  for(var i=0;i<stars;i++){(function(idx){setTimeout(function(){if(starEls[idx])starEls[idx].classList.add('lit');},300+idx*300);})(i);}
+  show('s-hn-result');
+}
+
+function hTip(av,nm,txt){
+  document.getElementById('hTipAv').textContent=av;
+  document.getElementById('hTipNm').textContent=nm;
+  document.getElementById('hTipTxt').textContent=txt;
+  document.getElementById('hNpcTip').classList.add('show');
+  setTimeout(function(){document.getElementById('hNpcTip').classList.remove('show');},2800);
+}
+
+document.getElementById('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter')startGame();});
 </script>
+
+<!-- ═══════════════════════════════════
+     MODO HISTORIA — PANTALLAS HTML
+════════════════════════════════════ -->
+
+<!-- MAPA -->
+<div id="s-historia" class="screen">
+  <div class="h-header">
+    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
+    <div class="section-title">🐉 Camino del Dragón</div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px">
+      <div style="font-size:.72rem;color:var(--muted)">Nv.<span style="color:var(--gold);font-weight:700;margin-left:3px" id="hNivel">1</span></div>
+      <div style="font-size:.7rem;color:var(--muted)" id="hXpDisp">0 XP</div>
+    </div>
+  </div>
+
+  <div class="mundo-banner">
+    <div class="mundo-icon" id="hMundoIcon">✈️</div>
+    <div class="mundo-info">
+      <div class="mundo-title" id="hMundoTitle">Mundo 1 · Llegada a China</div>
+      <div class="mundo-desc" id="hMundoDesc">Aeropuerto, hotel, saludos y números</div>
+      <div class="mundo-prog-wrap"><div class="mundo-prog-fill" id="hMundoFill" style="width:0%"></div></div>
+    </div>
+    <div style="font-size:.75rem;color:var(--gold);font-weight:700;min-width:28px;text-align:right" id="hMundoPct">0/3</div>
+  </div>
+
+  <div class="map-wrap" id="hMapWrap">
+    <div class="map-path"></div>
+  </div>
+</div>
+
+<!-- DETALLE NIVEL -->
+<div id="s-hn-nivel" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="back-btn" onclick="show('s-historia');buildMapH()">← Mapa</button>
+    <div class="section-title" id="hnTitle">Nivel</div>
+    <div style="width:72px"></div>
+  </div>
+
+  <div class="nv-hero">
+    <div class="nv-emoji" id="hnEmoji">🛬</div>
+    <div class="nv-title" id="hnTitleBig">Aeropuerto de Shanghai</div>
+    <div class="nv-desc" id="hnDesc">Tu primera conversación en China.</div>
+    <div class="nv-stars" id="hnStars">☆☆☆</div>
+  </div>
+
+  <div class="nv-stats">
+    <div class="nv-stat"><div class="nv-stat-val" id="hnPalab">4</div><div class="nv-stat-lbl">📚 Preguntas</div></div>
+    <div class="nv-stat"><div class="nv-stat-val" id="hnXP">+50</div><div class="nv-stat-lbl">⚡ XP posible</div></div>
+    <div class="nv-stat"><div class="nv-stat-val" id="hnTipo">💬</div><div class="nv-stat-lbl">Modo</div></div>
+  </div>
+
+  <div class="dlg-preview">
+    <div class="dlg-ttl">Vista previa del diálogo</div>
+    <div class="dlg-row">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+        <div class="dlg-av" id="hnNpcAv">👩‍✈️</div>
+        <div style="font-size:.6rem;color:var(--muted)" id="hnNpcNm">NPC</div>
+      </div>
+      <div class="dlg-bubble">
+        <div class="dlg-hanzi" id="hnPrevZh">你好！</div>
+        <div class="dlg-pinyin" id="hnPrevPy">nǐ hǎo!</div>
+        <div class="dlg-esp" id="hnPrevEsp">¡Hola!</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-gold" onclick="iniciarNivelH()">🐉 ¡Empezar nivel!</button>
+  <button class="btn btn-ghost" onclick="show('s-historia');buildMapH()" style="padding:12px;font-size:.85rem">Volver al mapa</button>
+</div>
+
+<!-- GAMEPLAY -->
+<div id="s-hn-game" class="screen" style="gap:12px">
+  <div class="gp-header">
+    <button class="back-btn" style="padding:10px 14px;font-size:.85rem" onclick="show('s-historia');buildMapH()">✕</button>
+    <div class="gp-bar-wrap"><div class="gp-bar-fill" id="hnProgFill" style="width:0%"></div></div>
+    <div class="vidas" id="hnVidas">❤️❤️❤️</div>
+  </div>
+
+  <div class="scene" id="hnScene">
+    <div class="scene-loc"><span id="hnLocIco">🏙️</span><span id="hnLocTxt">Shanghai</span></div>
+    <div class="npc-row">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="npc-av" id="hnNpcAv2">👩‍✈️</div>
+        <div class="npc-nm" id="hnNpcNm2">NPC</div>
+      </div>
+      <div class="bbl">
+        <div class="bbl-hanzi" id="hnBblZh">你好！</div>
+        <div class="bbl-pinyin" id="hnBblPy">nǐ hǎo!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="q-box">
+    <div class="q-lbl">¿Qué significa?</div>
+    <div class="q-text" id="hnQTxt">Elegí la respuesta correcta:</div>
+  </div>
+
+  <div class="opts" id="hnOpts"></div>
+  <div class="fb-bar" id="hnFb"></div>
+  <button class="btn btn-gold" id="hnNextBtn" style="display:none" onclick="nextPregH()">Siguiente →</button>
+</div>
+
+<!-- RESULTADO -->
+<div id="s-hn-result" class="screen" style="align-items:center;justify-content:center;text-align:center;gap:16px">
+  <div class="hn-trophy" id="hnRTrophy">🏆</div>
+  <div class="hn-stars">
+    <span class="hn-star">⭐</span><span class="hn-star">⭐</span><span class="hn-star">⭐</span>
+  </div>
+  <div class="hn-rtitle" id="hnRTitle">¡Nivel completado!</div>
+  <div class="hn-rsub" id="hnRSub">8 de 8 correctas</div>
+
+  <div class="hn-rewards">
+    <div class="hn-ritem"><div class="hn-rval" id="hnRCorr">8/8</div><div class="hn-rlbl">✅ Correctas</div></div>
+    <div class="hn-ritem"><div class="hn-rval" id="hnRXP">+60 XP</div><div class="hn-rlbl">⚡ XP</div></div>
+    <div class="hn-ritem"><div class="hn-rval" id="hnRRacha">🔥 x8</div><div class="hn-rlbl">Racha</div></div>
+  </div>
+
+  <div class="hn-story">
+    <div class="hn-story-lbl">📖 Lo que pasó</div>
+    <div class="hn-story-txt" id="hnRStory">Tu aventura continúa...</div>
+  </div>
+
+  <button class="btn btn-gold" onclick="show('s-historia');buildMapH()">🗺️ Volver al mapa</button>
+  <button class="btn btn-ghost" style="padding:12px;font-size:.85rem" onclick="iniciarNivelH()">🔄 Repetir nivel</button>
+</div>
+
+<!-- TOOLTIP NPC -->
+<div class="npc-tip" id="hNpcTip">
+  <div class="npc-tip-inner">
+    <div class="npc-tip-av" id="hTipAv">🔒</div>
+    <div>
+      <div class="npc-tip-name" id="hTipNm">Bloqueado</div>
+      <div class="npc-tip-txt" id="hTipTxt">Completá el nivel anterior primero.</div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
