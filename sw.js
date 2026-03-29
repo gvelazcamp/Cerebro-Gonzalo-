@@ -1,4 +1,4 @@
-var CACHE_NAME = 'chino-aventura-v2';
+var CACHE_NAME = 'chino-aventura-v3';
 var urlsToCache = [
   '/Cerebro-Gonzalo-/chino_aventura.html',
   '/Cerebro-Gonzalo-/manifest.json'
