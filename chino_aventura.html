@@ -36,7 +36,7 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
 .btn-gold{background:linear-gradient(135deg,var(--gold),#f4a261);color:#111}
 .btn-ghost{background:var(--card);color:var(--text);border:1px solid #333}
 .btn-green{background:linear-gradient(135deg,var(--green),#05a880);color:#111}
-.back-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;font-family:'Outfit',sans-serif;padding:4px 0}
+.back-btn{background:linear-gradient(135deg,#c1121f,#7a0a1a);border:none;color:#fff;cursor:pointer;font-size:1rem;font-family:'Outfit',sans-serif;padding:12px 20px;border-radius:10px;font-weight:600;transition:transform .1s;position:relative;z-index:100;box-shadow:0 4px 12px rgba(198,25,25,0.3)}
 .row{display:flex;justify-content:space-between;align-items:center}
 .hud{background:var(--card);border-radius:16px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
 .xp-bar{height:6px;background:#333;border-radius:3px;margin-top:4px;width:100px}
@@ -601,6 +601,7 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
     <div id="audioPinyin" style="color:var(--blue);font-size:1rem"></div>
     <div id="audioEsp" style="font-size:1.1rem;font-weight:600;color:#06d6a0"></div>
     <div id="audioStatus" style="font-size:.8rem;color:var(--muted)">— — —</div>
+    <button class="btn btn-gold" onclick="testAudio()" style="width:100%;padding:12px;font-size:1rem;margin-top:8px;background:linear-gradient(135deg,var(--gold),#f4a261);color:#111;font-weight:700">🔊 Escuchar AHORA</button>
   </div>
 
   <!-- Controles -->
@@ -1365,6 +1366,8 @@ function _gtts(text,lang,rate,cb){
     try{_fallbackAudio.pause();}catch(e){}
   }
   
+  console.log('🎧 TTS:', text, 'lang:', lang);
+  
   var urls=[
     'https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(text)+'&tl='+encodeURIComponent(lang)+'&client=tw-ob',
     'https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl='+encodeURIComponent(lang)+'&q='+encodeURIComponent(text)
@@ -1374,30 +1377,45 @@ function _gtts(text,lang,rate,cb){
   
   function tryUrl(){
     if(urlIdx>=urls.length){
-      console.log('No TTS disponible');
-      if(cb)cb();
+      console.log('❌ No TTS disponible');
+      if(cb)setTimeout(cb,100);
       return;
     }
+    
+    console.log('🔗 Intentando URL', urlIdx+1, urls[urlIdx].substring(0,50)+'...');
     
     _fallbackAudio=new Audio();
     _fallbackAudio.crossOrigin='anonymous';
     _fallbackAudio.volume=1;
-    if(rate&&rate!==1)try{_fallbackAudio.playbackRate=rate;}catch(e){}
+    _fallbackAudio.playbackRate=rate||1;
     
-    _fallbackAudio.onended=function(){
-      if(cb)setTimeout(cb,300);
+    _fallbackAudio.oncanplay=function(){
+      console.log('✅ Audio cargado, reproduciendo...');
     };
     
-    _fallbackAudio.onerror=function(){
-      console.log('Error en URL:',urls[urlIdx]);
+    _fallbackAudio.onended=function(){
+      console.log('✅ Audio terminó');
+      if(cb)setTimeout(cb,200);
+    };
+    
+    _fallbackAudio.onerror=function(e){
+      console.log('❌ Error en URL', urlIdx, e);
+      urlIdx++;
+      tryUrl();
+    };
+    
+    _fallbackAudio.onabort=function(){
+      console.log('⚠️ Abortado URL', urlIdx);
       urlIdx++;
       tryUrl();
     };
     
     _fallbackAudio.src=urls[urlIdx];
     
-    _fallbackAudio.play().catch(function(e){
-      console.log('Error al reproducir:',e);
+    _fallbackAudio.play().then(function(){
+      console.log('▶️ Reproduciendo...');
+    }).catch(function(e){
+      console.log('❌ Error play:', e.message);
       urlIdx++;
       tryUrl();
     });
@@ -2225,6 +2243,15 @@ function playCurrentWord(){
         },delay);
       });
     },900);
+  });
+}
+
+function testAudio(){
+  if(!audioState.words.length)return;
+  var w=audioState.words[audioState.idx];
+  document.getElementById('audioStatus').textContent='🔊 Test...';
+  speakText(w.h,'zh-CN',0.75,function(){
+    document.getElementById('audioStatus').textContent='✓ Listo';
   });
 }
 
