@@ -1,12 +1,12 @@
-// Service Worker Chino Aventura - ResponsiveVoice TTS v7
-var CACHE_NAME = 'chino-aventura-v7-responsivevoice';
+// Service Worker Chino Aventura - Ad Blocker v8
+var CACHE_NAME = 'chino-aventura-v8-no-ads';
 var urlsToCache = [
   '/Cerebro-Gonzalo-/chino_aventura.html',
   '/Cerebro-Gonzalo-/manifest.json'
 ];
 
 self.addEventListener('install', function(event) {
-  console.log('SW Install v7 - ResponsiveVoice TTS');
+  console.log('SW Install v8 - Ad Blocker');
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(urlsToCache);
@@ -16,7 +16,7 @@ self.addEventListener('install', function(event) {
 });
 
 self.addEventListener('activate', function(event) {
-  console.log('SW Activate v7 - Cleaning old caches');
+  console.log('SW Activate v8 - Cleaning old caches');
   event.waitUntil(
     caches.keys().then(function(names) {
       return Promise.all(
