@@ -5,40 +5,31 @@ var urlsToCache = [
   '/Cerebro-Gonzalo-/manifest.json'
 ];
 self.addEventListener('install', function(event) {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return Promise.all(urlsToCache.map(function(url) {
-        return fetch(new Request(url, {cache: 'no-cache'})).then(function(r){ return cache.put(url, r); });
+        return fetch(url + '?_=' + Date.now(), {cache: 'no-store'}).then(function(r){ return cache.put(url, r); }).catch(function(){});
       }));
     })
   );
-  self.skipWaiting();
 });
 self.addEventListener('activate', function(event) {
   event.waitUntil(
     caches.keys().then(function(names) {
-      return Promise.all(names.filter(function(n){ return n !== CACHE_NAME; }).map(function(n){ return caches.delete(n); }));
-    })
+      return Promise.all(names.map(function(n){ if(n !== CACHE_NAME) return caches.delete(n); }));
+    }).then(function(){ return self.clients.claim(); })
   );
-  self.clients.claim();
 });
 self.addEventListener('fetch', function(event) {
-  var url = event.request.url;
-  if (url.endsWith('.html') || url.endsWith('.json')) {
-    event.respondWith(
-      fetch(new Request(event.request, {cache: 'no-cache'})).then(function(r) {
-        caches.open(CACHE_NAME).then(function(c){ c.put(event.request, r.clone()); });
-        return r;
-      }).catch(function(){ return caches.match(event.request); })
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request).then(function(cached) {
-        return cached || fetch(event.request).then(function(r) {
-          caches.open(CACHE_NAME).then(function(c){ c.put(event.request, r.clone()); });
-          return r;
-        });
-      })
-    );
-  }
+  if (event.request.method !== 'GET') return;
+  event.respondWith(
+    fetch(event.request, {cache: 'no-store'}).then(function(r) {
+      if(r && r.status === 200){
+        var rc = r.clone();
+        caches.open(CACHE_NAME).then(function(c){ c.put(event.request, rc); });
+      }
+      return r;
+    }).catch(function(){ return caches.match(event.request); })
+  );
 });
