@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Chino Aventura">
 <link rel="manifest" href="manifest.json">
 <script>
-if('serviceWorker' in navigator && !location.hostname.includes('claudeusercontent') && location.protocol!=='file:'){
+if('serviceWorker' in navigator && !location.hostname.includes('claudeusercontent')){
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){r.update();}).catch(function(e){console.log('SW failed',e)});
 }
 </script>
@@ -183,7 +183,7 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
 @keyframes fadeOut{to{opacity:0;transform:translateY(-10px)}}
 .section-title{font-family:'Noto Serif SC',serif;font-size:1.2rem;color:var(--gold);font-weight:700;text-align:center;flex:1}
 </style>
-<script src="https://code.responsivevoice.org/responsivevoice.js" async></script>
+<script src="https://code.responsivevoice.org/responsivevoice.js"></script>
 </head>
 <body>
 <script>
@@ -322,9 +322,6 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
     </div>
     <div class="menu-btn" onclick="show('s-frases');initFrases()">
       <div class="icon">💬</div><div class="label">Frases</div><div class="desc">Frases del día</div>
-    </div>
-    <div class="menu-btn" onclick="show('s-ciudades');initCiudades()">
-      <div class="icon">🏙️</div><div class="label">Ciudades</div><div class="desc">China y sus lugares</div>
     </div>
     <div class="menu-btn" onclick="show('s-conv');initConv()">
       <div class="icon">🗺️</div><div class="label">Conversaciones</div><div class="desc">Situaciones reales</div>
@@ -752,12 +749,6 @@ body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;mi
     <button class="btn btn-primary" onclick="nextCultura()" style="flex:1;padding:12px">Siguiente →</button>
   </div>
 </div>
-
-<!-- CIUDADES -->
-<div id="s-ciudades" class="screen">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <button class="back-btn" onclick="goMenu()">✕ Salir</button>
-    <div class="section-title">🏙️ Ciudades de China</div>
     <div style="font-size:.85rem;color:var(--muted)"><span id="ciudIdx">1</span>/<span id="ciudTotal">1</span></div>
   </div>
   <div class="flip-scene" onclick="flipCiudad()">
@@ -1974,37 +1965,6 @@ function flipCultura(){document.getElementById('flipCultura').classList.toggle('
 function nextCultura(){cultState.idx=cultState.idx<cultState.cards.length-1?cultState.idx+1:0;renderCultura();}
 function prevCultura(){cultState.idx=cultState.idx>0?cultState.idx-1:cultState.cards.length-1;renderCultura();}
 
-/* ── CIUDADES ── */
-const CIUDADES=[
-  {emoji:"🏛️",nombre:"Pekín",hanzi:"北京",p:"Běijīng",info:"La capital de China. Hogar de la Ciudad Prohibida y la Plaza de Tiananmen. Significa 'Capital del Norte'.",dato:"🏯 La Ciudad Prohibida tiene 9.999 habitaciones"},
-  {emoji:"🌆",nombre:"Shanghái",hanzi:"上海",p:"Shànghǎi",info:"La ciudad más moderna con 26 millones de habitantes. Centro financiero mundial. Su nombre significa 'sobre el mar'.",dato:"💹 Es el puerto de contenedores más activo del mundo"},
-  {emoji:"🐼",nombre:"Chengdu",hanzi:"成都",p:"Chéngdū",info:"Capital de Sichuan, famosa por sus pandas gigantes y cocina picante. Conocida como 'la ciudad del ocio'.",dato:"🐼 Hogar del Centro de Investigación del Panda Gigante"},
-  {emoji:"🏮",nombre:"Xián",hanzi:"西安",p:"Xī'ān",info:"Una de las ciudades más antiguas del mundo. Aquí está el Ejército de Terracota. Punto de inicio de la Ruta de la Seda.",dato:"⚔️ Los 8.000 guerreros de terracota la hicieron famosa"},
-  {emoji:"🌸",nombre:"Hangzhou",hanzi:"杭州",p:"Hángzhōu",info:"Considerada una de las ciudades más bellas de China por el Lago del Oeste 西湖. Sede de Alibaba.",dato:"🍵 Produce el mejor té verde del mundo"},
-  {emoji:"🏔️",nombre:"Guilin",hanzi:"桂林",p:"Guìlín",info:"Famosa por sus montañas de karst. Es el paisaje que aparece en los billetes de 20 yuanes.",dato:"💴 Su paisaje está en el billete de 20 yuanes"},
-  {emoji:"🌊",nombre:"Hong Kong",hanzi:"香港",p:"Xiānggǎng",info:"Región Administrativa Especial. Significa 'Puerto Fragante'. Fusión de cultura china y occidental.",dato:"🎬 Es donde nació el cine de kung fu"},
-  {emoji:"🏙️",nombre:"Chongqing",hanzi:"重庆",p:"Chóngqìng",info:"La ciudad más grande del mundo por área municipal. Ciudad de montaña junto al río Yangtsé. Famosa por su hot pot.",dato:"🌶️ Inventó el Hot Pot más picante del mundo"},
-  {emoji:"🏖️",nombre:"Sanya",hanzi:"三亚",p:"Sānyà",info:"El destino tropical de China en la isla de Hainan. El 'Hawaii chino'.",dato:"🌴 La única ciudad tropical de China continental"},
-  {emoji:"🌿",nombre:"Lijiang",hanzi:"丽江",p:"Lìjiāng",info:"Ciudad antigua Patrimonio de la UNESCO. Hogar del pueblo Naxi con escritura pictográfica única.",dato:"📜 Tiene la única escritura pictográfica viva del mundo"}
-];
-let ciudState={idx:0};
-function initCiudades(){ciudState.idx=0;document.getElementById('ciudTotal').textContent=CIUDADES.length;renderCiudad();}
-function renderCiudad(){
-  const d=CIUDADES[ciudState.idx];
-  document.getElementById('ciudIdx').textContent=ciudState.idx+1;
-  document.getElementById('flipCiudad').classList.remove('flipped');
-  document.getElementById('ciudEmoji').textContent=d.emoji;
-  document.getElementById('ciudNombre').textContent=d.nombre;
-  document.getElementById('ciudHanzi').textContent=d.hanzi;
-  document.getElementById('ciudEmojiBig').textContent=d.emoji;
-  document.getElementById('ciudNombreBack').textContent=d.nombre+' '+d.hanzi;
-  document.getElementById('ciudPinyin').textContent=d.p;
-  document.getElementById('ciudInfo').textContent=d.info;
-  document.getElementById('ciudDato').textContent='💡 '+d.dato;
-}
-function flipCiudad(){document.getElementById('flipCiudad').classList.toggle('flipped');}
-function nextCiudad(){ciudState.idx=ciudState.idx<CIUDADES.length-1?ciudState.idx+1:0;renderCiudad();}
-function prevCiudad(){ciudState.idx=ciudState.idx>0?ciudState.idx-1:CIUDADES.length-1;renderCiudad();}
 
 /* ── CONVERSACIONES ── */
 const CONV={
