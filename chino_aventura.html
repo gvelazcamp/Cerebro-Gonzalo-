@@ -1361,21 +1361,48 @@ function flashBtn(btn){
 }
 var _fallbackAudio=null;
 function _gtts(text,lang,rate,cb){
-  if(_fallbackAudio){try{_fallbackAudio.pause();_fallbackAudio.src='';}catch(e){}}
+  // Pausar y limpiar audio anterior completamente
+  if(_fallbackAudio){
+    try{
+      _fallbackAudio.pause();
+      _fallbackAudio.onended=null;
+      _fallbackAudio.onerror=null;
+      _fallbackAudio.src='';
+      _fallbackAudio.load();
+    }catch(e){}
+  }
   var urls=[
     'https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl='+encodeURIComponent(lang)+'&q='+encodeURIComponent(text),
     'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl='+encodeURIComponent(lang)+'&q='+encodeURIComponent(text)
   ];
   var idx=0;
+  var callbackFired=false;
   function tryNext(){
-    if(idx>=urls.length){if(cb)cb();return;}
+    if(idx>=urls.length){
+      if(cb&&!callbackFired){callbackFired=true;cb();}
+      return;
+    }
     _fallbackAudio=new Audio(urls[idx]);
     _fallbackAudio.setAttribute('playsinline','');
     _fallbackAudio.volume=1;
     if(rate&&rate!==1)try{_fallbackAudio.playbackRate=rate;}catch(e){}
-    if(cb)_fallbackAudio.onended=function(){setTimeout(cb,300);};
-    _fallbackAudio.onerror=function(){idx++;tryNext();};
-    _fallbackAudio.play().then(function(){}).catch(function(){idx++;tryNext();});
+    
+    var audioFired=false;
+    _fallbackAudio.onended=function(){
+      if(!audioFired){
+        audioFired=true;
+        if(cb&&!callbackFired){callbackFired=true;setTimeout(cb,300);}
+      }
+    };
+    _fallbackAudio.onerror=function(){
+      idx++;
+      tryNext();
+    };
+    
+    _fallbackAudio.play().then(function(){}).catch(function(){
+      idx++;
+      tryNext();
+    });
   }
   tryNext();
 }
@@ -2163,8 +2190,21 @@ function startAudioMode(){
 function stopAudioMode(){
   audioState.playing=false;
   if(audioState.timer){clearTimeout(audioState.timer);audioState.timer=null;}
-  if(window.speechSynthesis)window.speechSynthesis.cancel();
-  if(_fallbackAudio){try{_fallbackAudio.pause();_fallbackAudio=null;}catch(e){}}
+  // Cancelar speechSynthesis
+  if(window.speechSynthesis){
+    window.speechSynthesis.cancel();
+  }
+  // Pausar y limpiar fallback audio
+  if(_fallbackAudio){
+    try{
+      _fallbackAudio.pause();
+      _fallbackAudio.onended=null;
+      _fallbackAudio.onerror=null;
+      _fallbackAudio.src='';
+      _fallbackAudio.load();
+      _fallbackAudio=null;
+    }catch(e){}
+  }
   releaseWakeLock();
   document.getElementById('audioPlayBtn').textContent='▶ Iniciar';
   document.getElementById('audioPlayBtn').style.background='linear-gradient(135deg,#4cc9f0,#0077aa)';
@@ -2202,16 +2242,51 @@ function playCurrentWord(){
 }
 
 function speakText(text,lang,rate,callback){
-  if(!window.speechSynthesis||!window.speechSynthesis.getVoices().length){_gtts(text,lang,rate,callback);return;}
-  window.speechSynthesis.cancel();
+  // Cancelar absolutamente todo audio anterior
+  if(window.speechSynthesis){
+    window.speechSynthesis.cancel();
+  }
+  if(_fallbackAudio){
+    try{
+      _fallbackAudio.pause();
+      _fallbackAudio.onended=null;
+      _fallbackAudio.onerror=null;
+      _fallbackAudio.src='';
+      _fallbackAudio.load();
+    }catch(e){}
+  }
+  
+  // Usar Web Speech API si está disponible, sino fallback
+  if(!window.speechSynthesis||!window.speechSynthesis.getVoices().length){
+    _gtts(text,lang,rate,callback);
+    return;
+  }
+  
+  // Pequeño delay para asegurar que speechSynthesis está limpio
   setTimeout(function(){
     var u=new SpeechSynthesisUtterance(text);
-    u.lang=lang;u.rate=rate;u.pitch=1;u.volume=1;
+    u.lang=lang;
+    u.rate=rate;
+    u.pitch=1;
+    u.volume=1;
     if(lang==='zh-CN'&&_zhVoice)u.voice=_zhVoice;
-    u.onend=function(){if(callback)setTimeout(callback,300);};
-    u.onerror=function(){if(callback)callback();};
+    
+    var callbackFired=false;
+    u.onend=function(){
+      if(!callbackFired){
+        callbackFired=true;
+        if(callback)setTimeout(callback,300);
+      }
+    };
+    u.onerror=function(){
+      if(!callbackFired){
+        callbackFired=true;
+        if(callback)callback();
+      }
+    };
+    
     window.speechSynthesis.speak(u);
-  },150);
+  },100);
 }
 
 function audioNext(){
