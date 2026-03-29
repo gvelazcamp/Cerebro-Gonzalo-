@@ -1,12 +1,12 @@
-// Service Worker Chino Aventura - UI Fix + Audio Cleanup v10
-var CACHE_NAME = 'chino-aventura-v10-ui-fix';
+// Service Worker Chino Aventura - Flash Header Fix v11
+var CACHE_NAME = 'chino-aventura-v11-header-fix';
 var urlsToCache = [
   '/Cerebro-Gonzalo-/chino_aventura.html',
   '/Cerebro-Gonzalo-/manifest.json'
 ];
 
 self.addEventListener('install', function(event) {
-  console.log('SW Install v10 - UI Fix + Audio Cleanup');
+  console.log('SW Install v11 - Flash Header Fix');
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(urlsToCache);
@@ -16,7 +16,7 @@ self.addEventListener('install', function(event) {
 });
 
 self.addEventListener('activate', function(event) {
-  console.log('SW Activate v10 - Cleaning old caches');
+  console.log('SW Activate v11 - Cleaning old caches');
   event.waitUntil(
     caches.keys().then(function(names) {
       return Promise.all(
