@@ -1,12 +1,12 @@
-// Service Worker Chino Aventura - Audio + UI Fix v6
-var CACHE_NAME = 'chino-aventura-v6-audio-ui';
+// Service Worker Chino Aventura - ResponsiveVoice TTS v7
+var CACHE_NAME = 'chino-aventura-v7-responsivevoice';
 var urlsToCache = [
   '/Cerebro-Gonzalo-/chino_aventura.html',
   '/Cerebro-Gonzalo-/manifest.json'
 ];
 
 self.addEventListener('install', function(event) {
-  console.log('SW Install v6 - Audio + UI Fix');
+  console.log('SW Install v7 - ResponsiveVoice TTS');
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(urlsToCache);
@@ -16,7 +16,7 @@ self.addEventListener('install', function(event) {
 });
 
 self.addEventListener('activate', function(event) {
-  console.log('SW Activate v6 - Cleaning old caches');
+  console.log('SW Activate v7 - Cleaning old caches');
   event.waitUntil(
     caches.keys().then(function(names) {
       return Promise.all(
