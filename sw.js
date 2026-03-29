@@ -1,12 +1,12 @@
-// Service Worker Chino Aventura - Anti-Ad Brutal v9
-var CACHE_NAME = 'chino-aventura-v9-no-ads-brutal';
+// Service Worker Chino Aventura - UI Fix + Audio Cleanup v10
+var CACHE_NAME = 'chino-aventura-v10-ui-fix';
 var urlsToCache = [
   '/Cerebro-Gonzalo-/chino_aventura.html',
   '/Cerebro-Gonzalo-/manifest.json'
 ];
 
 self.addEventListener('install', function(event) {
-  console.log('SW Install v9 - Anti-Ad Brutal');
+  console.log('SW Install v10 - UI Fix + Audio Cleanup');
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(urlsToCache);
@@ -16,7 +16,7 @@ self.addEventListener('install', function(event) {
 });
 
 self.addEventListener('activate', function(event) {
-  console.log('SW Activate v9 - Cleaning old caches');
+  console.log('SW Activate v10 - Cleaning old caches');
   event.waitUntil(
     caches.keys().then(function(names) {
       return Promise.all(
