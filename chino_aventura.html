@@ -1820,7 +1820,8 @@ function checkCompletar(chosen,q,btn){
     const tip=q.ops.find(o=>o.h===q.blank);
     const correctOp=q.ops.find(o=>o.h===q.blank);
     fb.className='feedback ok';
-    fb.innerHTML='✅ ¡Correcto! <span style="font-size:1.2rem;color:var(--gold)">'+q.blank+'</span> = <strong>'+(correctOp?correctOp.e:q.blankEsp)+'</strong>'+(player.racha>1?' 🔥 x'+player.racha:'');
+    fb.innerHTML='✅ ¡Correcto! <span style="font-size:1.2rem;color:var(--gold)">'+q.blank+'</span> = <strong>'+(correctOp?correctOp.e:q.blankEsp)+'</strong>'+(player.racha>1?' 🔥 x'+player.racha:'')+' <button onclick="speakHanzi(\''+q.blank+'\',this)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:3px 10px;color:#fff;font-size:.8rem;cursor:pointer;margin-left:6px">🔊</button>';
+    speakHanzi(q.blank);
     if(pip)pip.style.background='var(--green)';
     if(player.racha>=3){showDuo(q.blank+' = '+q.blankEsp);}
   } else {
@@ -2426,11 +2427,11 @@ const COMPLETAR_DATA = {
     {esp:"¿___ pagar con tarjeta?",      hanzi:"___ 刷卡吗？",     blank:"可以",blankEsp:"Puedo",     blankP:"kěyǐ",   p:"___ shuā kǎ ma?",           ops:[{h:"可以",e:"Puedo"},{h:"不能",e:"No puedo"},{h:"应该",e:"Debería"},{h:"想",e:"Quiero"}]},
     {esp:"___ la cuenta, por favor",     hanzi:"___ 买单",         blank:"请", blankEsp:"Tráigame",   blankP:"qǐng",   p:"___ mǎi dān",               ops:[{h:"请",e:"Por favor"},{h:"谢谢",e:"Gracias"},{h:"对不起",e:"Perdón"},{h:"你好",e:"Hola"}]},
     {esp:"Habla un poco más ___",        hanzi:"请你说 ___ 一点",  blank:"慢", blankEsp:"despacio",    blankP:"màn",    p:"qǐng nǐ shuō ___ yīdiǎn",  ops:[{h:"慢",e:"despacio"},{h:"快",e:"rápido"},{h:"大",e:"fuerte"},{h:"小",e:"suave"}]},
-    {esp:"¿___ está la estación?",       hanzi:"地铁站 ___ 哪里？", blank:"在", blankEsp:"Dónde",       blankP:"zài",    p:"dìtiě zhàn ___ nǎlǐ?",     ops:[{h:"在",e:"está"},{h:"是",e:"es"},{h:"有",e:"hay"},{h:"去",e:"va"}]},
+    {esp:"La estación ___ por aquí",      hanzi:"地铁站 ___ 哪里？", blank:"在", blankEsp:"está",       blankP:"zài",    p:"dìtiě zhàn ___ nǎlǐ?",     ops:[{h:"在",e:"está"},{h:"是",e:"es"},{h:"有",e:"hay"},{h:"去",e:"va"}]},
     {esp:"¿___ hay descuento?",          hanzi:"___ 有打折吗？",   blank:"有没有",blankEsp:"Acaso",   blankP:"yǒuméiyǒu",p:"___ yǒu dǎzhé ma?",        ops:[{h:"有没有",e:"¿Hay?"},{h:"可以",e:"¿Puedo?"},{h:"什么",e:"¿Qué?"},{h:"为什么",e:"¿Por qué?"}]},
     {esp:"Quiero ir ___",                hanzi:"我想 ___ 天安门",  blank:"去", blankEsp:"a Tiananmen", blankP:"qù",     p:"wǒ xiǎng ___ Tiān'ānmén",  ops:[{h:"去",e:"ir a"},{h:"来",e:"venir a"},{h:"看",e:"ver"},{h:"买",e:"comprar"}]},
-    {esp:"¿___ está el baño?",           hanzi:"洗手间 ___ 哪里？",blank:"在", blankEsp:"Dónde",       blankP:"zài",    p:"xǐshǒujiān ___ nǎlǐ?",     ops:[{h:"在",e:"está"},{h:"是",e:"es"},{h:"有",e:"hay"},{h:"去",e:"va"}]},
-    {esp:"Habla más ___",                hanzi:"请 ___ 说",        blank:"慢慢",blankEsp:"despacio",   blankP:"mànmàn", p:"qǐng ___ shuō",             ops:[{h:"慢慢",e:"despacio"},{h:"快快",e:"rápido"},{h:"大声",e:"fuerte"},{h:"小声",e:"suave"}]},
+    {esp:"¿Cuánto tarda ___?",           hanzi:"___ 需要多久？",    blank:"送达",blankEsp:"la entrega",  blankP:"sòngdá", p:"___ xūyào duō jiǔ?",        ops:[{h:"送达",e:"la entrega"},{h:"生产",e:"producción"},{h:"检验",e:"inspección"},{h:"付款",e:"el pago"}]},
+    {esp:"¿Puedo ver ___?",              hanzi:"我可以看 ___ 吗？",  blank:"菜单",blankEsp:"el menú",    blankP:"càidān", p:"wǒ kěyǐ kàn ___ ma?",       ops:[{h:"菜单",e:"el menú"},{h:"地图",e:"el mapa"},{h:"账单",e:"la cuenta"},{h:"价格",e:"el precio"}]},
   ],
   2: [
     {esp:"¿___ es la cantidad mínima?",  hanzi:"___ 是最小订购量？",blank:"什么",blankEsp:"Cuál",    blankP:"shénme", p:"___ shì zuì xiǎo dìnggòu liàng?",ops:[{h:"什么",e:"Cuál es"},{h:"多少",e:"Cuánto"},{h:"为什么",e:"Por qué"},{h:"哪里",e:"Dónde"}]},
@@ -2489,6 +2490,23 @@ function renderCompletar(){
   document.getElementById('compPinyin').textContent=q.p;
   document.getElementById('compFeedback').style.display='none';
   document.getElementById('compNext').style.display='none';
+  // Add audio button
+  var compAudioWrap=document.getElementById('compAudioWrap');
+  if(!compAudioWrap){
+    compAudioWrap=document.createElement('div');
+    compAudioWrap.id='compAudioWrap';
+    compAudioWrap.style.cssText='text-align:center;margin-top:-8px';
+    var compAudioBtn=document.createElement('button');
+    compAudioBtn.style.cssText='background:rgba(255,255,255,.08);border:1px solid #333;border-radius:20px;padding:7px 18px;color:#ccc;font-size:.85rem;cursor:pointer';
+    compAudioBtn.innerHTML='🔊 Escuchar';
+    compAudioBtn.onclick=function(){
+      var q=compState.qs[compState.idx];
+      if(q)speakHanzi(q.blank);
+    };
+    compAudioWrap.appendChild(compAudioBtn);
+    var compOpts=document.getElementById('compOpciones');
+    if(compOpts)compOpts.parentNode.insertBefore(compAudioWrap,compOpts);
+  }
   const opDiv=document.getElementById('compOpciones');opDiv.innerHTML='';
   shuffle(q.ops).forEach((op,i)=>{
     const btn=document.createElement('button');btn.className='opt-btn';
