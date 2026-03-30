@@ -1821,7 +1821,7 @@ function checkCompletar(chosen,q,btn){
     const correctOp=q.ops.find(o=>o.h===q.blank);
     fb.className='feedback ok';
     fb.innerHTML='✅ ¡Correcto! <span style="font-size:1.2rem;color:var(--gold)">'+q.blank+'</span> = <strong>'+(correctOp?correctOp.e:q.blankEsp)+'</strong>'+(player.racha>1?' 🔥 x'+player.racha:'')+' <button onclick="speakHanzi(\''+q.blank+'\',this)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:3px 10px;color:#fff;font-size:.8rem;cursor:pointer;margin-left:6px">🔊</button>';
-    speakHanzi(q.blank);
+    speakHanzi(q.hanzi.replace('___',q.blank));
     if(pip)pip.style.background='var(--green)';
     if(player.racha>=3){showDuo(q.blank+' = '+q.blankEsp);}
   } else {
@@ -2501,7 +2501,10 @@ function renderCompletar(){
     compAudioBtn.innerHTML='🔊 Escuchar';
     compAudioBtn.onclick=function(){
       var q=compState.qs[compState.idx];
-      if(q)speakHanzi(q.blank);
+      if(q){
+        var full=q.hanzi.replace('___',q.blank);
+        speakHanzi(full);
+      }
     };
     compAudioWrap.appendChild(compAudioBtn);
     var compOpts=document.getElementById('compOpciones');
