@@ -3217,20 +3217,7 @@ const MUNDOS_H=[
   ],
   historia:'La noche de karaoke fue épica. Tu socio Zhang quedó impresionado con tu actitud. La relación 关系 se fortaleció. ¡Negocio casi cerrado! 🎤🍻'},
 
-    {id:'n2boss',tipo:'boss',titulo:'💀 Desafío: Regateo en la Feria',emoji:'⚡',npc:{av:'👹',nm:'Vendedor de la Feria'},lugar:'Feria de Cantón — Zona de negociación',xp:85,
-  pregs:[
-    {zh:'最低多少？',py:'zuìdī duōshǎo?',q:'¿Qué preguntás para obtener el precio mínimo?',
-     opts:[{t:'¿Cuál es tu precio mínimo?',zh:'最低多少',ok:true},{t:'¿Cuánto cuesta en total?',zh:'一共多少',ok:false},{t:'¿Tenés algo más barato?',zh:'有更便宜',ok:false},{t:'¿Cuánto me hacés de rebaja?',zh:'减多少',ok:false}],
-     fok:'🔥 最低 = el más bajo/mínimo · 多少 = cuánto. ¡Directo al punto!',ffail:'最低 = mínimo/lo más bajo + 多少 = cuánto → precio mínimo'},
-    {zh:'我们都是朋友，给你个好价格',py:'wǒmen dōu shì péngyǒu, gěi nǐ gè hǎo jiàgé',q:'El vendedor dice: "somos amigos, te doy buen precio". ¿Qué significa?',
-     opts:[{t:'Técnica de presión: finge amistad para no bajar',zh:'心理战',ok:true},{t:'Realmente te quiere dar precio especial',zh:'真心话',ok:false},{t:'Ya bajó todo lo que podía',zh:'价格最低',ok:false},{t:'Sos su cliente favorito',zh:'最爱客户',ok:false}],
-     fok:'🧠 ¡Correcto! "Somos amigos" es una táctica clásica china para crear presión emocional. ¡No caigas!',ffail:'En el mercado, "somos amigos" es presión psicológica. Sé amable pero firme en el precio.'},
-    {zh:'好，成交！',py:'hǎo, chéngjião!',q:'¿Qué significa cuando el vendedor dice esto?',
-     opts:[{t:'¡Trato hecho!',zh:'成交',ok:true},{t:'¡Imposible!',zh:'不可能',ok:false},{t:'Lo pienso...',zh:'想想',ok:false},{t:'¡Otro día!',zh:'下次',ok:false}],
-     fok:'✅ 成交 = trato hecho / deal closed. ¡La palabra más dulce en el regateo!',ffail:'成交 = trato cerrado/deal. Cuando escuchás esto, ¡ganaste la negociación!'}
-  ],
-  historia:'¡Trato cerrado! Conseguiste el mejor precio del mercado. Los otros vendedores te aplauden. Desbloqueaste el Mundo 3: Feria Cantón. 🏆'}
-]},
+  ]},
 
 {id:'m3',icon:'🏭',titulo:'Mundo 3 · Feria de Cantón',desc:'La feria de importación más grande del mundo',color:'#4cc9f0',bloqueado:true,niveles:[
   {id:'n3a',tipo:'dlg',titulo:'Registro en la feria',emoji:'📋',npc:{av:'👩‍💼',nm:'Staff Sra. Zhang'},lugar:'Canton Fair, Guangzhou — Entrada principal',xp:60,
@@ -3283,6 +3270,20 @@ const MUNDOS_H=[
      fok:'🌟 定金 = depósito/adelanto · 见提单 = contra conocimiento de embarque. ¡Estándar del comercio China!',ffail:'定金 = adelanto · 提单 = B/L (conocimiento de embarque) → 30% ahora, 70% cuando está embarcado'}
   ],
   historia:'Cerraste condiciones comerciales con la Sra. Wang. 30/70 T/T, precio FOB Guangzhou. ¡Tu primer contrato internacional está casi listo! 📜'},
+
+  {id:'n3regateo',tipo:'boss',titulo:'💀 Desafío: Regateo en la Feria',emoji:'⚡',npc:{av:'👹',nm:'Vendedor de la Feria'},lugar:'Feria de Cantón — Zona de negociación',xp:85,
+  pregs:[
+    {zh:'最低多少？',py:'zuìdī duōshǎo?',q:'¿Qué preguntás para obtener el precio mínimo?',
+     opts:[{t:'¿Cuál es tu precio mínimo?',zh:'最低多少',ok:true},{t:'¿Cuánto cuesta en total?',zh:'一共多少',ok:false},{t:'¿Tenés algo más barato?',zh:'有更便宜',ok:false},{t:'¿Cuánto me hacés de rebaja?',zh:'减多少',ok:false}],
+     fok:'🔥 最低 = el más bajo/mínimo · 多少 = cuánto. ¡Directo al punto!',ffail:'最低 = mínimo/lo más bajo + 多少 = cuánto → precio mínimo'},
+    {zh:'我们都是朋友，给你个好价格',py:'wǒmen dōu shì péngyǒu, gěi nǐ gè hǎo jiàgé',q:'El vendedor dice: "somos amigos, te doy buen precio". ¿Qué significa?',
+     opts:[{t:'Técnica de presión: finge amistad para no bajar',zh:'心理战',ok:true},{t:'Realmente te quiere dar precio especial',zh:'真心话',ok:false},{t:'Ya bajó todo lo que podía',zh:'价格最低',ok:false},{t:'Sos su cliente favorito',zh:'最爱客户',ok:false}],
+     fok:'🧠 ¡Correcto! "Somos amigos" es una táctica clásica china para crear presión emocional. ¡No caigas!',ffail:'En el mercado, "somos amigos" es presión psicológica. Sé amable pero firme en el precio.'},
+    {zh:'好，成交！',py:'hǎo, chéngjião!',q:'¿Qué significa cuando el vendedor dice esto?',
+     opts:[{t:'¡Trato hecho!',zh:'成交',ok:true},{t:'¡Imposible!',zh:'不可能',ok:false},{t:'Lo pienso...',zh:'想想',ok:false},{t:'¡Otro día!',zh:'下次',ok:false}],
+     fok:'✅ 成交 = trato hecho / deal closed. ¡La palabra más dulce en el regateo!',ffail:'成交 = trato cerrado/deal. Cuando escuchás esto, ¡ganaste la negociación!'}
+  ],
+  historia:'¡Trato cerrado! Conseguiste el mejor precio del mercado. Los otros vendedores te aplauden. Desbloqueaste el Mundo 3: Feria Cantón. 🏆'},
 
   {id:'n3boss',tipo:'boss',titulo:'💀 Desafío Final: Cierre del contrato',emoji:'⚡',npc:{av:'👹',nm:'Director de Exportaciones'},lugar:'Oficina corporativa, Guangzhou',xp:110,
   pregs:[
