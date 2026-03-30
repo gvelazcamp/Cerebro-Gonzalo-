@@ -3077,7 +3077,52 @@ const MUNDOS_H=[
   ],
   historia:'Tenés tu habitación con vista a Shanghai. Desde la ventana ves las luces de la ciudad. Mañana empezás tu aventura de negocios. 🌃'},
 
-  {id:'n1boss',tipo:'boss',titulo:'💀 Desafío: Números 1-100',emoji:'🔢',npc:{av:'👹',nm:'Guardián de los Números'},lugar:'Templo de los Números',xp:80,
+  {id:'n1c',tipo:'dlg',titulo:'En el taxi',emoji:'🚕',npc:{av:'🧔',nm:'Taxista Wang'},lugar:'Afuera del aeropuerto Pudong',xp:50,
+  pregs:[
+    {zh:'去哪里？',py:'qù nǎlǐ?',q:'¿Qué te pregunta el taxista?',
+     opts:[{t:'¿A dónde va?',zh:'去哪里',ok:true},{t:'¿Cuánto equipaje tiene?',zh:'多少行李',ok:false},{t:'¿Tiene efectivo?',zh:'有现金吗',ok:false},{t:'¿Es su primer viaje?',zh:'第一次来',ok:false}],
+     fok:'✅ 去 = ir · 哪里 = dónde. ¡La pregunta más común del taxista!',ffail:'去哪里 = ¿a dónde va? Básico para tomar un taxi en China.'},
+    {zh:'请到这个地址',py:'qǐng dào zhège dìzhǐ',q:'¿Cómo le decís al taxista la dirección?',
+     opts:[{t:'Por favor lléveme a esta dirección',zh:'请到这个地址',ok:true},{t:'Vaya rápido por favor',zh:'请快一点',ok:false},{t:'Pare aquí por favor',zh:'请停这里',ok:false},{t:'¿Cuánto cuesta?',zh:'多少钱',ok:false}],
+     fok:'✅ 请 = por favor · 到 = llegar a · 地址 = dirección',ffail:'请到这个地址 = por favor lléveme a esta dirección. ¡Mostrá el mapa si no saben el nombre!'},
+    {zh:'大概多少钱？',py:'dàgài duōshǎo qián?',q:'¿Cómo preguntás el precio aproximado?',
+     opts:[{t:'¿Cuánto cuesta más o menos?',zh:'大概多少钱',ok:true},{t:'¿Hay descuento?',zh:'有折扣吗',ok:false},{t:'¿Aceptan tarjeta?',zh:'可以刷卡吗',ok:false},{t:'¿Cuánto demora?',zh:'要多久',ok:false}],
+     fok:'🌟 大概 = aproximadamente · 多少钱 = ¿cuánto cuesta?',ffail:'大概 = aproximadamente · 多少 = cuánto · 钱 = dinero'},
+    {zh:'可以用微信支付吗？',py:'kěyǐ yòng wēixìn zhīfù ma?',q:'¿Qué preguntás para pagar con WeChat?',
+     opts:[{t:'¿Puedo pagar con WeChat Pay?',zh:'微信支付',ok:true},{t:'¿Tienen cámara de seguridad?',zh:'有摄像头吗',ok:false},{t:'¿Puedo pagar en dólares?',zh:'可以用美元',ok:false},{t:'¿Me da recibo?',zh:'给我收据',ok:false}],
+     fok:'✅ 微信支付 = WeChat Pay · ¡China es casi sin efectivo!',ffail:'微信 = WeChat · 支付 = pago. En China el 90% paga con el cel!'}
+  ],
+  historia:'El taxista te llevó al hotel por las autopistas de Shanghai. Las luces de la ciudad por la noche son increíbles. Ya manejás el taxi como un local. 🚕'},
+
+  {id:'n1d',tipo:'dlg',titulo:'Primeras compras',emoji:'🛒',npc:{av:'👩‍💼',nm:'Vendedora en tienda'},lugar:'Tienda de conveniencia, cerca del hotel',xp:55,
+  pregs:[
+    {zh:'这个多少钱？',py:'zhège duōshǎo qián?',q:'¿Cómo preguntás el precio?',
+     opts:[{t:'¿Cuánto cuesta esto?',zh:'多少钱',ok:true},{t:'¿Dónde está el baño?',zh:'厕所在哪',ok:false},{t:'¿Tienen más colores?',zh:'有别的颜色',ok:false},{t:'¿Es de calidad?',zh:'质量好吗',ok:false}],
+     fok:'✅ 这个 = esto · 多少钱 = ¿cuánto cuesta? ¡La frase más usada en China!',ffail:'这个多少钱 = ¿cuánto cuesta esto? ¡La aprenderás el primer día!'},
+    {zh:'有没有水？',py:'yǒuméiyǒu shuǐ?',q:'¿Cómo preguntás si tienen agua?',
+     opts:[{t:'¿Tienen agua?',zh:'有水',ok:true},{t:'¿El agua está fría?',zh:'水冷吗',ok:false},{t:'¿Cuántas botellas?',zh:'几瓶',ok:false},{t:'¿Es agua mineral?',zh:'矿泉水吗',ok:false}],
+     fok:'✅ 有没有 = ¿hay/tienen? · 水 = agua. ¡Fórmula mágica para preguntar si existe algo!',ffail:'有没有 = ¿hay? La fórmula: 有没有 + lo que buscás = pregunta perfecta'},
+    {zh:'给我一个袋子',py:'gěi wǒ yī gè dàizi',q:'¿Qué le pedís a la vendedora?',
+     opts:[{t:'Una bolsa por favor',zh:'一个袋子',ok:true},{t:'La cuenta por favor',zh:'买单',ok:false},{t:'El recibo',zh:'收据',ok:false},{t:'Un descuento',zh:'打折',ok:false}],
+     fok:'✅ 给我 = dame · 一个 = uno · 袋子 = bolsa',ffail:'给我 = dame · 袋子 = bolsa. En China las bolsas cuestan, ¡hay que pedirlas!'}
+  ],
+  historia:'Compraste agua y snacks para el hotel. La vendedora quedó sorprendida de que hablaras chino. +Reputación en China. 🛒'},
+
+  {id:'n1e',tipo:'dlg',titulo:'Saludos con el personal',emoji:'🤝',npc:{av:'👨‍💼',nm:'Gerente del hotel'},lugar:'Lobby del hotel, Shanghai',xp:60,
+  pregs:[
+    {zh:'您好！很高兴认识您',py:'nín hǎo! hěn gāoxìng rènshí nín',q:'¿Cómo saludás formalmente?',
+     opts:[{t:'Hola, encantado de conocerlo',zh:'很高兴认识',ok:true},{t:'Hola, ¿cómo está?',zh:'你好吗',ok:false},{t:'Buenos días señor',zh:'早上好先生',ok:false},{t:'Mucho gusto, soy de Argentina',zh:'我是阿根廷人',ok:false}],
+     fok:'✅ 很高兴 = muy contento · 认识 = conocer · 您 = usted (formal)',ffail:'很高兴认识您 = encantado de conocerlo. Forma MUY importante en negocios!'},
+    {zh:'请问，您贵姓？',py:'qǐngwèn, nín guìxìng?',q:'¿Qué te pregunta el gerente educadamente?',
+     opts:[{t:'¿Cuál es su apellido?',zh:'贵姓',ok:true},{t:'¿De dónde viene?',zh:'从哪来',ok:false},{t:'¿Cuánto tiempo se queda?',zh:'住几天',ok:false},{t:'¿Tiene reserva?',zh:'有预订',ok:false}],
+     fok:'🌟 贵姓 = forma elegante de preguntar el apellido. 贵 = honorable/precioso',ffail:'贵姓 = ¿su honorable apellido? Es la forma más educada de preguntar el nombre en China'},
+    {zh:'我姓冈萨雷斯，叫贡萨洛',py:'wǒ xìng gāng sà léi sī, jiào gòng sà luò',q:'¿Cómo te presentás en chino?',
+     opts:[{t:'Mi apellido es González, me llamo Gonzalo',zh:'姓+叫',ok:true},{t:'Soy de Uruguay',zh:'我是乌拉圭人',ok:false},{t:'Habla más despacio',zh:'说慢一点',ok:false},{t:'No entiendo chino',zh:'我不懂中文',ok:false}],
+     fok:'✅ 姓 = apellido · 叫 = llamarse. ¡Los chinos siempre preguntan apellido primero!',ffail:'En China: primero el apellido (姓), después el nombre (叫). ¡Al revés que en occidente!'}
+  ],
+  historia:'El gerente quedó impresionado. Te invitó al bar del hotel para hablar de negocios. Las relaciones 关系 empiezan así. 🤝'},
+
+    {id:'n1boss',tipo:'boss',titulo:'💀 Desafío: Números 1-100',emoji:'🔢',npc:{av:'👹',nm:'Guardián de los Números'},lugar:'Templo de los Números',xp:80,
   pregs:[
     {zh:'价格是多少？四十五元',py:'jiàgé shì duōshǎo? sìshíwǔ yuán',q:'¿Cuánto cuesta?',
      opts:[{t:'45 yuanes',zh:'四十五',ok:true},{t:'54 yuanes',zh:'五十四',ok:false},{t:'14 yuanes',zh:'十四',ok:false},{t:'40 yuanes',zh:'四十',ok:false}],
