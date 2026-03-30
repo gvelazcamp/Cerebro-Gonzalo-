@@ -2,28 +2,47 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+
 <meta name="theme-color" content="#0d0d0d">
 <meta name="description" content="Aprende chino mandarín para negocios e importación con China. Tarjetas, quiz, trazos y modo audio.">
+
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Chino Aventura">
+
 <link rel="manifest" href="manifest.json">
+
 <script>
-// NUCLEAR CACHE KILLER v1 — rompe el loop de SW viejo
+// NUCLEAR CACHE KILLER v2 — solo corre una vez y no rompe PWA
 (async function(){
-  if(!('serviceWorker' in navigator) || location.hostname.includes('claudeusercontent')) return;
+  if(!('serviceWorker' in navigator)) return;
+
+  const CACHE_FLAG = 'sw_clean_v1_done';
+
   try {
-    // 1. Borrar TODOS los caches
-    var keys = await caches.keys();
-    await Promise.all(keys.map(function(k){ return caches.delete(k); }));
-    // 2. Des-registrar TODOS los SW viejos
-    var regs = await navigator.serviceWorker.getRegistrations();
-    await Promise.all(regs.map(function(r){ return r.unregister(); }));
-    // 3. Registrar el nuevo SW limpio
-    var reg = await navigator.serviceWorker.register('sw.js?v=19', {updateViaCache:'none'});
-    reg.update();
-    navigator.serviceWorker.addEventListener('controllerchange', function(){ location.reload(); });
-  } catch(e){ console.log('SW setup error', e); }
+    // Ejecutar limpieza SOLO una vez
+    if (!localStorage.getItem(CACHE_FLAG)) {
+
+      // 1. Borrar caches viejos
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+
+      // 2. Desregistrar SW viejos
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r => r.unregister()));
+
+      localStorage.setItem(CACHE_FLAG, 'true');
+      console.log('SW limpio aplicado');
+    }
+
+    // 3. Registrar SW normal (estable)
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('SW registrado', reg))
+      .catch(err => console.log('SW error', err));
+
+  } catch(e){
+    console.log('SW setup error', e);
+  }
 })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
