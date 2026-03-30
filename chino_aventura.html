@@ -3556,6 +3556,8 @@ function renderPregH(){
   document.getElementById('hnScene').style.animation='none';
   void document.getElementById('hnScene').offsetWidth;
   document.getElementById('hnScene').style.animation='slideUp .3s ease';
+  // Auto-speak the Chinese phrase
+  setTimeout(function(){ speakHanzi(p.zh); }, 400);
 }
 
 function elegirH(opt,preg,btnEl){
@@ -4062,14 +4064,17 @@ try{
         <div class="npc-nm" id="hnNpcNm2">NPC</div>
       </div>
       <div class="bbl">
-        <div class="bbl-hanzi" id="hnBblZh">你好！</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="bbl-hanzi" id="hnBblZh">你好！</div>
+          <button onclick="speakHanzi(document.getElementById('hnBblZh').textContent,this)" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:5px 12px;color:#ccc;font-size:.8rem;cursor:pointer;flex-shrink:0;margin-left:8px">🔊</button>
+        </div>
         <div class="bbl-pinyin" id="hnBblPy">nǐ hǎo!</div>
       </div>
     </div>
   </div>
 
   <div class="q-box">
-    <div class="q-lbl">¿Qué significa?</div>
+    <div class="q-lbl">¿QUÉ TE DICE? → elegí la traducción</div>
     <div class="q-text" id="hnQTxt">Elegí la respuesta correcta:</div>
   </div>
 
