@@ -3172,7 +3172,52 @@ const MUNDOS_H=[
   ],
   historia:'Regateaste como un profesional y conseguiste 40% de descuento. El Sr. Ma quedó boquiabierto. Sos un verdadero comerciante. 💪'},
 
-  {id:'n2boss',tipo:'boss',titulo:'💀 Desafío: Regateo intenso',emoji:'⚡',npc:{av:'👹',nm:'Vendedor Astuto'},lugar:'Mercado de antigüedades',xp:85,
+  {id:'n2c',tipo:'dlg',titulo:'Leyendo el menú',emoji:'📋',npc:{av:'👨‍🍳',nm:'Mozo Li'},lugar:'Restaurante local, Shanghai',xp:50,
+  pregs:[
+    {zh:'有什么推荐？',py:'yǒu shénme tuījiàn?',q:'¿Cómo pedís una recomendación?',
+     opts:[{t:'¿Qué recomienda?',zh:'有推荐',ok:true},{t:'¿Cuál es el más barato?',zh:'哪个最便宜',ok:false},{t:'¿Tiene menú en inglés?',zh:'有英文菜单吗',ok:false},{t:'¿Qué es popular?',zh:'什么受欢迎',ok:false}],
+     fok:'✅ 有 = hay/tiene · 推荐 = recomendación. ¡El mozo siempre tiene favoritos!',ffail:'有什么推荐 = ¿qué recomiendan? Los mozos chinos aman recomendar sus especialidades.'},
+    {zh:'不要太辣，谢谢',py:'bú yào tài là, xièxiè',q:'¿Cómo pedís que no sea muy picante?',
+     opts:[{t:'No muy picante por favor',zh:'不要太辣',ok:true},{t:'Sin sal por favor',zh:'不要盐',ok:false},{t:'Sin aceite por favor',zh:'不要油',ok:false},{t:'Sin cebolla por favor',zh:'不要葱',ok:false}],
+     fok:'✅ 不要 = no quiero · 太 = demasiado · 辣 = picante. ¡Esencial en China!',ffail:'不要太辣 = no muy picante. 太辣 = demasiado picante. ¡Frase que te salva la vida!'},
+    {zh:'这个是什么做的？',py:'zhège shì shénme zuò de?',q:'¿Cómo preguntás los ingredientes?',
+     opts:[{t:'¿Con qué está hecho esto?',zh:'什么做的',ok:true},{t:'¿Es vegetariano?',zh:'是素食吗',ok:false},{t:'¿Tiene gluten?',zh:'有麸质吗',ok:false},{t:'¿Es fresco?',zh:'新鲜的吗',ok:false}],
+     fok:'🌟 是...做的 = está hecho de... · 什么 = qué. ¡Para saber qué comés!',ffail:'什么做的 = ¿hecho de qué? Útil para alergias o simplemente por curiosidad.'},
+    {zh:'再来一份！',py:'zài lái yī fèn!',q:'¿Cómo pedís otra porción de lo mismo?',
+     opts:[{t:'¡Otro igual!',zh:'再来一份',ok:true},{t:'¡La cuenta!',zh:'买单',ok:false},{t:'¡Está delicioso!',zh:'很好吃',ok:false},{t:'¡Traje takeaway!',zh:'打包',ok:false}],
+     fok:'✅ 再来 = traer otra vez · 一份 = una porción. ¡El mejor cumplido para el chef!',ffail:'再来一份 = otro igual. 再 = de nuevo · 来 = traer · 份 = porción'}
+  ],
+  historia:'Pediste como un experto. El chef salió a conocerte personalmente. Tu reputación gastronómica en China crece. 🍜'},
+
+  {id:'n2d',tipo:'dlg',titulo:'Alergias y restricciones',emoji:'⚠️',npc:{av:'👩‍🍳',nm:'Chef Wang'},lugar:'Restaurante gourmet, Shanghai',xp:55,
+  pregs:[
+    {zh:'我对海鲜过敏',py:'wǒ duì hǎixiān guòmǐn',q:'¿Cómo avisás que sos alérgico a los mariscos?',
+     opts:[{t:'Soy alérgico a los mariscos',zh:'对海鲜过敏',ok:true},{t:'No me gustan los mariscos',zh:'不喜欢海鲜',ok:false},{t:'Sin mariscos por favor',zh:'不要海鲜',ok:false},{t:'¿Tiene mariscos?',zh:'有海鲜吗',ok:false}],
+     fok:'✅ 对...过敏 = ser alérgico a... · 海鲜 = mariscos. ¡Puede salvar tu vida!',ffail:'过敏 = alergia. 对...过敏 = ser alérgico a algo. ¡Aprende esta antes de viajar!'},
+    {zh:'有素食选项吗？',py:'yǒu sùshí xuǎnxiàng ma?',q:'¿Cómo preguntás por opciones vegetarianas?',
+     opts:[{t:'¿Tienen opciones vegetarianas?',zh:'素食选项',ok:true},{t:'¿Tienen ensaladas?',zh:'有沙拉吗',ok:false},{t:'¿Sin carne?',zh:'没有肉',ok:false},{t:'¿Solo verduras?',zh:'只有蔬菜',ok:false}],
+     fok:'✅ 素食 = vegetariano · 选项 = opción/alternativa. ¡Útil para vegetarianos!',ffail:'素食 = comida vegetariana/budista. Muy común en China tener opciones 素食.'},
+    {zh:'打包，谢谢',py:'dǎbāo, xièxiè',q:'¿Cómo pedís para llevar lo que sobra?',
+     opts:[{t:'Para llevar, gracias',zh:'打包',ok:true},{t:'La cuenta',zh:'买单',ok:false},{t:'Más agua',zh:'多点水',ok:false},{t:'Otro plato',zh:'再来一份',ok:false}],
+     fok:'✅ 打包 = empacar para llevar (doggy bag). ¡Los chinos no desperdician comida!',ffail:'打包 = takeaway/para llevar. En China es muy normal y no da vergüenza pedirlo.'}
+  ],
+  historia:'Cenaste sin problemas a pesar de tus restricciones. El chef adaptó dos platos especialmente para vos. 🥗'},
+
+  {id:'n2e',tipo:'dlg',titulo:'El karaoke',emoji:'🎤',npc:{av:'😄',nm:'Tu socio chino Zhang'},lugar:'KTV privado, centro de Shanghai',xp:65,
+  pregs:[
+    {zh:'我们去唱歌吧！',py:'wǒmen qù chàng gē ba!',q:'¿Qué te propone tu socio?',
+     opts:[{t:'¡Vamos a cantar!',zh:'去唱歌',ok:true},{t:'¡Vamos a comer!',zh:'去吃饭',ok:false},{t:'¡Vamos a bailar!',zh:'去跳舞',ok:false},{t:'¡Vamos al bar!',zh:'去酒吧',ok:false}],
+     fok:'✅ 去 = vamos a · 唱歌 = cantar. El KTV es FUNDAMENTAL en los negocios chinos!',ffail:'唱歌 = cantar · 去 = ir. El karaoke privado (KTV) es donde se cierran los negocios en China!'},
+    {zh:'来，干杯！',py:'lái, gānbēi!',q:'¿Qué dice tu socio al alzar la copa?',
+     opts:[{t:'¡Salud! ¡Brindemos!',zh:'干杯',ok:true},{t:'¡Por los negocios!',zh:'为生意',ok:false},{t:'¡Por la amistad!',zh:'为友谊',ok:false},{t:'¡Un poco más!',zh:'再来一点',ok:false}],
+     fok:'🔥 干杯 = literalmente "secar la copa" = ¡salud! Hay que tomarlo de un sorbo.',ffail:'干杯 = cheers/salud. En China hay que tomar todo de un sorbo cuando dicen 干杯!'},
+    {zh:'我唱得不好，请多关照',py:'wǒ chàng de bù hǎo, qǐng duō guānzhào',q:'¿Cómo te presentás al cantar con modestia?',
+     opts:[{t:'No canto bien, cuídenme',zh:'唱得不好+关照',ok:true},{t:'Soy muy buen cantante',zh:'我唱得很好',ok:false},{t:'No quiero cantar',zh:'我不想唱',ok:false},{t:'Solo conozco canciones en español',zh:'只会西班牙语歌',ok:false}],
+     fok:'🌟 关照 = cuidar/ser gentil. La modestia 谦虚 es muy valorada en China!',ffail:'请多关照 = por favor tengan consideración. Es humildad estratégica — ¡los chinos lo adoran!'}
+  ],
+  historia:'La noche de karaoke fue épica. Tu socio Zhang quedó impresionado con tu actitud. La relación 关系 se fortaleció. ¡Negocio casi cerrado! 🎤🍻'},
+
+    {id:'n2boss',tipo:'boss',titulo:'💀 Desafío: Regateo en la Feria',emoji:'⚡',npc:{av:'👹',nm:'Vendedor de la Feria'},lugar:'Feria de Cantón — Zona de negociación',xp:85,
   pregs:[
     {zh:'最低多少？',py:'zuìdī duōshǎo?',q:'¿Qué preguntás para obtener el precio mínimo?',
      opts:[{t:'¿Cuál es tu precio mínimo?',zh:'最低多少',ok:true},{t:'¿Cuánto cuesta en total?',zh:'一共多少',ok:false},{t:'¿Tenés algo más barato?',zh:'有更便宜',ok:false},{t:'¿Cuánto me hacés de rebaja?',zh:'减多少',ok:false}],
