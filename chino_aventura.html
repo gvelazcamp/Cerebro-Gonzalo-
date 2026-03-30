@@ -1306,7 +1306,7 @@ function salirDelJuego(){
   document.getElementById('emailInput').value='';
   show('s-intro');
 }
-function goMenu(){updateHUD();show('s-menu');var fb=document.getElementById('historiaFixedExit');if(fb)fb.style.display='none';}
+function goMenu(){updateHUD();show('s-menu');}
 function exitGame(){if(desafioTimer){clearInterval(desafioTimer);desafioTimer=null;}goMenu()}
 function startGame(){player.nombre=document.getElementById('nameInput').value.trim()||'Dragón';updateHUD();show('s-menu')}
 
@@ -3289,8 +3289,7 @@ try{
 }catch(e){}
   buildMapH();
   show('s-historia');
-  var fb=document.getElementById('historiaFixedExit');if(fb)fb.style.display='block';
-}
+  }
 function saveHsProg(){try{localStorage.setItem('hs_prog',JSON.stringify(hs.prog));}catch(e){}}
 
 /* ═══════════════════════════════════════
@@ -3299,6 +3298,14 @@ function saveHsProg(){try{localStorage.setItem('hs_prog',JSON.stringify(hs.prog)
 function buildMapH(){
   var wrap=document.getElementById('hMapWrap');
   wrap.innerHTML='<div class="map-path"></div>';
+  var volverDiv=document.createElement('div');
+  volverDiv.style.cssText='position:relative;z-index:2;text-align:center;padding:10px 0 6px';
+  var volverB=document.createElement('button');
+  volverB.textContent='← Volver al menú';
+  volverB.onclick=function(){goMenu();};
+  volverB.style.cssText='background:rgba(255,255,255,.07);border:1px solid #444;color:var(--muted);font-family:Outfit,sans-serif;font-size:.85rem;padding:9px 24px;border-radius:22px;cursor:pointer';
+  volverDiv.appendChild(volverB);
+  wrap.appendChild(volverDiv);
   var pos=['right','left','center','right','left'];
   var gIdx=0;
   MUNDOS_H.forEach(function(mundo,mi){
@@ -3861,7 +3868,7 @@ try{
 <!-- MAPA -->
 <div id="s-historia" class="screen" style="padding-top:0">
   <div class="h-header" style="padding-top:8px">
-    <button onclick="goMenu()" style="background:var(--card);border:1px solid #444;color:var(--muted);font-family:'Outfit',sans-serif;font-size:.85rem;padding:8px 20px;border-radius:20px;cursor:pointer">← Menú</button>
+    <button onclick="goMenu()" style="background:rgba(255,255,255,.08);border:1px solid #444;color:var(--muted);font-family:'Outfit',sans-serif;font-size:.82rem;padding:7px 16px;border-radius:20px;cursor:pointer;margin-top:2px">← Menú</button>
     <div class="section-title">🐉 Camino del Dragón</div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px">
       <div style="font-size:.72rem;color:var(--muted)">Nv.<span style="color:var(--gold);font-weight:700;margin-left:3px" id="hNivel">1</span></div>
